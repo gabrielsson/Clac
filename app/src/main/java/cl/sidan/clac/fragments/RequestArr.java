@@ -1,6 +1,7 @@
-package cl.sidan.clac.access.fragments;
+package cl.sidan.clac.fragments;
 
-import cl.sidan.access.interfaces.Arr;
+
+import cl.sidan.clac.access.interfaces.Arr;
 
 public class RequestArr implements Arr {
     String arr_namn = "";

@@ -1,4 +1,4 @@
-package cl.sidan.clac.access.fragments;
+package cl.sidan.clac.fragments;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

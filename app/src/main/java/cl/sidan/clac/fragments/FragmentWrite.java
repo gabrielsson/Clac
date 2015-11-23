@@ -1,4 +1,4 @@
-package cl.sidan.clac.access.fragments;
+package cl.sidan.clac.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;

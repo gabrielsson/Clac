@@ -28,6 +28,7 @@ import cl.sidan.access.impl.JSONParserSidanAccess;
 import cl.sidan.access.interfaces.Entry;
 import cl.sidan.access.interfaces.SidanAccess;
 import cl.sidan.access.interfaces.User;
+import cl.sidan.clac.R;
 import cl.sidan.util.ConnectionUtil;
 import cl.sidan.util.GCMUtil;
 

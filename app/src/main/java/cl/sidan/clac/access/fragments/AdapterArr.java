@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cl.sidan.access.interfaces.Arr;
+import cl.sidan.clac.R;
+import cl.sidan.clac.access.interfaces.Arr;
+
 
 public class AdapterArr extends ArrayAdapter<Arr> {
     private Context context;

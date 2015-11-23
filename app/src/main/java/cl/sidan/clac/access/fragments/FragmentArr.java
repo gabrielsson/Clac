@@ -35,8 +35,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import cl.sidan.access.interfaces.Arr;
-import cl.sidan.access.interfaces.Poll;
+import cl.sidan.clac.R;
+import cl.sidan.clac.access.interfaces.Arr;
+import cl.sidan.clac.access.interfaces.Poll;
+
 
 public class FragmentArr extends Fragment {
     private List<Arr> arrlista = new ArrayList<Arr>();

@@ -25,7 +25,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cl.sidan.access.interfaces.Entry;
+import cl.sidan.clac.R;
+import cl.sidan.clac.access.interfaces.Entry;
+
 
 public class FragmentReadEntries extends Fragment {
     private final String TAG = getClass().getCanonicalName();

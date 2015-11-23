@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:background="@color/background_turqoise">
+
+        <EditText android:id="@+id/write_entry_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="5"
+            android:maxLines="20"
+            android:gravity="top"
+            android:padding="10dp"
+            android:inputType="textMultiLine|textCapSentences"
+            android:background="#ffffffff"
+            android:hint="@string/write_entry_hint" />
+
+        <Button android:id="@+id/write_entry_send"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/write_entry_send" />
+
+        <ImageView
+            android:id="@+id/write_entry_imagechoosen"
+            android:contentDescription="@string/imagechosen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container_drawer"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content" />
+
+    <!-- <include layout="@layout/write_entry_drawer" android:id="@+id/write_entry_drawer" /> -->
+
+</RelativeLayout>

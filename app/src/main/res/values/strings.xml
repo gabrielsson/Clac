@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Clac</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="app_name">CLAppen</string>
     <string name="title_read">Läs</string>
     <string name="title_write">Skriv</string>
     <string name="title_units">Enhet</string>

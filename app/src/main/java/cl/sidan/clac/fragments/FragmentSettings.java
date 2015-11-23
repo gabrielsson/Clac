@@ -12,8 +12,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cl.sidan.interfaces.GCMChangeListener;
-import cl.sidan.util.GCMUtil;
+import cl.sidan.clac.R;
+import cl.sidan.clac.interfaces.GCMChangeListener;
+// import cl.sidan.util.GCMUtil;
 
 public class FragmentSettings extends Fragment implements GCMChangeListener {
     private static final float MULTIPLIER = 10;
@@ -96,7 +97,7 @@ public class FragmentSettings extends Fragment implements GCMChangeListener {
 
     public final void updateNotifications() {
         SharedPreferences sp = ((MainActivity) getActivity()).getPrefs();
-        if( GCMUtil.isRegistered(getActivity()) ) {
+        if( true ) { // GCMUtil.isRegistered(getActivity()) ) {
             sp.edit().putBoolean("notifications", true).apply();
         } else {
             sp.edit().putBoolean("notifications", false).apply();

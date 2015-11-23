@@ -23,11 +23,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sileria.android.view.SlidingTray;
-import com.sileria.util.Side;
+// import com.sileria.android.view.SlidingTray;
+// import com.sileria.util.Side;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+
+import cl.sidan.clac.R;
 
 public class FragmentWrite extends Fragment {
     boolean hemlis = false;
@@ -56,13 +58,13 @@ public class FragmentWrite extends Fragment {
                                    Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_write_entry, container, false);
 
-        SlidingTray drawer = (SlidingTray) inflater.inflate(R.layout.write_entry_drawer, null);
+        // SlidingTray drawer = (SlidingTray) inflater.inflate(R.layout.write_entry_drawer, null);
         FrameLayout parent = (FrameLayout) rootView.findViewById(R.id.container_drawer);
 
-        drawer.setOrientation(SlidingTray.LEFT);
-        drawer.setHandlePosition(Side.BOTTOM);
+        // drawer.setOrientation(SlidingTray.LEFT);
+        // drawer.setHandlePosition(Side.BOTTOM);
 
-        parent.addView(drawer);
+        // parent.addView(drawer);
 
         ((CheckBox) rootView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
         ((TextView) rootView.findViewById(R.id.write_entry_text)).setText(text);

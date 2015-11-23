@@ -13,8 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import cl.sidan.util.ConnectionUtil;
-import cl.sidan.util.GCMUtil;
+import cl.sidan.clac.R;
+//import cl.sidan.clac.interfaces.ConnectionUtil;
+//import cl.sidan.util.GCMUtil;
 
 public class FragmentLogin extends Fragment {
 
@@ -35,7 +36,7 @@ public class FragmentLogin extends Fragment {
 
         Button login = (Button) rootView.findViewById(R.id.login);
 
-        final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        final SharedPreferences preferences = ((cl.sidan.clac.MainActivity) getActivity()).getPrefs();
         ((EditText) rootView.findViewById(R.id.nummer)).setText(preferences.getString("nummer", "#"));
         ((EditText) rootView.findViewById(R.id.password)).setText(preferences.getString("password", ""));
 
@@ -53,12 +54,12 @@ public class FragmentLogin extends Fragment {
 
                 checkForGCMAndTryToRetrieveIfMissing();
 
-                ((MainActivity) getActivity()).removeLogin();
+                ((cl.sidan.clac.MainActivity) getActivity()).removeLogin();
             }
         });
 
         TextView offline = (TextView) getActivity().findViewById(R.id.offline_info);
-        Boolean isConnected = ConnectionUtil.isNetworkConnected(getActivity());
+        Boolean isConnected = true; // ConnectionUtil.isNetworkConnected(getActivity());
         if (offline != null) {
             if (isConnected) {
                 offline.setVisibility(View.INVISIBLE);
@@ -72,10 +73,10 @@ public class FragmentLogin extends Fragment {
         setHasOptionsMenu(false);
         setMenuVisibility(false);
 
-        if( isConnected && ((MainActivity) getActivity()).loggedIn() ) {
+        if( isConnected && ((cl.sidan.clac.MainActivity) getActivity()).loggedIn() ) {
             setHasOptionsMenu(true);
             setMenuVisibility(true);
-            ((MainActivity) getActivity()).removeLogin();
+            ((cl.sidan.clac.MainActivity) getActivity()).removeLogin();
         }
 
         return rootView;
@@ -84,20 +85,20 @@ public class FragmentLogin extends Fragment {
 
     @SuppressWarnings("unchecked")
     private void checkForGCMAndTryToRetrieveIfMissing() {
-        if( !GCMUtil.isRegistered(getActivity().getApplicationContext()) ){
+        // if( !GCMUtil.isRegistered(getActivity().getApplicationContext()) ){
             new AsyncTask(){
                 @Override
                 protected Object doInBackground(Object[] objects) {
                     Log.d("XXX_SWO", "Checks GCM or retrieve.");
                     String androidId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                    String regId = ((MainActivity) getActivity()).sidanAccess().getGCMRegIdFromDeviceId(androidId);
+                    String regId = ((cl.sidan.clac.MainActivity) getActivity()).sidanAccess().getGCMRegIdFromDeviceId(androidId);
                     if( regId != null ) {
-                        SharedPreferences.Editor editor = ((MainActivity) getActivity()).getPrefs().edit();
-                        editor.putString(GCMUtil.PREFS_REG_ID_KEY, regId).apply();
+                        SharedPreferences.Editor editor = ((cl.sidan.clac.MainActivity) getActivity()).getPrefs().edit();
+                        // editor.putString(GCMUtil.PREFS_REG_ID_KEY, regId).apply();
                     }
                     return null;
                 }
             }.execute(null,null,null);
-        }
+        // }
     }
 }

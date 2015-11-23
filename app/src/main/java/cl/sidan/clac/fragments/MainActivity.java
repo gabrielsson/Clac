@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.sileria.android.Kit;
-
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -24,13 +22,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 
-import cl.sidan.access.impl.JSONParserSidanAccess;
-import cl.sidan.access.interfaces.Entry;
-import cl.sidan.access.interfaces.SidanAccess;
-import cl.sidan.access.interfaces.User;
+// import cl.sidan.access.impl.JSONParserSidanAccess;
+// import cl.sidan.access.interfaces.Entry;
+// import cl.sidan.access.interfaces.SidanAccess;
+// import cl.sidan.access.interfaces.User;
 import cl.sidan.clac.R;
-import cl.sidan.util.ConnectionUtil;
-import cl.sidan.util.GCMUtil;
+import cl.sidan.clac.access.impl.JSONParserSidanAccess;
+import cl.sidan.clac.access.interfaces.Entry;
+import cl.sidan.clac.access.interfaces.SidanAccess;
+import cl.sidan.clac.access.interfaces.User;
+// import cl.sidan.util.ConnectionUtil;
+// import cl.sidan.util.GCMUtil;
 
 // http://aniqroid.sileria.com/doc/api/
 
@@ -114,7 +116,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public final void onDestroy() {
         super.onDestroy();
-        Kit.destroy();
+        // Kit.destroy();
     }
 
     public static boolean loggedIn() {
@@ -122,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public final boolean isConnected() {
-        return ConnectionUtil.isNetworkConnected(this);
+        return true; // ConnectionUtil.isNetworkConnected(this);
     }
 
     /* Hade varit gött att flytta denna till FragmentLogin
@@ -136,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
             setContentView(R.layout.main);
 
             // http://aniqroid.sileria.com/doc/api/
-            Kit.init(getApplicationContext());
+            // Kit.init(getApplicationContext());
 
             mViewPager = (ViewPager) findViewById(R.id.viewpager);
             MyFragmentPagerAdapter mMyFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
@@ -338,7 +340,7 @@ public class MainActivity extends ActionBarActivity {
 
         if( isSuccess ) {
             Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
-            GCMUtil.notifyGCM(getApplicationContext(), nummer, entry.getMessage());
+            // GCMUtil.notifyGCM(getApplicationContext(), nummer, entry.getMessage());
         }
 
         return isSuccess;
@@ -369,9 +371,9 @@ public class MainActivity extends ActionBarActivity {
 
     public final void notifyGCMChange() {
         if( preferences.getBoolean("notifications", true) ) {
-            GCMUtil.unregister(this);
+            // GCMUtil.unregister(this);
         } else {
-            GCMUtil.register(this);
+            // GCMUtil.register(this);
         }
     }
 

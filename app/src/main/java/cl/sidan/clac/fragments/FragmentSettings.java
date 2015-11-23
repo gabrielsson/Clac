@@ -13,10 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cl.sidan.clac.R;
-import cl.sidan.clac.interfaces.GCMChangeListener;
 // import cl.sidan.util.GCMUtil;
 
-public class FragmentSettings extends Fragment implements GCMChangeListener {
+public class FragmentSettings extends Fragment implements cl.sidan.clac.interfaces.GCMChangeListener {
     private static final float MULTIPLIER = 10;
     private static final float DEFAULT_FONTSIZE = 15;
 
@@ -38,7 +37,7 @@ public class FragmentSettings extends Fragment implements GCMChangeListener {
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         SeekBar volumeControl = (SeekBar) rootView.findViewById(R.id.fontsize);
         fontsize_text = (TextView) rootView.findViewById(R.id.fontsize_text);
-        final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        final SharedPreferences preferences = ((MainActivity_old) getActivity()).getPrefs();
 
         int default_size = (int) preferences.getFloat("font_size", DEFAULT_FONTSIZE);
         fontsize_text.setTextSize(default_size);
@@ -73,7 +72,7 @@ public class FragmentSettings extends Fragment implements GCMChangeListener {
                 boolean checked = cbPosition.isChecked();
                 preferences.edit().putBoolean("positionSetting", checked).apply();
                 Log.d("Location", "Location changed to " + checked);
-                ((MainActivity) getActivity()).notifyLocationChange();
+                ((MainActivity_old) getActivity()).notifyLocationChange();
             }
         });
 
@@ -85,7 +84,7 @@ public class FragmentSettings extends Fragment implements GCMChangeListener {
             public void onClick(View view) {
                 boolean checked = !cbNotifications.isChecked();
                 preferences.edit().putBoolean("notifications", checked).apply();
-                ((MainActivity) getActivity()).notifyGCMChange();
+                ((MainActivity_old) getActivity()).notifyGCMChange();
 
                 updateNotifications();
             }
@@ -96,7 +95,7 @@ public class FragmentSettings extends Fragment implements GCMChangeListener {
     }
 
     public final void updateNotifications() {
-        SharedPreferences sp = ((MainActivity) getActivity()).getPrefs();
+        SharedPreferences sp = ((MainActivity_old) getActivity()).getPrefs();
         if( true ) { // GCMUtil.isRegistered(getActivity()) ) {
             sp.edit().putBoolean("notifications", true).apply();
         } else {

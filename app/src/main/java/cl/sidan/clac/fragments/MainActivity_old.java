@@ -37,7 +37,7 @@ import cl.sidan.clac.access.interfaces.User;
 // http://aniqroid.sileria.com/doc/api/
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity_old extends ActionBarActivity {
     private SharedPreferences preferences = null;
     private static String nummer = "";
     private static String password = "";
@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
         switch (id) {
             case R.id.logout:
                 preferences.edit().clear().apply();
-                new MainActivity();
+                new MainActivity_old();
                 break;
 
             case R.id.exit_app:
@@ -309,7 +309,7 @@ public class MainActivity extends ActionBarActivity {
     private static class LazyHolder {
         private static SidanAccess INSTANCE = new JSONParserSidanAccess(nummer, password);
     }
-    public static SidanAccess sidanAccess() {
+    public static SidanAccess sidanAccess_old() {
         return LazyHolder.INSTANCE;
     }
     public final SharedPreferences getPrefs() {
@@ -334,7 +334,7 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        boolean isSuccess = sidanAccess().createEntry(entry.getMessage(), entry.getLatitude(), entry.getLongitude(),
+        boolean isSuccess = sidanAccess_old().createEntry(entry.getMessage(), entry.getLatitude(), entry.getLongitude(),
                 entry.getEnheter(), entry.getStatus(), host, entry.getSecret(), entry.getImage(),
                 entry.getFileName(), entry.getKumpaner());
 

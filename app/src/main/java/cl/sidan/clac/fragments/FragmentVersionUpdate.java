@@ -84,7 +84,7 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
         }
         versionInfoText.setText(getCurrentVersionString());
 
-        if( ((MainActivity) getActivity()).isConnected() ) {
+        if( ((MainActivity_old) getActivity()).isConnected() ) {
             VersionUpdateTask vc = new VersionUpdateTask(this);
             vc.execute();
         } else {

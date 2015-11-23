@@ -23,7 +23,7 @@ import java.net.URL;
  */
 public class JsbJSONInvoker {
     public static JSONObject invoke(String invokeUrl, String urlParameters, String userName, String password) {
-        //Log.d(this.getClass().getCanonicalName(), "Invoking " + invokeUrl);
+        Log.d(JsbJSONInvoker.class.getCanonicalName(), "Invoking " + invokeUrl);
 
         String response ="";
         // Set the timeout in milliseconds until a connection is established.

@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Arr;
 import cl.sidan.clac.access.interfaces.Poll;
@@ -79,7 +80,7 @@ public class FragmentArr extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_arr, container, false);
         context = rootView.getContext();
 
-        final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        final SharedPreferences preferences = ((MainActivity_old) getActivity()).getPrefs();
         float font_size = preferences.getFloat("font_size", 15);
 
         Button new_arr = (Button) rootView.findViewById(R.id.add_arr);
@@ -145,7 +146,7 @@ public class FragmentArr extends Fragment {
     {
         super.onResume();
 
-        SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        SharedPreferences preferences = ((MainActivity_old) getActivity()).getPrefs();
         float font_size = preferences.getFloat("font_size", 15);
 
         arrAdapter = new AdapterArr(rootView.getContext(), R.layout.arr, arrlista, font_size);
@@ -275,7 +276,7 @@ public class FragmentArr extends Fragment {
                             arr.setNamn(arrNamn);
                             arr.setPlats(arrPlats);
                             arr.setDatum(date);
-                            arr.setDeltagare(((MainActivity) getActivity()).getPrefs().getString("nummer", null));
+                            arr.setDeltagare(((MainActivity_old) getActivity()).getPrefs().getString("nummer", null));
 
                             new CreateOrUpdateArrAsync().execute(arr);
                         }

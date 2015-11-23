@@ -29,6 +29,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 
+import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 
 public class FragmentWrite extends Fragment {
@@ -138,16 +139,16 @@ public class FragmentWrite extends Fragment {
 
                 entry.setSecret(hemlis);
 
-                boolean reportPosition = ((MainActivity) getActivity()).getPrefs().getBoolean("positionSetting", false);
-                Location myLocation = ((MainActivity) getActivity()).getLocation();
+                boolean reportPosition = ((MainActivity_old) getActivity()).getPrefs().getBoolean("positionSetting", false);
+                Location myLocation = ((MainActivity_old) getActivity()).getLocation();
                 if( reportPosition && myLocation != null ) {
                     entry.setLatitude(BigDecimal.valueOf(myLocation.getLatitude()));
                     entry.setLongitude(BigDecimal.valueOf(myLocation.getLongitude()));
                 }
 
                 // Vi sätter kumpaner i MainActivity också
-                ((MainActivity) getActivity()).createEntryAndSend(entry);
-                ((MainActivity) getActivity()).setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.readentry);
+                ((MainActivity_old) getActivity()).createEntryAndSend(entry);
+                ((MainActivity_old) getActivity()).setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.readentry);
 
                 // en Entry är skapat, resetta allt.
                 hemlisBox.setChecked(false);
@@ -166,7 +167,7 @@ public class FragmentWrite extends Fragment {
     {
         super.onResume();
 
-        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
+        float font_size = ((MainActivity_old) getActivity()).getPrefs().getFloat("font_size", 15);
 
         TextView tv = (TextView) rootView.findViewById(R.id.write_entry_text);
         tv.setTextSize(font_size);

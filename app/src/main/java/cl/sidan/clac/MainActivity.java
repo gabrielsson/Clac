@@ -133,7 +133,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public boolean loggedIn() {
-        return !(nummer == null || nummer.isEmpty() || "#".equals(nummer));
+        if((nummer == null || nummer.isEmpty() || "#".equals(nummer))){
+            return false;
+        }
+
+        return sidanAccess().authenticateUser();
     }
 
     private static class LazyHolder {

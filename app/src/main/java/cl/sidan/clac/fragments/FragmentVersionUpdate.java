@@ -34,7 +34,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import cl.sidan.interfaces.VersionUpdateListener;
 
 public class FragmentVersionUpdate extends Fragment implements VersionUpdateListener {
     // Versionsnumret sätts från build.gradle.

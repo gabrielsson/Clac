@@ -1,8 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Clac</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="app_name">CLAppen</string>
+    <string name="title_read">Läs</string>
+    <string name="title_write">Skriv</string>
+    <string name="title_units">Enhet</string>
+    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="enhet">Rapport av 1 enhet</string>
+    <string name="menu_log_out">Logga Ut</string>
+    <string name="menu_exit_app">Avsluta Appen</string>
+    <string name="write_entry_hint">Skriv inlägg&#8230;</string>
+    <string name="write_entry_send">Skicka</string>
+    <string name="write_entry_not_empty">Ganska trist att skicka tomma meddelanden tycker jag!</string>
+    <string name="write_entry_missing_name">Hur ska folk veta var din brevlåda bor?</string>
+    <string name="write_entry_drawer_title">Extrakrams</string>
+    <string name="write_entry_drawer_open">Öppna skrivinställningar</string>
+    <string name="write_entry_drawer_close">Stäng skrivinställningar</string>
+    <string name="write_entry_secret">Hemlis</string>
+
+    <string name="title_activity_settings">Inställningar</string>
+    <string name="settings_login_success">Inloggad som {{nummer}}!</string>
+    <string name="settings_login_failed">Felaktigt login!</string>
+    <string name="settings_offline">Internetaccess saknas!</string>
+    <string name="settings_notifications_off">Ej ansluten!</string>
+
+    <string name="changePasswordText">Ändra Lösenord</string>
+
+    <string name="title_activity_version_update">VersionUpdateActivity</string>
+    <string name="version_update">Uppdatera!</string>
+    <string name="version_update_available">Uppdatering finns!</string>
+    <string name="version_current_version">Version: {{currentVersion}}</string>
+    <string name="version_latest_version">senaste: {{latestVersion}}</string>
+    <string name="letar_uppdateringar">Kollar efter uppdateringar&#8230;</string>
+    <string name="default_release">
+        version 4.6 (20151005):\n\t
+        -Länkparsning (igen)\n\t
+        -Mer debuginformation\n\t
+        -En del bugfixar\n\n
+
+        version 4.5 (20150728):\n\t
+        -Bättre allokering av minne\n\t
+        -Bugfix\n\n
+
+        version 4.4 (20150715):\n\t
+        -Lite fixade fel\n\t
+        -Bättre positionering\n\t
+        -Mindre batterianvändning vid positionering\n\n
+
+        version 4.3 (20150628):\n\t
+        -Poll\n\t
+        -Create new Arr\n\t
+        -Location\n\n
+
+        version 4.2 (20150613):\n\t
+        -Notifications är fixat!\n\t
+        -Lite nullpointers fixade\n\t
+        -Lite mer på Arrfragmentet fixat\n\n
+
+        version 4.1 (20150521):\n\t
+        -Felrapportsmail\n\t
+        -En början på Arrfragmentet\n\n
+
+        version 4.0 (20150518):\n\t
+        -Kumpaner\n\t
+        -Lite fixar på arrsidan\n\t
+        -Androids versionsuppdateringsverktyg\n\t
+        -Textstorlek\n\t
+        -Förhoppningsvis lite mindre crasher\n\t
+        -Inga mer Long/Lat rapporter från havet\n\n
+
+        version 3.0 (20150406):\n\t
+        -Bilduppladdning på G\n\t
+        -Bättre länkparsning\n\t
+        -Refaktorerad kod + uppdaterad design\n\t
+        -Androids versionsuppdaterings verktyg\n\t
+        -Textstorlek\n\t
+        -Hashade lösenord\n\t
+        -Positionering\n\n
+
+        version 2.1 (141216):\n\t
+        -Fixad NullPointer vid ölrapportering\n\t
+        -Minorversioner\n\n
+
+        version 2 (141124):\n\t
+        -Notifications\n\t
+        -Hemlisar\n\t
+        -POST requests\n\t
+        -Settings\n\t
+        -Förbättrat login\n\t
+        -Meddelandeavskiljare \n\n
+
+        version 1 (141028):\n\t\
+        -Posta inlägg\n\t
+        -HTMLfierat\n\t
+        -Kolla bilder/följa länkar\n\t
+        -Svara på bilder\n\t
+        -Uppdatera appen\n\n
+
+        version 0 (141020):\n\t
+        -Beta Release!\n\t
+        -Läsa inlägg\n\t
+        -Enhetsrapportering\n\t
+        -Gilla inlägg\n\t
+    </string>
+
+    <string name="nummer">#</string>
+    <string name="loggain">Logga in</string>
+    <string name="svara_med_inlagg">Svara med inlägg</string>
+    <string name="svara_privat">Svara privat</string>
+    <string name="svara_via_hemlis">via hemlis</string>
+    <string name="svara_via_sms">via sms</string>
+    <string name="svara_via_email">via epost</string>
+    <string name="gillaEntry">Gilla</string>
+    <string name="andra">Ändra</string>
+    <string name="rapporteraPosition">Rapportera position</string>
+    <string name="bilduppladdning">Bättre bild</string>
+    <string name="not_registered_user">Du är inte registrerad.</string>
+    <string name="imagechosen">Vald bild</string>
+    <string name="olsug">Ölsug</string>
+    <string name="notifications">Använd Notifications</string>
+    <string name="not_connected">Inte ansluten</string>
+    <string name="fontsize">Textstorlek</string>
+    <string name="change_password">Ändra lösenord</string>
+    <string name="update_failed">Uppdatering misslyckades!</string>
+    <string name="update_already_latest">Du har den senaste versionen!</string>
+    <string name="update_exist">En ny version finns!</string>
+    <string name="kumpaner">Kumpaner</string>
+    <string name="bangar_arr">Jag bangar!</string>
+    <string name="jag_ar_pa">Jag är på!</string>
+    <string name="lurpassa">Lurpassa</string>
+    <string name="hetsa">Hetsa</string>
 </resources>

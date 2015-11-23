@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/reply_entry"
+        android:title="@string/svara_med_inlagg" />
+
+    <item android:id="@+id/reply_entry_via"
+        android:title="@string/svara_privat">
+
+        <menu>
+            <item android:id="@+id/reply_entry_hemlis"
+                android:title="@string/svara_via_hemlis" />
+
+            <item android:id="@+id/reply_entry_sms"
+                android:title="@string/svara_via_sms"
+                android:enabled="false" />
+
+            <item android:id="@+id/reply_entry_email"
+                android:title="@string/svara_via_email" />
+        </menu>
+
+    </item>
+
+    <item android:id="@+id/like_entry"
+        android:title="@string/gillaEntry" />
+
+    <item android:id="@+id/edit_entry"
+        android:title="@string/andra" />
+
+</menu>

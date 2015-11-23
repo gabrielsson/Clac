@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/banga_arr"
+        android:title="@string/bangar_arr"
+        android:visible="false" />
+
+    <item android:id="@+id/joina_arr"
+        android:title="@string/jag_ar_pa" />
+
+    <item android:id="@+id/lurpassa_arr"
+        android:title="@string/lurpassa" />
+
+    <item android:id="@+id/hetsa_arr"
+        android:title="@string/hetsa"
+        android:enabled="false" />
+
+    <item android:id="@+id/edit_arr"
+        android:title="@string/andra"
+        android:enabled="true" />
+</menu>

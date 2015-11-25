@@ -121,7 +121,6 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
         }
         if( !kumpanString.isEmpty() ) {
             kumpanString = " | " + kumpanString.substring(0, kumpanString.length()-1);
-
         }
 
         holder.txtSignatureLine.setText(entry.getSignature() + "|" + format.format(date) + "(" + dayOfWeek + ")"+ kumpanString + " | +" + entry.getLikes());

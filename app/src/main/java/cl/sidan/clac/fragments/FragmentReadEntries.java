@@ -90,7 +90,7 @@ public class FragmentReadEntries extends Fragment {
     {
         super.onResume();
 
-        float font_size = ((MainActivity_old) getActivity()).getPrefs().getFloat("font_size", 15);
+        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
 
         entriesAdapter = new AdapterEntries(rootView.getContext(), R.layout.entry, entries, font_size);
         entriesAdapter.setNotifyOnChange(true);
@@ -115,7 +115,7 @@ public class FragmentReadEntries extends Fragment {
         Entry e = entriesAdapter.getItem(info.position);
 
         MenuItem likeItem = menu.findItem(R.id.like_entry);
-        String nummer = ((MainActivity_old) getActivity()).getPrefs().getString("nummer", "");
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", "");
         likeItem.setEnabled(!nummer.equals(e.getSignature()));
         MenuItem editItem = menu.findItem(R.id.edit_entry);
         editItem.setEnabled(false);
@@ -258,7 +258,7 @@ public class FragmentReadEntries extends Fragment {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String nummer = ((MainActivity_old) getActivity()).getPrefs().getString("nummer", null);
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", null);
         ((MainActivity) getActivity()).sidanAccess().createLike(i, nummer, host);
         Log.d("Debug", "Liked " + i);
     }

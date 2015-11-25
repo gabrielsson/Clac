@@ -75,7 +75,7 @@ public class FragmentLogin extends Fragment {
         setHasOptionsMenu(false);
         setMenuVisibility(false);
 
-        if( isConnected && ((MainActivity) getActivity()).loggedIn() ) {
+        if( isConnected && ((MainActivity) getActivity()).isLoggedIn() ) {
             setHasOptionsMenu(true);
             setMenuVisibility(true);
             ((MainActivity) getActivity()).removeLogin();

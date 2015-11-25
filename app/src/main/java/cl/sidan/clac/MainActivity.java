@@ -1,9 +1,13 @@
 package cl.sidan.clac;
 
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,10 +18,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
+import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
+import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.fragments.FragmentLogin;
 import cl.sidan.clac.fragments.MyExceptionHandler;
+import cl.sidan.clac.fragments.MyLocationListener;
+import cl.sidan.clac.fragments.RequestEntry;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,10 +39,20 @@ public class MainActivity extends AppCompatActivity
     private static String nummer = "";
     private static String password = "";
 
+    private ArrayList<User> kumpaner = new ArrayList<User>();
+    private ArrayList<Integer> selectedItems = new ArrayList<Integer>();
+
+    private ViewPager mViewPager = null;
+
+    private MyLocationListener locationListener = null;
+    private Location lastKnownLocation = null;
+
+    ArrayList<Entry> notSentList = new ArrayList<Entry>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
         preferences = getSharedPreferences("cl.sidan", 0);
         nummer = preferences.getString("nummer", null);
@@ -122,9 +146,33 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public boolean checkAndUpdateTime() {
+        /* Save date to see if information is up-to-date */
+        GregorianCalendar cal = new GregorianCalendar();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        cal.add(GregorianCalendar.HOUR, 5);
+        String dateNow = formatter.format(cal.getTime());
+        String dateOld = preferences.getString("lastTimeReportedKumpaner", "");
+        Log.d("Kumpaner", "Uppdatera tid: Now=" + dateNow + ", was=" + dateOld);
+        if( dateNow.compareTo(dateOld) >= 0 ){
+            Log.d("Kumpaner", "Fortfarande inom 5 timmar. Sparar nuvarande tid.");
+            preferences.edit().putString("lastTimeReportedKumpaner", dateNow).apply();
+            return true;
+        } else {
+            Log.d("Kumpaner", "Tiden har gått ut, rensar kumpan listan.");
+            selectedItems.clear();
+            return false;
+        }
+    }
 
-    public final SharedPreferences getPrefs() {
-        return preferences;
+    public void createEntryAndSend(Entry entry) {
+        if( checkAndUpdateTime() ) {
+            Log.d("Kumpaner", "Creating kumpaner.");
+            ((RequestEntry) entry).setKumpaner(kumpaner);
+        } else {
+            Log.d("Kumpaner", "No kumpaner found.");
+        }
+        new CreateEntryAsync().execute(entry);
     }
 
     public void removeLogin() {
@@ -132,18 +180,115 @@ public class MainActivity extends AppCompatActivity
         password = preferences.getString("password", null);
     }
 
-    public boolean loggedIn() {
-        if((nummer == null || nummer.isEmpty() || "#".equals(nummer))){
-            return false;
-        }
 
-        return sidanAccess().authenticateUser();
+    public final void notifyLocationChange() {
+        if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
+            locationListener = new MyLocationListener(this, lastKnownLocation);
+            Log.d("Location", "New Location listener created.");
+        } else if(locationListener != null) {
+            locationListener.stopLocationUpdates();
+            locationListener = null;
+            Log.d("Location", "Stopped and removed location listener.");
+        }
     }
+
+    public final void notifyGCMChange() {
+        if( preferences.getBoolean("notifications", true) ) {
+            // GCMUtil.unregister(this);
+        } else {
+            // GCMUtil.register(this);
+        }
+    }
+
+
+    /**************************************************************************
+     * Setters
+     *************************************************************************/
+
+    /* Set the current view given a FragmentOrder item */
+    public final void setCurrentItem(int order) {
+        mViewPager.setCurrentItem(order);
+    }
+
+    /**************************************************************************
+     * Getters/is-functions
+     *************************************************************************/
+
+    public static SidanAccess sidanAccess() {
+        return LazyHolder.INSTANCE;
+    }
+
+    public final SharedPreferences getPrefs() {
+        return preferences;
+    }
+
+    public final boolean isConnected() {
+        return true; // ConnectionUtil.isNetworkConnected(this);
+    }
+
+    public boolean isLoggedIn() {
+        return !(nummer == null ||
+                nummer.isEmpty() ||
+                "#".equals(nummer)) &&
+                sidanAccess().authenticateUser();
+    }
+
+    public final Location getLocation() {
+        if( locationListener != null ) {
+            lastKnownLocation = locationListener.getLocation();
+            return lastKnownLocation;
+        }
+        return null;
+    }
+
+    /**************************************************************************
+     * CLASSES
+     *************************************************************************/
 
     private static class LazyHolder {
         private static SidanAccess INSTANCE = new JSONParserSidanAccess(nummer, password);
     }
-    public static SidanAccess sidanAccess() {
-        return LazyHolder.INSTANCE;
+
+    public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {
+        @Override
+        protected Boolean doInBackground(Entry... entries) {
+            for(Entry e : entries) {
+                notSentList.add(e);
+            }
+            Entry e = null;
+            for(int i = 0; i < notSentList.size(); i++) {
+                e = notSentList.get(i);
+                if( onCreateEntry(e) ) {
+                    notSentList.remove(i);
+                }
+            }
+            return notSentList.isEmpty();
+        }
+
+
+        public final boolean onCreateEntry(Entry entry) {
+            String host = null;
+            try {
+                host = InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+
+            boolean isSuccess = sidanAccess().createEntry(entry.getMessage(), entry.getLatitude(), entry.getLongitude(),
+                    entry.getEnheter(), entry.getStatus(), host, entry.getSecret(), entry.getImage(),
+                    entry.getFileName(), entry.getKumpaner());
+
+            if( isSuccess ) {
+                Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
+                // GCMUtil.notifyGCM(getApplicationContext(), nummer, entry.getMessage());
+            }
+
+            return isSuccess;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean retur) {
+            Log.e("WriteEntry", "Could not create some Entries.");
+        }
     }
 }

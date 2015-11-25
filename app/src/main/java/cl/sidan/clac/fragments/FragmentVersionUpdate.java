@@ -34,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.interfaces.VersionUpdateListener;
 
@@ -84,7 +85,7 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
         }
         versionInfoText.setText(getCurrentVersionString());
 
-        if( ((MainActivity_old) getActivity()).isConnected() ) {
+        if( ((MainActivity) getActivity()).isConnected() ) {
             VersionUpdateTask vc = new VersionUpdateTask(this);
             vc.execute();
         } else {

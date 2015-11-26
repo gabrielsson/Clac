@@ -90,7 +90,7 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
             vc.execute();
         } else {
             TextView versionStatusText = (TextView) rootView.findViewById(R.id.version_update_status);
-            versionStatusText.setText("Uppkoppling saknas!");
+            versionStatusText.setText(R.string.missingConnection);
         }
 
         return rootView;
@@ -151,7 +151,7 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
     }
 
     public static ArrayList<Long> parseVersionString(String recieved) {
-        ArrayList<Long> versionList = new ArrayList<Long>();
+        ArrayList<Long> versionList = new ArrayList<>();
         for(String version : recieved.split("\\.")) {
             versionList.add(Long.parseLong(version));
         }
@@ -204,7 +204,7 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
                     }
                 }
 
-                return received.getBytes().length+0L;
+                return (long) received.getBytes().length;
             }
 
             protected final void onPostExecute( Long result ) {
@@ -244,22 +244,24 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
 
                 File outputFile = new File(context.getFilesDir().getPath() + "/" + apkFileName);
 
-                if(outputFile.exists()){
-                    outputFile.delete();
+                if(outputFile.exists() && !outputFile.delete()){
+                    Log.e("UpdateAPP", "outputFile exists but was unable to delete file.");
                 }
                 FileOutputStream fos = new FileOutputStream(outputFile);
 
                 InputStream is = c.getInputStream();
 
                 byte[] buffer = new byte[1024];
-                int len1 = 0;
+                int len1;
                 while ((len1 = is.read(buffer)) != -1) {
                     fos.write(buffer, 0, len1);
                 }
                 fos.close();
                 is.close();
 
-                outputFile.setReadable(true, false);
+                if (outputFile.setReadable(true, false)) {
+                    Log.e("UpdateAPP", "Could not make outputFile readable.");
+                }
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(outputFile), "application/vnd.android.package-archive");

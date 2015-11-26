@@ -28,7 +28,9 @@ public class MyLocationListener implements LocationListener
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, this);
         try {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, this);
-        } catch ( IllegalArgumentException e ) {} // Network provivder does not exist in emulator.
+        } catch ( IllegalArgumentException e ) {
+            Log.e("Location", "Network provider does not exist in emulator.");
+        }
 
         locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, minTime, minDistance, this);
 

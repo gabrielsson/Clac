@@ -32,7 +32,7 @@ import cl.sidan.clac.access.interfaces.Entry;
 
 public class FragmentReadEntries extends Fragment {
     private final String TAG = getClass().getCanonicalName();
-    private List<Entry> entries = new ArrayList<Entry>();
+    private List<Entry> entries = new ArrayList<>();
     private AdapterEntries entriesAdapter = null;
     private SwipeRefreshLayout entriesContainer = null;
     private static FragmentReadEntries readEntriesFragment;
@@ -116,7 +116,9 @@ public class FragmentReadEntries extends Fragment {
 
         MenuItem likeItem = menu.findItem(R.id.like_entry);
         String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", "");
-        likeItem.setEnabled(!nummer.equals(e.getSignature()));
+        if (e != null) {
+            likeItem.setEnabled(!nummer.equals(e.getSignature()));
+        }
         MenuItem editItem = menu.findItem(R.id.edit_entry);
         editItem.setEnabled(false);
     }
@@ -136,7 +138,7 @@ public class FragmentReadEntries extends Fragment {
 
             case R.id.like_entry:
                 e = entriesAdapter.getItem(info.position);
-                new CreateLikeAsync().execute(e.getId());
+                new CreateLikeAsync().execute(e != null ? e.getId() : null);
                 Log.d("Context menu", "Like entry " + info.id);
                 return true;
 
@@ -161,7 +163,7 @@ public class FragmentReadEntries extends Fragment {
                     hemlis = true;
                 }
 
-                String signed = e.getSignature();
+                String signed = e != null ? e.getSignature() : null;
                 if (signed != null && !signed.isEmpty()) {
                     signed += ": ";
                 } else {

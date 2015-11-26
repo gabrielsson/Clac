@@ -42,14 +42,14 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
     }
 
     private long getAvailableInternalMemorySize(StatFs stat) {
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
+        long blockSize = stat.getBlockSizeLong();
+        long availableBlocks = stat.getAvailableBlocksLong();
         return availableBlocks * blockSize;
     }
 
     private long getTotalInternalMemorySize(StatFs stat) {
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
+        long blockSize = stat.getBlockSizeLong();
+        long totalBlocks = stat.getBlockCountLong();
         return totalBlocks * blockSize;
     }
 
@@ -91,7 +91,7 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
                     context.getPackageName());
         }
 
-        message.append("SDK: ").append(Build.VERSION.SDK).append(NL);
+        message.append("SDK: ").append(Build.VERSION.SDK_INT).append(NL);
         message.append("Incremental: ").append(Build.VERSION.INCREMENTAL).append(NL);
     }
 
@@ -159,13 +159,10 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
 
                         Date curDate = new Date();
                         String subject = "CLappen krashade " + curDate.toString();
-                        StringBuilder body = new StringBuilder();
-                        body.append(NL).append(NL);
-                        body.append(errorContent).append(NL).append(NL);
 
                         sendIntent.setType("plain/text");
                         sendIntent.putExtra(Intent.EXTRA_EMAIL, RECIPIENTS);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, body.toString());
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, NL + NL + errorContent + NL + NL);
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
                         context1.startActivity(Intent.createChooser(sendIntent, "Error Report"));

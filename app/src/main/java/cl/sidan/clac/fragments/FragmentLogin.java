@@ -96,7 +96,8 @@ public class FragmentLogin extends Fragment {
                     String regId = ((MainActivity) getActivity()).sidanAccess().getGCMRegIdFromDeviceId(androidId);
                     if( regId != null ) {
                         SharedPreferences.Editor editor = ((MainActivity) getActivity()).getPrefs().edit();
-                        // editor.putString(GCMUtil.PREFS_REG_ID_KEY, regId).apply();
+                        // editor.putString(GCMUtil.PREFS_REG_ID_KEY, regId);
+                        editor.apply();
                     }
                     return null;
                 }

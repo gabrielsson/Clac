@@ -24,10 +24,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -37,6 +35,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import cl.sidan.clac.R;
@@ -46,7 +45,7 @@ import cl.sidan.clac.access.interfaces.User;
 
 public class AdapterEntries extends ArrayAdapter<Entry> {
 
-    private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     Context context;
     float fontsize;
@@ -123,7 +122,11 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
             kumpanString = " | " + kumpanString.substring(0, kumpanString.length()-1);
         }
 
-        holder.txtSignatureLine.setText(entry.getSignature() + "|" + format.format(date) + "(" + dayOfWeek + ")"+ kumpanString + " | +" + entry.getLikes());
+        String signatureLineText = String.format(
+                "%s | %s (%s) %s | %d", // #68 | 2015-11-10 (tis) #38,#71 | 42
+                entry.getSignature(), format.format(date),
+                dayOfWeek, kumpanString, entry.getLikes());
+        holder.txtSignatureLine.setText(signatureLineText);
 
         switch (entry.getStatus()) {
             case 1: //politics
@@ -145,7 +148,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
             case 5: //NSFW
                 holder.txtEntry.setTextColor(context.getResources().getColor(R.color.text_winered));
                 holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.text_winered));
-                holder.txtEntry.setText("NSFW!!" + holder.txtEntry.getText());
+                holder.txtEntry.setText(String.format("NSFW!! %s", holder.txtEntry.getText()));
                 break;
             case 0: //normal
             default:
@@ -211,7 +214,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
         html = Pattern.compile("href=(?!['\"])([^\\s>]*)", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("'$1'");
         // convert links that does not start with "href=" to real <a href='link'>link</a>
-        html = Pattern.compile("(?<!href=['\"])((?:https?:\\/\\/|ftps?:\\/\\/|www\\d{0,3}[.])(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
+        html = Pattern.compile("(?<!href=['\"])((?:https?://|ftps?://|www\\d{0,3}[.])(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("<a href='$1'>$1</a>");
         // if the link is in the form "inmailat/...jpg" prepend full url.
         html = Pattern.compile("(inmailat/.*\\.)(jpg|jpeg|gif|png)", Pattern.CASE_INSENSITIVE)
@@ -219,14 +222,13 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
 
         /* Convert the html */
         Spanned text = Html.fromHtml(html, urlIP, null);
-        SpannableString buffer = new SpannableString(text);
 
-        return buffer;
+        return new SpannableString(text);
     }
 
     public final class URLImageParser implements Html.ImageGetter {
-        ArrayList<String> localImagesURLArray  = new ArrayList<String>();
-        ArrayList<Integer> localImagesResArray = new ArrayList<Integer>();
+        ArrayList<String> localImagesURLArray  = new ArrayList<>();
+        ArrayList<Integer> localImagesResArray = new ArrayList<>();
         String[] localImagesURLSources = {
                 "minipics/checkbox.gif",
                 "minipics/checkbox_unchecked.gif",
@@ -296,7 +298,9 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
                 localOrEmpty = c.getResources().getDrawable(R.drawable.proppeller);
             }
             d.addLevel(0, 0, localOrEmpty);
-            d.setBounds(0, 0, localOrEmpty.getIntrinsicWidth(), localOrEmpty.getIntrinsicHeight());
+            int width = localOrEmpty != null ? localOrEmpty.getIntrinsicWidth() : 0;
+            int height = localOrEmpty != null ? localOrEmpty.getIntrinsicHeight() : 0;
+            d.setBounds(0, 0, width, height);
 
             if( localImage < 0 ) {
                 if (source.startsWith("inmailat")) {
@@ -325,10 +329,6 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
                 try {
                     InputStream is = new URL(source).openStream();
                     return BitmapFactory.decodeStream(is);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

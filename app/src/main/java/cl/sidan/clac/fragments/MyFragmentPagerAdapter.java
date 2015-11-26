@@ -3,12 +3,11 @@ package cl.sidan.clac.fragments;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import java.util.HashMap;
-
 class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-    private HashMap<Integer, String> mFragmentTags;
+    private SparseArray<String> mFragmentTags;
     private FragmentManager mFragmentManager;
 
     private static final int NUMBER_OF_PAGES = 5;
@@ -23,7 +22,7 @@ class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
         mFragmentManager = fm;
-        mFragmentTags = new HashMap<Integer,String>();
+        mFragmentTags = new SparseArray<>();
     }
 
     public Fragment getFragment(int position) {

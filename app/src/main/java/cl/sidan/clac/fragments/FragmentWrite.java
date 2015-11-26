@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,7 +35,6 @@ public class FragmentWrite extends Fragment {
     boolean hemlis = false;
     String text = "";
     private static final int FILE_SELECT_CODE = 0;
-    private String imagePath = "";
 
     private View rootView = null;
 
@@ -60,7 +58,7 @@ public class FragmentWrite extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_write_entry, container, false);
 
         // SlidingTray drawer = (SlidingTray) inflater.inflate(R.layout.write_entry_drawer, null);
-        FrameLayout parent = (FrameLayout) rootView.findViewById(R.id.container_drawer);
+        //FrameLayout parent = (FrameLayout) rootView.findViewById(R.id.container_drawer);
 
         // drawer.setOrientation(SlidingTray.LEFT);
         // drawer.setHandlePosition(Side.BOTTOM);
@@ -188,8 +186,6 @@ public class FragmentWrite extends Fragment {
 
                 Log.d("IMAGEUPLOAD", "File selected: " + path);
                 Toast.makeText(getActivity(), "File Selected: " + path, Toast.LENGTH_LONG).show();
-
-                imagePath = path;
             } catch (Exception e) {
                 Log.e("IMAGEUPLOAD", "File select error", e);
             }
@@ -199,10 +195,14 @@ public class FragmentWrite extends Fragment {
 
     public String getPath(Uri uri) {
         Cursor returnCursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-        returnCursor.moveToFirst();
-        String path = returnCursor.getString(nameIndex);
-        returnCursor.close();
+        int nameIndex;
+        String path = "";
+        if (returnCursor != null) { // maybe throw an exception if this is not true
+            nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            path = returnCursor.getString(nameIndex);
+            returnCursor.close();
+        }
 
         return path;
     }

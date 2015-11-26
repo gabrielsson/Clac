@@ -133,4 +133,5 @@
     <string name="jag_ar_pa">Jag är på!</string>
     <string name="lurpassa">Lurpassa</string>
     <string name="hetsa">Hetsa</string>
+    <string name="missingConnection">Uppkoppling saknas!</string>
 </resources>

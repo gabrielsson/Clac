@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
@@ -42,7 +43,7 @@ import cl.sidan.clac.access.interfaces.Poll;
 
 
 public class FragmentArr extends Fragment {
-    private List<Arr> arrlista = new ArrayList<Arr>();
+    private List<Arr> arrlista = new ArrayList<>();
     private AdapterArr arrAdapter = null;
     private SwipeRefreshLayout arrContainer = null;
     private int lastPollId = 0;
@@ -171,19 +172,21 @@ public class FragmentArr extends Fragment {
         MenuItem joinaArrItem = menu.findItem(R.id.joina_arr);
         MenuItem bangaArrItem = menu.findItem(R.id.banga_arr);
         MenuItem luraArrItem = menu.findItem(R.id.lurpassa_arr);
-        for( String deltagare : arr.getDeltagare().split(",") ) {
-            if( nummer.equals(deltagare) ) {
-                joinaArrItem.setVisible(false);
-                bangaArrItem.setVisible(true);
-                luraArrItem.setEnabled(false);
-                break;
+        if (arr != null) {
+            for( String deltagare : arr.getDeltagare().split(",") ) {
+                if( nummer.equals(deltagare) ) {
+                    joinaArrItem.setVisible(false);
+                    bangaArrItem.setVisible(true);
+                    luraArrItem.setEnabled(false);
+                    break;
+                }
             }
-        }
 
-        for( String lurpassare : arr.getKanske().split(",") ) {
-            if( !luraArrItem.isEnabled() || nummer.equals(lurpassare) ) {
-                luraArrItem.setEnabled(false);
-                break;
+            for( String lurpassare : arr.getKanske().split(",") ) {
+                if( !luraArrItem.isEnabled() || nummer.equals(lurpassare) ) {
+                    luraArrItem.setEnabled(false);
+                    break;
+                }
             }
         }
     }
@@ -195,15 +198,21 @@ public class FragmentArr extends Fragment {
 
         switch( item.getItemId() ) {
             case R.id.joina_arr:
-                new JoinArrAsync().execute(arr.getId());
+                if (arr != null) {
+                    new JoinArrAsync().execute(arr.getId());
+                }
                 return true;
 
             case R.id.banga_arr:
-                new ExitArrAsync().execute(arr.getId());
+                if (arr != null) {
+                    new ExitArrAsync().execute(arr.getId());
+                }
                 return true;
 
             case R.id.lurpassa_arr:
-                new LurpassaArrAsync().execute(arr.getId());
+                if (arr != null) {
+                    new LurpassaArrAsync().execute(arr.getId());
+                }
                 return true;
 
              case R.id.hetsa_arr:
@@ -237,8 +246,7 @@ public class FragmentArr extends Fragment {
 
         if( arr != null ) {
             String dateString = arr.getDatum();
-            GregorianCalendar cal = new GregorianCalendar();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             ParsePosition pos = new ParsePosition(0);
             Calendar date = GregorianCalendar.getInstance();
             date.setTime(formatter.parse(dateString, pos));
@@ -266,7 +274,7 @@ public class FragmentArr extends Fragment {
                             GregorianCalendar cal = new GregorianCalendar();
                             cal.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
                                     timePicker.getCurrentHour(), timePicker.getCurrentMinute());
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                             String date = formatter.format(cal.getTime());
 
                             Log.d("Arr", "Arr skapas: " + arrNamn + " @ " + arrPlats + " [" + date + "]");
@@ -332,7 +340,7 @@ public class FragmentArr extends Fragment {
             GregorianCalendar cal = new GregorianCalendar();
             cal.add(GregorianCalendar.HOUR_OF_DAY, -12);
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             String dateNow = formatter.format(cal.getTime());
 
             List<Arr> response = ((MainActivity) getActivity()).sidanAccess().readArr(dateNow);
@@ -427,12 +435,11 @@ public class FragmentArr extends Fragment {
 
                         /* Add padding to have them centered together.  */
                         int maxChars = fullTextYay.length() - fullTextNay.length();
-                        String padding = "";
                         if (maxChars > 0) {
-                            padding = new String(new char[maxChars]).replace("\0", "  ");
+                            String padding = new String(new char[maxChars]).replace("\0", "  ");
                             fullTextNay = pollNay + padding + " (" + ansNrNay + ")";
                         } else if (maxChars < 0) {
-                            padding = new String(new char[-maxChars]).replace("\0", "  ");
+                            String padding = new String(new char[-maxChars]).replace("\0", "  ");
                             fullTextYay = pollYae + padding + " (" + ansNrYae + ")";
                         }
 

@@ -8,13 +8,9 @@ import java.util.List;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.User;
 
-
-/**
- * Created by max.gabrielsson on 2014-10-16.
- */
 public class RequestEntry implements Entry {
     String signature = "";
-    ArrayList<User> kumpaner = new ArrayList<User>();
+    ArrayList<User> kumpaner = new ArrayList<>();
     BigDecimal latitude = null;
     BigDecimal longitude = null;
     String message = "";

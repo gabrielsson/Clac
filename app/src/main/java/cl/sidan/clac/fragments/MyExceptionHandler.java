@@ -137,7 +137,7 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
     }
 
     public void sendErrorMail(final StringBuilder errorContent) {
-        final AlertDialog.Builder builder= new AlertDialog.Builder(context);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         new Thread(){
             @Override
             public void run() {

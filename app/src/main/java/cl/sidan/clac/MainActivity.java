@@ -1,11 +1,13 @@
 package cl.sidan.clac;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -22,70 +24,111 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
-import cl.sidan.clac.fragments.FragmentLogin;
+import cl.sidan.clac.fragments.FragmentReadEntries;
 import cl.sidan.clac.fragments.MyExceptionHandler;
+import cl.sidan.clac.fragments.MyFragmentPagerAdapter;
 import cl.sidan.clac.fragments.MyLocationListener;
 import cl.sidan.clac.fragments.RequestEntry;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String APP_SHARED_PREFS = "cl.sidan";
+
     private SharedPreferences preferences = null;
+    private boolean isUserLoggedIn;
     private static String nummer = "";
     private static String password = "";
 
-    private ArrayList<User> kumpaner = new ArrayList<User>();
-    private ArrayList<Integer> selectedItems = new ArrayList<Integer>();
+    private ArrayList<User> kumpaner = new ArrayList<>();
+    private ArrayList<Integer> selectedItems = new ArrayList<>();
 
     private ViewPager mViewPager = null;
 
     private MyLocationListener locationListener = null;
     private Location lastKnownLocation = null;
 
-    ArrayList<Entry> notSentList = new ArrayList<Entry>();
+    ArrayList<Entry> notSentList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onResume() {
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
+        if (!isUserLoggedIn) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        isUserLoggedIn = preferences.getBoolean("userLoggedInState", false);
+        if (!isUserLoggedIn) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+        super.onRestart();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Report exceptions via mail
         Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
-        preferences = getSharedPreferences("cl.sidan", 0);
-        nummer = preferences.getString("nummer", null);
+        // Get common preferences
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
+        nummer = preferences.getString("username", null);
         password = preferences.getString("password", null);
 
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Start login activity if needed
+        if (!isUserLoggedIn) {
+            Log.d("XXX_SWO","User not logged in. Starting LoginActivity");
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        } else {
+            setContentView(R.layout.activity_main);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.writeentry);
+                }
+            });
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, FragmentReadEntries.newInstance())
+                        .commit();
             }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        if (savedInstanceState == null) {
-            /* Create Login fragment and check if login is successful. */
-            setContentView(R.layout.activity_login);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, FragmentLogin.newInstance(), "tag_login")
-                    .commit();
         }
     }
 
@@ -95,6 +138,10 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
             super.onBackPressed();
         }
     }
@@ -114,6 +161,9 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
+//            case R.id.action_logout:
+//                logOut();
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -145,11 +195,19 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void logOut() {
+        preferences.edit().clear().apply();
+
+        // Broadcast logout to other activities
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("com.package.ACTION_LOGOUT");
+        sendBroadcast(broadcastIntent);
+    }
 
     public boolean checkAndUpdateTime() {
         /* Save date to see if information is up-to-date */
         GregorianCalendar cal = new GregorianCalendar();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         cal.add(GregorianCalendar.HOUR, 5);
         String dateNow = formatter.format(cal.getTime());
         String dateOld = preferences.getString("lastTimeReportedKumpaner", "");
@@ -174,12 +232,6 @@ public class MainActivity extends AppCompatActivity
         }
         new CreateEntryAsync().execute(entry);
     }
-
-    public void removeLogin() {
-        nummer = preferences.getString("nummer", null);
-        password = preferences.getString("password", null);
-    }
-
 
     public final void notifyLocationChange() {
         if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
@@ -252,10 +304,9 @@ public class MainActivity extends AppCompatActivity
     public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {
         @Override
         protected Boolean doInBackground(Entry... entries) {
-            for(Entry e : entries) {
-                notSentList.add(e);
-            }
-            Entry e = null;
+            Collections.addAll(notSentList, entries);
+
+            Entry e;
             for(int i = 0; i < notSentList.size(); i++) {
                 e = notSentList.get(i);
                 if( onCreateEntry(e) ) {

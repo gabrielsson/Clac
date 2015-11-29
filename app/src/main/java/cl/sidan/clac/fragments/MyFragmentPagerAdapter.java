@@ -6,12 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<String> mFragmentTags;
     private FragmentManager mFragmentManager;
 
     private static final int NUMBER_OF_PAGES = 5;
-    final static class FragmentOrder {
+    public final static class FragmentOrder {
         public final static int writeentry = 0;
         public final static int readentry = 1;
         public final static int arr = 2;
@@ -27,8 +27,9 @@ class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public Fragment getFragment(int position) {
         String tag = mFragmentTags.get(position);
-        if (tag == null)
+        if (tag == null) {
             return null;
+        }
         return mFragmentManager.findFragmentByTag(tag);
     }
 

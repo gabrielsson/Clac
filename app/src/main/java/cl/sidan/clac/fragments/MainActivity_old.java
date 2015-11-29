@@ -66,9 +66,9 @@ public class MainActivity_old extends ActionBarActivity {
         if (savedInstanceState == null) {
             /* Create Login fragment and check if login is successful. */
             setContentView(R.layout.activity_main);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, FragmentLogin.newInstance(), "tag_login")
-                    .commit();
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.container, FragmentLogin.newInstance(), "tag_login")
+//                    .commit();
         }
     }
 

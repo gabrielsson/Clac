@@ -9,6 +9,7 @@
     <string name="title_units">Enhet</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
     <string name="enhet">Rapport av 1 enhet</string>
     <string name="menu_log_out">Logga Ut</string>
     <string name="menu_exit_app">Avsluta Appen</string>

@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     private MyLocationListener locationListener = null;
     private Location lastKnownLocation = null;
 
-    ArrayList<Entry> notSentList = new ArrayList<>();
+    private ArrayList<Entry> notSentList = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -161,9 +160,9 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
-//            case R.id.action_logout:
-//                logOut();
-//                return true;
+            case R.id.action_logout:
+                logOut();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -202,6 +201,7 @@ public class MainActivity extends AppCompatActivity
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("com.package.ACTION_LOGOUT");
         sendBroadcast(broadcastIntent);
+        finish();
     }
 
     public boolean checkAndUpdateTime() {

@@ -173,7 +173,7 @@ public class MainActivity_old extends ActionBarActivity {
         helpBuilder.setIcon(R.drawable.nopo);
 
         /* Fixa om detta så att man får det från en databas. */
-        final CharSequence[] kumpans = new CharSequence[85];
+        final CharSequence[] kumpans = new CharSequence[89];
         for( int i = 0; i < kumpans.length; i++) {
             int nummer = i+1;
             if( nummer == 70 )
@@ -182,6 +182,8 @@ public class MainActivity_old extends ActionBarActivity {
                 kumpans[i] = "Orättvist förlorarnummer";
             else if( "#1, #5, #6, #21, #69,".contains("#"+nummer+",") )
                 kumpans[i] = "Nej, vinnarnummer";
+            else if("#88,".contains("#"+nummer+","))
+                kumpans[i] = "Nej, pausad";
             else
                 kumpans[i] = "#" + nummer;
         }

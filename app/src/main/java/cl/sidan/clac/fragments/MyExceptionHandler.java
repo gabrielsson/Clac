@@ -129,7 +129,11 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
 
             report.append("****** END OF REPORT ******");
 
-            Log.e(MyExceptionHandler.class.getName(), "Error while sendErrorMail. " + report);
+            Log.e(MyExceptionHandler.class.getName(), "ErrorHandler will try to send mail with " +
+                    "error-report:");
+            for( String line : report.toString().split("\n") ) {
+                Log.e(MyExceptionHandler.class.getName(), line);
+            }
             sendErrorMail(report);
         } catch (Throwable ignore) {
             Log.e(MyExceptionHandler.class.getName(), "Error while sending error e-mail", ignore);

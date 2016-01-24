@@ -41,6 +41,6 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content" />
 
-    <!-- <include layout="@layout/write_entry_drawer" android:id="@+id/write_entry_drawer" /> -->
+    <!-- <include layout="@layout/write_entry_drawer" android:id="@+id/write_entry_drawer" />-->
 
 </RelativeLayout>

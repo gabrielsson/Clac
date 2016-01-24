@@ -86,17 +86,20 @@ public class FragmentReadEntries extends Fragment {
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
-
-        entriesAdapter = new AdapterEntries(rootView.getContext(), R.layout.entry, entries, font_size);
-        entriesAdapter.setNotifyOnChange(true);
+        if (entriesAdapter == null) {
+            entriesAdapter = new AdapterEntries(rootView.getContext(), R.layout.entry, entries, font_size);
+            entriesAdapter.setNotifyOnChange(true);
+        }
 
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
+
+
+
     }
 
 

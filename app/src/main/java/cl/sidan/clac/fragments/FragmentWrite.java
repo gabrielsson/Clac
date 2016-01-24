@@ -65,11 +65,11 @@ public class FragmentWrite extends Fragment {
 
         // parent.addView(drawer);
 
-        ((CheckBox) rootView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
-        ((TextView) rootView.findViewById(R.id.write_entry_text)).setText(text);
+        //((CheckBox) rootView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
+        //((TextView) rootView.findViewById(R.id.write_entry_text)).setText(text);
         rootView.findViewById(R.id.write_entry_text).requestFocus();
 
-        rootView.findViewById(R.id.bilduppladdning).setOnClickListener(new View.OnClickListener() {
+       /* rootView.findViewById(R.id.bilduppladdning).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -86,7 +86,7 @@ public class FragmentWrite extends Fragment {
                             Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
         rootView.findViewById(R.id.write_entry_send).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,20 +120,10 @@ public class FragmentWrite extends Fragment {
                     return;
                 }
 
-                Spinner enheterSpinner = (Spinner) getActivity().findViewById(R.id.write_entry_enheter);
-                int enheter = Integer.parseInt(enheterSpinner.getSelectedItem().toString());
-
-                CheckBox hemlisBox = (CheckBox) getActivity().findViewById(R.id.write_entry_secret);
-                boolean hemlis = hemlisBox.isChecked();
-
                 //MenuItem positionSettingItem = menu.findItem(R.id.position_setting);
 
                 entry.setMessage(text);
 
-                if (enheter != 0) {
-                    Log.d(getClass().getCanonicalName(), "Enheter: " + enheter);
-                    entry.setEnheter(enheter);
-                }
 
                 entry.setSecret(hemlis);
 
@@ -146,14 +136,16 @@ public class FragmentWrite extends Fragment {
 
                 // Vi sätter kumpaner i MainActivity också
                 ((MainActivity) getActivity()).createEntryAndSend(entry);
-                ((MainActivity) getActivity()).setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.readentry);
+                //((MainActivity) getActivity()).setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.readentry);
+                getActivity().getSupportFragmentManager().popBackStack();
 
                 // en Entry är skapat, resetta allt.
-                hemlisBox.setChecked(false);
-                enheterSpinner.setSelection(0);
                 entryText.setText("");
                 imageView.setTag("");
                 imageView.setImageDrawable(null);
+
+
+
             }
         });
 

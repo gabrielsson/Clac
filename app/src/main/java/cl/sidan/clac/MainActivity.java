@@ -7,10 +7,13 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -32,7 +35,8 @@ import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.fragments.FragmentReadEntries;
-import cl.sidan.clac.fragments.MyExceptionHandler;
+import cl.sidan.clac.fragments.FragmentWrite;
+//import cl.sidan.clac.fragments.MyExceptionHandler;
 import cl.sidan.clac.fragments.MyFragmentPagerAdapter;
 import cl.sidan.clac.fragments.MyLocationListener;
 import cl.sidan.clac.fragments.RequestEntry;
@@ -48,8 +52,6 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<User> kumpaner = new ArrayList<>();
     private ArrayList<Integer> selectedItems = new ArrayList<>();
-
-    private ViewPager mViewPager = null;
 
     private MyLocationListener locationListener = null;
     private Location lastKnownLocation = null;
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Report exceptions via mail
-        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+        //Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
         // Get common preferences
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
@@ -110,7 +112,10 @@ public class MainActivity extends AppCompatActivity
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.writeentry);
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragment_container, FragmentWrite.newInstance())
+                            .commit();
+
                 }
             });
 
@@ -170,10 +175,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_camera:
-                break;
+               fragment = new FragmentWrite();
+
             case R.id.nav_gallery:
                 break;
             case R.id.nav_slideshow:
@@ -189,6 +195,13 @@ public class MainActivity extends AppCompatActivity
                 throw new RuntimeException("Some functionality is obviously not implemented yet.");
         }
 
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+            item.setChecked(true);
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -230,7 +243,14 @@ public class MainActivity extends AppCompatActivity
         } else {
             Log.d("Kumpaner", "No kumpaner found.");
         }
-        new CreateEntryAsync().execute(entry);
+        //new CreateEntryAsync().execute(entry);
+
+        Fragment fragment = FragmentReadEntries.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
     public final void notifyLocationChange() {
@@ -250,16 +270,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             // GCMUtil.register(this);
         }
-    }
-
-
-    /**************************************************************************
-     * Setters
-     *************************************************************************/
-
-    /* Set the current view given a FragmentOrder item */
-    public final void setCurrentItem(int order) {
-        mViewPager.setCurrentItem(order);
     }
 
     /**************************************************************************

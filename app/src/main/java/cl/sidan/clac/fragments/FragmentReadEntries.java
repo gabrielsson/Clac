@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -28,7 +29,7 @@ import java.util.List;
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
-
+import cl.sidan.clac.interfaces.ScrollListener;
 
 public class FragmentReadEntries extends Fragment {
     private final String TAG = getClass().getCanonicalName();
@@ -76,8 +77,28 @@ public class FragmentReadEntries extends Fragment {
                 }
         );
 
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
+        ScrollListener scrl = new ScrollListener
+                .Builder(ScrollListener.ViewType.FOOTER)
+                .footer(fab)
+                .minFooterTranslation(getActivity().getResources().getDimensionPixelSize(R.dimen.fab_height))
+                .isSnappable(true)
+                .build();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, FragmentWrite.newInstance())
+                        .commit();
+            }
+        });
+
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
+        listView.setOnScrollListener(scrl);
+
         registerForContextMenu(listView);
 
         new ReadEntriesAsync().execute();

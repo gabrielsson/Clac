@@ -168,9 +168,9 @@ public class ScrollListener implements AbsListView.OnScrollListener
     private int newHeaderDiff(int diff)
     {
         if (diff < 0) { // scrolling down
-            return Math.max(totalHeaderDiff + diff, minimumHeaderTranslation);
+            return Math.max(totalHeaderDiff + diff, -minimumHeaderTranslation);
         } else { // scrolling up
-            return Math.min(Math.max(totalHeaderDiff + diff, minimumHeaderTranslation), 0);
+            return Math.min(Math.max(totalHeaderDiff + diff, -minimumHeaderTranslation), 0);
         }
     }
 

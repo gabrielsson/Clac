@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -23,18 +20,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
-import cl.sidan.clac.access.interfaces.User;
-import cl.sidan.clac.interfaces.ScrollListener;
 
 public class FragmentReadEntries extends Fragment {
     private final String TAG = getClass().getCanonicalName();

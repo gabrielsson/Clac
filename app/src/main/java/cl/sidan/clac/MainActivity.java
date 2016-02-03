@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -88,11 +87,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-
         super.onCreate(savedInstanceState);
-        // Report exceptions via mail
-        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
         // Get common preferences
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
@@ -108,6 +103,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else {
+            // Report exceptions via mail
+            Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+
             setContentView(R.layout.activity_main);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

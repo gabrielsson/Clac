@@ -23,14 +23,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
+import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.interfaces.ScrollListener;
 
 public class FragmentReadEntries extends Fragment {
@@ -46,6 +49,11 @@ public class FragmentReadEntries extends Fragment {
             readEntriesFragment = new FragmentReadEntries();
         }
         return readEntriesFragment;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -79,28 +87,8 @@ public class FragmentReadEntries extends Fragment {
                 }
         );
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-
-        ScrollListener scrl = new ScrollListener
-                .Builder(ScrollListener.ViewType.FOOTER)
-                .footer(fab)
-                .minFooterTranslation(getActivity().getResources().getDimensionPixelSize(R.dimen.fab_height))
-                .isSnappable(true)
-                .build();
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.right_drawer, FragmentWrite.newInstance())
-                        .commit();
-                ((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.END);
-            }
-        });
-
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
-        listView.setOnScrollListener(scrl);
 
         registerForContextMenu(listView);
 
@@ -121,11 +109,7 @@ public class FragmentReadEntries extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
-
-
-
     }
-
 
     @Override
     public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

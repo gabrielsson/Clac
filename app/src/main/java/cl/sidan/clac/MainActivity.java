@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.ListView;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,10 +37,11 @@ import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.fragments.FragmentReadEntries;
 import cl.sidan.clac.fragments.FragmentWrite;
-//import cl.sidan.clac.fragments.MyExceptionHandler;
+import cl.sidan.clac.fragments.MyExceptionHandler;
 import cl.sidan.clac.fragments.MyFragmentPagerAdapter;
 import cl.sidan.clac.fragments.MyLocationListener;
 import cl.sidan.clac.fragments.RequestEntry;
+import cl.sidan.clac.interfaces.ScrollListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -83,9 +88,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+
         super.onCreate(savedInstanceState);
         // Report exceptions via mail
-        //Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
         // Get common preferences
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
@@ -102,8 +109,11 @@ public class MainActivity extends AppCompatActivity
             finish();
         } else {
             setContentView(R.layout.activity_main);
+
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+
+            ListView listView = (ListView) findViewById(R.id.entries);
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -114,13 +124,28 @@ public class MainActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
-            if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, FragmentReadEntries.newInstance())
-                        .commit();
-            }
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.right_drawer, FragmentWrite.newInstance())
+                            .commit();
+                    ((DrawerLayout) findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.END);
+                }
+            });
+
+            final ScrollListener scrl = new ScrollListener
+                    .Builder()
+                    .footer(fab)
+                    .minFooterTranslation(getResources().getDimensionPixelSize(R.dimen.fab_height))
+                    .actionbar(getSupportActionBar())
+                    .isSnappable(true)
+                    .build();
+            listView.setOnScrollListener(scrl);
         }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -183,7 +208,7 @@ public class MainActivity extends AppCompatActivity
 
         if(fragment != null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment)
+                    .add(R.id.right_drawer, fragment)
                     .commit();
             item.setChecked(true);
 
@@ -229,14 +254,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             Log.d("Kumpaner", "No kumpaner found.");
         }
-        //new CreateEntryAsync().execute(entry);
-
-        Fragment fragment = FragmentReadEntries.newInstance();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+        new CreateEntryAsync().execute(entry);
     }
 
     public final void notifyLocationChange() {

@@ -1,9 +1,9 @@
 package cl.sidan.clac.interfaces;
 
 import android.animation.ObjectAnimator;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListView;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -12,39 +12,23 @@ public class ScrollListener implements AbsListView.OnScrollListener
 {
     private static Dictionary<Integer, Integer> itemHeights = new Hashtable<Integer, Integer>();
 
-    private final ViewType viewType;
-    private final View headerView;
     private final View footerView;
-    private final int minimumHeaderTranslation;
     private final int minimumFooterTranslation;
     private final boolean isSnappable; // Snap into place or not.
+    private final ActionBar actionbar;
+
+    private boolean isScrolling = false;
+    private int mLastFirstVisibleItem = 0;
 
     private int previousScrollY = 0;
-    private int totalHeaderDiff = 0;
     private int totalFooterDiff = 0;
 
     private ScrollListener(Builder builder)
     {
-        viewType = builder.viewType;
-        headerView = builder.header;
-        minimumHeaderTranslation = builder.minHeaderTranslation;
         footerView = builder.footer;
+        actionbar = builder.actionbar;
         minimumFooterTranslation = builder.minFooterTranslation;
         isSnappable = builder.isSnappable;
-    }
-
-    public enum ViewType {
-        HEADER,
-        FOOTER,
-        BOTH
-    }
-
-    public static int getScrollY(ListView lv) {
-        View c = lv.getChildAt(0);
-        if (c == null) {
-            return 0;
-        }
-        return -c.getTop() + lv.getFirstVisiblePosition() * c.getHeight();
     }
 
     public static int getScrollY(AbsListView lv) {
@@ -73,57 +57,26 @@ public class ScrollListener implements AbsListView.OnScrollListener
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState)
     {
+        if ( scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE ) {
+            isScrolling = false;
+        }
+
         if (scrollState == SCROLL_STATE_IDLE && isSnappable)
         {
-            switch (viewType)
-            {
-                case HEADER:
-                    totalHeaderDiff = slideHeader();
-                    break;
-
-                case FOOTER:
-                    totalFooterDiff = slideFooter();
-                    break;
-
-                case BOTH:
-                    totalHeaderDiff = slideHeader();
-                    totalFooterDiff = slideFooter();
-                    break;
-
-                default:
-                    break;
-            }
+            totalFooterDiff = slideFooter();
         }
-    }
-
-    private int slideHeader()
-    {
-        int midHeader = -minimumHeaderTranslation / 2;
-
-        if (-totalHeaderDiff > 0 && -totalHeaderDiff < midHeader) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(headerView, "translationY", headerView.getTranslationY(), 0);
-            anim.setDuration(100);
-            anim.start();
-            return 0;
-        } else if (-totalHeaderDiff < -minimumHeaderTranslation && -totalHeaderDiff >= midHeader) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(headerView, "translationY", headerView.getTranslationY(), minimumHeaderTranslation);
-            anim.setDuration(100);
-            anim.start();
-            return minimumHeaderTranslation;
-        }
-        return totalHeaderDiff;
     }
 
     private int slideFooter()
     {
         int midFooter = minimumFooterTranslation / 2;
 
-        if (-totalFooterDiff > 0 && -totalFooterDiff < midFooter) { // slide up
+        if (-totalFooterDiff >= 0 && -totalFooterDiff < midFooter) { // slide up
             ObjectAnimator anim = ObjectAnimator.ofFloat(footerView, "translationY", footerView.getTranslationY(), 0);
             anim.setDuration(100);
             anim.start();
             return 0;
-        } else if (-totalFooterDiff < minimumFooterTranslation && -totalFooterDiff >= midFooter) { // slide down
+        } else if (-totalFooterDiff <=  minimumFooterTranslation && -totalFooterDiff >= midFooter) { // slide down
             ObjectAnimator anim = ObjectAnimator.ofFloat(footerView, "translationY", footerView.getTranslationY(), minimumFooterTranslation);
             anim.setDuration(100);
             anim.start();
@@ -135,43 +88,27 @@ public class ScrollListener implements AbsListView.OnScrollListener
     @Override
     public void onScroll(AbsListView listview, int firstVisibleItem, int visibleItemCount, int totalItemCount)
     {
+        final int currentFirstVisibleItem = listview.getFirstVisiblePosition();
+
+        if (currentFirstVisibleItem > mLastFirstVisibleItem && !isScrolling && null != actionbar) {
+            isScrolling = true;
+            actionbar.hide();
+        } else if (currentFirstVisibleItem < mLastFirstVisibleItem && !isScrolling && null != actionbar) {
+            isScrolling = true;
+            actionbar.show();
+        }
+
+        mLastFirstVisibleItem = currentFirstVisibleItem;
+
         int scrollY = getScrollY(listview);
         int diff = previousScrollY - scrollY;
 
         if (diff != 0) {
-            switch (viewType) {
-                case HEADER:
-                    totalHeaderDiff = newHeaderDiff(diff);
-                    headerView.setTranslationY(totalHeaderDiff);
-                    break;
-
-                case FOOTER:
-                    totalFooterDiff = newFooterDiff(diff);
-                    footerView.setTranslationY(-totalFooterDiff);
-                    break;
-
-                case BOTH:
-                    totalHeaderDiff = newHeaderDiff(diff);
-                    totalFooterDiff = newFooterDiff(diff);
-                    headerView.setTranslationY(totalHeaderDiff);
-                    footerView.setTranslationY(-totalFooterDiff);
-                    break;
-
-                default:
-                    break;
-            }
+            totalFooterDiff = newFooterDiff(diff);
+            footerView.setTranslationY(-totalFooterDiff);
         }
 
         previousScrollY = scrollY;
-    }
-
-    private int newHeaderDiff(int diff)
-    {
-        if (diff < 0) { // scrolling down
-            return Math.max(totalHeaderDiff + diff, -minimumHeaderTranslation);
-        } else { // scrolling up
-            return Math.min(Math.max(totalHeaderDiff + diff, -minimumHeaderTranslation), 0);
-        }
     }
 
     private int newFooterDiff(int diff)
@@ -185,27 +122,10 @@ public class ScrollListener implements AbsListView.OnScrollListener
 
     public static class Builder
     {
-        private final ViewType viewType;
-
-        private View header = null;
-        private int minHeaderTranslation = 0;
         private View footer = null;
         private int minFooterTranslation = 0;
         private boolean isSnappable = false;
-
-        public Builder(ViewType viewType) {
-            this.viewType = viewType;
-        }
-
-        public Builder header(View header) {
-            this.header = header;
-            return this;
-        }
-
-        public Builder minHeaderTranslation(int minHeaderTranslation) {
-            this.minHeaderTranslation = minHeaderTranslation;
-            return this;
-        }
+        private ActionBar actionbar;
 
         public Builder footer(View footer) {
             this.footer = footer;
@@ -224,6 +144,11 @@ public class ScrollListener implements AbsListView.OnScrollListener
 
         public ScrollListener build() {
             return new ScrollListener(this);
+        }
+
+        public Builder actionbar(ActionBar ab) {
+            this.actionbar = ab;
+            return this;
         }
     }
 }

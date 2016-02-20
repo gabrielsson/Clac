@@ -203,7 +203,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_write_entry:
                 fragment = FragmentWrite.newInstance();
                 break;
-
             case R.id.nav_view:
                 fragment = FragmentArr.newInstance();
                 break;

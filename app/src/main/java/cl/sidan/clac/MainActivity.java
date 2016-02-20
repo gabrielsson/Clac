@@ -19,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ListView;
 
 import java.net.InetAddress;
@@ -35,7 +34,6 @@ import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.fragments.FragmentArr;
-import cl.sidan.clac.fragments.FragmentReadEntries;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.fragments.MyExceptionHandler;
@@ -132,7 +130,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.right_drawer, FragmentWrite.newInstance())
+                            .replace(R.id.right_drawer, getSupportFragmentManager().findFragmentByTag("write"))
                             .commit();
                     drawer.openDrawer(GravityCompat.END);
                 }
@@ -147,7 +145,12 @@ public class MainActivity extends AppCompatActivity
                     .build();
             listView.setOnScrollListener(scrl);
 
-
+            // FragmentWrite is the default fragment
+            getSupportFragmentManager().beginTransaction()
+                    .add(new FragmentArr(), FragmentArr.class.getCanonicalName())
+                    .add(new FragmentSettings(), FragmentSettings.class.getCanonicalName())
+                    .replace(R.id.right_drawer, new FragmentWrite(), FragmentWrite.class.getCanonicalName())
+                    .commit();
         }
     }
 
@@ -179,8 +182,11 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
+
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.right_drawer, FragmentSettings.newInstance())
+                        .replace(R.id.right_drawer,
+                                getSupportFragmentManager().findFragmentByTag(
+                                        FragmentSettings.class.getCanonicalName()))
                         .commit();
                 drawer.openDrawer(GravityCompat.END);
                 return true;
@@ -200,18 +206,12 @@ public class MainActivity extends AppCompatActivity
                 //Do nothing, drawers will be closed since no new fragment is loaded.
                 break;
             case R.id.nav_write_entry:
-                fragment = getSupportFragmentManager().findFragmentByTag(FragmentWrite.class.getCanonicalName());
-                if (fragment == null) {
-                    fragment = new FragmentWrite();
-                    getSupportFragmentManager().beginTransaction().add(fragment, fragment.getClass().getCanonicalName()).commit();
-                }
+                fragment = getSupportFragmentManager().findFragmentByTag(
+                        FragmentWrite.class.getCanonicalName());
                 break;
             case R.id.nav_view:
-                fragment = getSupportFragmentManager().findFragmentByTag(FragmentArr.class.getCanonicalName());
-                if (fragment == null) {
-                    fragment = new FragmentArr();
-                    getSupportFragmentManager().beginTransaction().add(fragment, fragment.getClass().getCanonicalName()).commit();
-                }
+                fragment = getSupportFragmentManager().findFragmentByTag(
+                        FragmentArr.class.getCanonicalName());
                 break;
             case R.id.nav_slideshow:
                 break;

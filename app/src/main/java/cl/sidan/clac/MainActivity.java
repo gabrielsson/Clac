@@ -200,11 +200,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         switch (item.getItemId()) {
-            case R.id.nav_camera:
+            case R.id.nav_write_entry:
                 fragment = FragmentWrite.newInstance();
                 break;
 
-            case R.id.nav_gallery:
+            case R.id.nav_view:
                 fragment = FragmentArr.newInstance();
                 break;
             case R.id.nav_slideshow:

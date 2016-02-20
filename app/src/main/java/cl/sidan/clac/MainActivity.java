@@ -34,7 +34,9 @@ import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentReadEntries;
+import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.fragments.MyExceptionHandler;
 import cl.sidan.clac.fragments.MyFragmentPagerAdapter;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     private Location lastKnownLocation = null;
 
     private ArrayList<Entry> notSentList = new ArrayList<>();
+    private DrawerLayout drawer;
 
     @Override
     protected void onResume() {
@@ -106,6 +109,8 @@ public class MainActivity extends AppCompatActivity
             // Report exceptions via mail
             Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
+            // Standard view consist of a FragmentReadEntries, together with a Actionbar menu,
+            // and a FloatingActionButton
             setContentView(R.layout.activity_main);
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity
 
             ListView listView = (ListView) findViewById(R.id.entries);
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
@@ -129,7 +134,7 @@ public class MainActivity extends AppCompatActivity
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.right_drawer, FragmentWrite.newInstance())
                             .commit();
-                    ((DrawerLayout) findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.END);
+                    drawer.openDrawer(GravityCompat.END);
                 }
             });
 
@@ -141,6 +146,11 @@ public class MainActivity extends AppCompatActivity
                     .isSnappable(true)
                     .build();
             listView.setOnScrollListener(scrl);
+
+            // FragmentWrite is the default fragmentp
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.right_drawer, FragmentWrite.newInstance())
+                    .commit();
         }
     }
 
@@ -173,6 +183,10 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.right_drawer, FragmentSettings.newInstance())
+                        .commit();
+                drawer.openDrawer(GravityCompat.END);
                 return true;
             case R.id.action_logout:
                 logOut();
@@ -187,9 +201,11 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_camera:
-               fragment = new FragmentWrite();
+                fragment = FragmentWrite.newInstance();
+                break;
 
             case R.id.nav_gallery:
+                fragment = FragmentArr.newInstance();
                 break;
             case R.id.nav_slideshow:
                 break;
@@ -206,10 +222,10 @@ public class MainActivity extends AppCompatActivity
 
         if(fragment != null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.right_drawer, fragment)
+                    .replace(R.id.right_drawer, fragment)
                     .commit();
             item.setChecked(true);
-
+            drawer.openDrawer(GravityCompat.END);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

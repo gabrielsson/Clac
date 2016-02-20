@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity
             finish();
         } else {
             // Report exceptions via mail
-            Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+            //Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
             // Standard view consist of a FragmentReadEntries, together with a Actionbar menu,
             // and a FloatingActionButton
@@ -147,10 +147,7 @@ public class MainActivity extends AppCompatActivity
                     .build();
             listView.setOnScrollListener(scrl);
 
-            // FragmentWrite is the default fragmentp
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.right_drawer, FragmentWrite.newInstance())
-                    .commit();
+
         }
     }
 
@@ -203,19 +200,24 @@ public class MainActivity extends AppCompatActivity
                 //Do nothing, drawers will be closed since no new fragment is loaded.
                 break;
             case R.id.nav_write_entry:
-                fragment = FragmentWrite.newInstance();
+                fragment = getSupportFragmentManager().findFragmentByTag(FragmentWrite.class.getCanonicalName());
+                if (fragment == null) {
+                    fragment = new FragmentWrite();
+                    getSupportFragmentManager().beginTransaction().add(fragment, fragment.getClass().getCanonicalName()).commit();
+                }
                 break;
             case R.id.nav_view:
-                fragment = FragmentArr.newInstance();
+                fragment = getSupportFragmentManager().findFragmentByTag(FragmentArr.class.getCanonicalName());
+                if (fragment == null) {
+                    fragment = new FragmentArr();
+                    getSupportFragmentManager().beginTransaction().add(fragment, fragment.getClass().getCanonicalName()).commit();
+                }
                 break;
             case R.id.nav_slideshow:
                 break;
             case R.id.nav_manage:
                 break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
+
             default:
                 // Kill
                 throw new RuntimeException("Some functionality is obviously not implemented yet.");

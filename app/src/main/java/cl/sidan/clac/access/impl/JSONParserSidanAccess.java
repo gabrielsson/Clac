@@ -340,6 +340,20 @@ public class JSONParserSidanAccess implements SidanAccess {
         return true;
     }
 
+    @Override
+    public List<User> readMemebers() {
+        JSONObject json = invoke("GetKumpaner", "");
+        JSONArray array = json.optJSONArray("Kumpaner");
+        List<User> result = new ArrayList<>();
+        if (array != null) {
+            for (int i = 0; i<array.length(); i++) {
+                result.add(new JSONObjectUser(array.optJSONObject(i)));
+            }
+        }
+
+        return result;
+    }
+
 
     private JSONObject invoke(String function, String requestString) {
         String fullUrl = BASE_URL + function + "/json";

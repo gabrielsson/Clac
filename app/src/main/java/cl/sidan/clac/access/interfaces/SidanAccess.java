@@ -162,5 +162,9 @@ public interface SidanAccess {
      * Just tries access to WS
      * @return success
      */
+
     public boolean authenticateUser();
+
+
+    List<User> readMemebers();
 }

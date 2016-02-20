@@ -20,4 +20,19 @@ public class JSONObjectUser implements User {
         }
         return nummer;
     }
+
+    @Override
+    public String getName() {
+        return obj.optString("Name");
+    }
+
+    @Override
+    public String getIm() {
+        return null;
+    }
+
+    @Override
+    public String Title() {
+        return null;
+    }
 }

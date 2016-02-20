@@ -217,12 +217,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_manage:
                 fragment = getReusedFragment(new FragmentWrite());
                 break;
-            case R.id.nav_map:
-                break;
-            case R.id.nav_ninja:
-                item.setChecked(true);
-
-                break;
             default:
                 // Kill
                 throw new RuntimeException("Some functionality is obviously not implemented yet.");

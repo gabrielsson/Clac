@@ -33,6 +33,7 @@ import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.fragments.MyLocationListener;
@@ -204,7 +205,9 @@ public class MainActivity extends AppCompatActivity
                 fragment = getReusedFragment(new FragmentWrite());
                 break;
             case R.id.nav_view:
-
+                break;
+            case R.id.nav_members:
+                fragment = getReusedFragment(new FragmentMembers());
                 break;
             case R.id.nav_slideshow:
                 break;
@@ -231,7 +234,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment getReusedFragment(Fragment instanceFragment) {
         Fragment reusedFragment = getSupportFragmentManager().findFragmentByTag(instanceFragment.getClass().getCanonicalName());
         if (reusedFragment == null) {
-            getSupportFragmentManager().beginTransaction().add(instanceFragment, FragmentWrite.class.getCanonicalName());
+            getSupportFragmentManager().beginTransaction().add(instanceFragment, instanceFragment.getClass().getCanonicalName());
             reusedFragment = instanceFragment;
         }
         return reusedFragment;

@@ -4,7 +4,9 @@ import cl.sidan.clac.access.interfaces.User;
 
 public class RequestUser implements User {
     private String signature = "";
-
+    private String name = "";
+    private String im = "";
+    private String title = "";
 
     public RequestUser(String signature) {
         if( signature.startsWith("#") ) {
@@ -21,18 +23,16 @@ public class RequestUser implements User {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public String getIm() {
-        return null;
+        return im;
     }
 
     @Override
     public String getTitle() {
-        return null;
+        return title;
     }
-
-
 }

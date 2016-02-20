@@ -3,6 +3,7 @@ package cl.sidan.clac;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
+
             toggle.syncState();
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -127,12 +129,15 @@ public class MainActivity extends AppCompatActivity
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Fragment fragment = getReusedFragment(new FragmentWrite());
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.right_drawer, getSupportFragmentManager().findFragmentByTag("write"))
+                            .replace(R.id.right_drawer, fragment)
                             .commit();
+
                     drawer.openDrawer(GravityCompat.END);
                 }
             });
+
 
             final ScrollListener scrl = new ScrollListener
                     .Builder()
@@ -175,11 +180,9 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:
-
+                Fragment fragment = getReusedFragment(new FragmentSettings());
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.right_drawer,
-                                getSupportFragmentManager().findFragmentByTag(
-                                        FragmentSettings.class.getCanonicalName()))
+                        .replace(R.id.right_drawer, fragment)
                         .commit();
                 drawer.openDrawer(GravityCompat.END);
                 return true;
@@ -214,7 +217,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_manage:
                 fragment = getReusedFragment(new FragmentWrite());
                 break;
+            case R.id.nav_map:
+                break;
+            case R.id.nav_ninja:
+                item.setChecked(true);
 
+                break;
             default:
                 // Kill
                 throw new RuntimeException("Some functionality is obviously not implemented yet.");

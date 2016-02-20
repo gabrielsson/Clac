@@ -28,6 +28,14 @@
             android:layout_height="wrap_content"
             android:text="@string/write_entry_send" />
 
+        <Spinner
+            android:id="@+id/number_of_beers"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            />
+
         <ImageView
             android:id="@+id/write_entry_imagechoosen"
             android:contentDescription="@string/imagechosen"

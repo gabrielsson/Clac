@@ -1,6 +1,5 @@
 package cl.sidan.clac.fragments;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,12 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -69,6 +69,11 @@ public class FragmentWrite extends Fragment {
         //((TextView) rootView.findViewById(R.id.write_entry_text)).setText(text);
         rootView.findViewById(R.id.write_entry_text).requestFocus();
 
+        final Spinner beers = (Spinner) rootView.findViewById(R.id.number_of_beers);
+        String[] bira = {"0", "1", "2", "3", "4", "5", "??"};
+        String[] biraSubtext = {"Inga öl", "Helan", "Halvan", "Tersen", "Kvarten", "Kvinten", "Kreaturens (åter)uppståndelse"};
+        beers.setAdapter(new MyBeerAdapter(inflater, getActivity(), R.layout.beer_spinner_item, bira, biraSubtext));
+
        /* rootView.findViewById(R.id.bilduppladdning).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,8 +99,17 @@ public class FragmentWrite extends Fragment {
                 Log.d(getClass().getCanonicalName(), "writeEntrySend.onClick()");
 
                 EditText entryText = (EditText) getActivity().findViewById(R.id.write_entry_text);
+                Spinner entryBeers = (Spinner) getActivity().findViewById(R.id.number_of_beers);
                 String text = entryText.getText().toString();
                 RequestEntry entry = new RequestEntry();
+
+                int numBeers = entryBeers.getSelectedItemPosition();
+                Log.d(getClass().getCanonicalName(), "Reporting " + numBeers + " beers");
+                if (numBeers == 6) {
+                    entry.setEnheter(16);
+                } else {
+                    entry.setEnheter(numBeers);
+                }
 
                 /* Ladda upp bild */
                 ImageView imageView = (ImageView) getActivity().findViewById(R.id.write_entry_imagechoosen);
@@ -115,7 +129,7 @@ public class FragmentWrite extends Fragment {
                     Log.d("IMAGEDRAWER", "Base64Image length: " + base64Image.length());
                 }
 
-                if (text.trim().isEmpty() && base64Image == null) {
+                if (text.trim().isEmpty() && base64Image == null && numBeers == 0) {
                     Toast.makeText(view.getContext(), getString(R.string.write_entry_not_empty), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -123,8 +137,6 @@ public class FragmentWrite extends Fragment {
                 //MenuItem positionSettingItem = menu.findItem(R.id.position_setting);
 
                 entry.setMessage(text);
-
-
                 entry.setSecret(hemlis);
 
                 boolean reportPosition = ((MainActivity) getActivity()).getPrefs().getBoolean("positionSetting", false);
@@ -143,9 +155,11 @@ public class FragmentWrite extends Fragment {
                 entryText.setText("");
                 imageView.setTag("");
                 imageView.setImageDrawable(null);
+                entryBeers.setSelection(0);
 
-
-
+                // Stäng meny
+                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.END);
             }
         });
 

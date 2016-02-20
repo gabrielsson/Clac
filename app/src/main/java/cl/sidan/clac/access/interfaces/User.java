@@ -8,4 +8,5 @@ public interface User {
     String getName();
     String getIm();
     String getTitle();
+    String getPhone();
 }

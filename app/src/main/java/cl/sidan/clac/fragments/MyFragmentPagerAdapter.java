@@ -17,6 +17,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         public final static int arr = 2;
         public final static int settings = 3;
         public final static int versionupdate = 4;
+        public final static int members = 5;
     }
 
     public MyFragmentPagerAdapter(FragmentManager fm) {
@@ -63,6 +64,8 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
                 return FragmentSettings.newInstance();
             case FragmentOrder.versionupdate:
                 return FragmentVersionUpdate.newInstance();
+            case FragmentOrder.members:
+                return FragmentMembers.newInstance();
             default:
                 return null;
         }

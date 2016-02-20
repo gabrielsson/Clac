@@ -14,7 +14,7 @@ public class JSONObjectUser implements User {
 
     @Override
     public String getSignature() {
-        String nummer = obj.optString("SideKickId");
+        String nummer = obj.optString("Number");
         if(!nummer.startsWith("#")) {
             nummer = "#" + nummer;
         }
@@ -34,5 +34,10 @@ public class JSONObjectUser implements User {
     @Override
     public String getTitle() {
         return obj.optString("Title");
+    }
+
+    @Override
+    public String getPhone() {
+        return obj.optString("Phone");
     }
 }

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ListView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="cl.sidan.clac.fragments.FragmentMembers"
+    android:orientation="vertical"
+    android:id="@+id/memberList"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:background="@color/background_turqoise"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="cl.sidan.clac.fragments.FragmentMembers"
     tools:listitem="@layout/fragment_member" />
+
+<!--
+android:name="cl.sidan.clac.fragments.FragmentMembers"
+tools:context="cl.sidan.clac.fragments.FragmentMembers"
+app:layoutManager="LinearLayoutManager"-->

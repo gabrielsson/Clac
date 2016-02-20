@@ -1,21 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:background="@color/background_turqoise">
+    android:layout_gravity="start"
+    android:gravity="start"
+    android:background="@drawable/background">
 
     <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
+        android:id="@+id/memberSignature"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:text="#78" />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/memberName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        android:layout_marginTop="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_toEndOf="@id/memberSignature"
+        android:text="Christofer Benett" />
+
+    <TextView
+        android:id="@+id/memberNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginLeft="10dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_toEndOf="@id/memberName"
+        android:text="0730-257634" />
+
+    <TextView
+        android:id="@+id/memberTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_below="@id/memberName"
+        android:layout_toEndOf="@id/memberSignature"
+        android:text="Yrkesmilitär" />
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:background="@color/gray" />
+</RelativeLayout>

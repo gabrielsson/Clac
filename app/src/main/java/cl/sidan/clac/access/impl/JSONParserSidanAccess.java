@@ -350,7 +350,6 @@ public class JSONParserSidanAccess implements SidanAccess {
                 result.add(new JSONObjectUser(array.optJSONObject(i)));
             }
         }
-
         return result;
     }
 

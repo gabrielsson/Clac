@@ -200,6 +200,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         switch (item.getItemId()) {
+            case R.id.nav_read_entries:
+                //Do nothing, drawers will be closed since no new fragment is loaded.
+                break;
             case R.id.nav_write_entry:
                 fragment = FragmentWrite.newInstance();
                 break;

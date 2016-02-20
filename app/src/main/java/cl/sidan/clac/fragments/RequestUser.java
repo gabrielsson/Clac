@@ -17,4 +17,19 @@ public class RequestUser implements User {
     public String getSignature() {
         return signature;
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getIm() {
+        return null;
+    }
+
+    @Override
+    public String Title() {
+        return null;
+    }
 }

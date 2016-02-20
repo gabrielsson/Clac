@@ -341,7 +341,7 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public List<User> readMemebers() {
+    public List<User> readMembers() {
         JSONObject json = invoke("GetKumpaner", "");
         JSONArray array = json.optJSONArray("Kumpaner");
         List<User> result = new ArrayList<>();

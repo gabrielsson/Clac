@@ -28,11 +28,11 @@ public class JSONObjectUser implements User {
 
     @Override
     public String getIm() {
-        return null;
+        return obj.optString("Im");
     }
 
     @Override
-    public String Title() {
-        return null;
+    public String getTitle() {
+        return obj.optString("Title");
     }
 }

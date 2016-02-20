@@ -166,5 +166,5 @@ public interface SidanAccess {
     public boolean authenticateUser();
 
 
-    List<User> readMemebers();
+    List<User> readMembers();
 }

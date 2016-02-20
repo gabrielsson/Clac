@@ -5,6 +5,7 @@ import cl.sidan.clac.access.interfaces.User;
 public class RequestUser implements User {
     private String signature = "";
 
+
     public RequestUser(String signature) {
         if( signature.startsWith("#") ) {
             this.signature = signature;
@@ -29,7 +30,9 @@ public class RequestUser implements User {
     }
 
     @Override
-    public String Title() {
+    public String getTitle() {
         return null;
     }
+
+
 }

@@ -33,11 +33,8 @@ import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
-import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
-import cl.sidan.clac.fragments.MyExceptionHandler;
-import cl.sidan.clac.fragments.MyFragmentPagerAdapter;
 import cl.sidan.clac.fragments.MyLocationListener;
 import cl.sidan.clac.fragments.RequestEntry;
 import cl.sidan.clac.interfaces.ScrollListener;
@@ -145,12 +142,7 @@ public class MainActivity extends AppCompatActivity
                     .build();
             listView.setOnScrollListener(scrl);
 
-            // FragmentWrite is the default fragment
-            getSupportFragmentManager().beginTransaction()
-                    .add(new FragmentArr(), FragmentArr.class.getCanonicalName())
-                    .add(new FragmentSettings(), FragmentSettings.class.getCanonicalName())
-                    .replace(R.id.right_drawer, new FragmentWrite(), FragmentWrite.class.getCanonicalName())
-                    .commit();
+
         }
     }
 
@@ -201,21 +193,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
+        // FragmentWrite is the default fragment
+
         switch (item.getItemId()) {
             case R.id.nav_read_entries:
+                item.setChecked(true);
                 //Do nothing, drawers will be closed since no new fragment is loaded.
                 break;
             case R.id.nav_write_entry:
-                fragment = getSupportFragmentManager().findFragmentByTag(
-                        FragmentWrite.class.getCanonicalName());
+                fragment = getReusedFragment(new FragmentWrite());
                 break;
             case R.id.nav_view:
-                fragment = getSupportFragmentManager().findFragmentByTag(
-                        FragmentArr.class.getCanonicalName());
+
                 break;
             case R.id.nav_slideshow:
                 break;
             case R.id.nav_manage:
+                fragment = getReusedFragment(new FragmentWrite());
                 break;
 
             default:
@@ -233,6 +227,16 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private Fragment getReusedFragment(Fragment instanceFragment) {
+        Fragment reusedFragment = getSupportFragmentManager().findFragmentByTag(instanceFragment.getClass().getCanonicalName());
+        if (reusedFragment == null) {
+            getSupportFragmentManager().beginTransaction().add(instanceFragment, FragmentWrite.class.getCanonicalName());
+            reusedFragment = instanceFragment;
+        }
+        return reusedFragment;
+    }
+
 
     public void logOut() {
         preferences.edit().clear().apply();

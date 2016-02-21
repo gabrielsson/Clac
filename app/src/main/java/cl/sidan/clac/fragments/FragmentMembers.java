@@ -2,7 +2,9 @@ package cl.sidan.clac.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +30,7 @@ import java.util.List;
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Arr;
+import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.User;
 
 /**
@@ -69,9 +74,64 @@ public class FragmentMembers extends Fragment {
         memberList.setAdapter(memberAdapter);
         registerForContextMenu(memberList);
 
+        registerForContextMenu(memberList);
+
         new ReadMembersAsync().execute();
 
         return rootView;
+    }
+
+    @Override
+    public final void onCreateContextMenu(ContextMenu menu, View v,
+                                          ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_members, menu);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        User user = memberAdapter.getItem(info.position);
+
+        MenuItem callItem = menu.findItem(R.id.member_call);
+        MenuItem smsItem = menu.findItem(R.id.member_sms);
+        MenuItem mailItem = menu.findItem(R.id.member_mail);
+
+        if (user != null) {
+           callItem.setEnabled(true);
+           smsItem.setEnabled(true);
+           mailItem.setEnabled(true);
+        }
+        else{
+            smsItem.setEnabled(false);
+            callItem.setEnabled(false);
+            mailItem.setEnabled(false);
+        }
+
+    }
+
+    @Override
+    public final boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Intent intent;
+        User user = memberAdapter.getItem(info.position);
+
+        switch (item.getItemId()) {
+            case R.id.member_call:
+                intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + user.getPhone()));
+                startActivity(intent);
+                return true;
+
+            case R.id.member_sms:
+                intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("smsto:" + user.getPhone()));
+                startActivity(intent);
+                return true;
+
+            case R.id.member_mail:
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     @Override

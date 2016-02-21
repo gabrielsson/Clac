@@ -6,10 +6,21 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:icon="@android:drawable/ic_menu_preferences"
+
+
+    app:showAsAction="never" />
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="@string/action_logout"
         app:showAsAction="never" />
+    <item android:title="Other"
+        android:icon="@android:drawable/ic_menu_edit" >
+        <menu>
+            <item android:title="Byt lösenord"
+                android:id="@+id/action_change_password"
+                android:icon="@android:drawable/ic_lock_idle_lock"/>
+        </menu>
+    </item>
 </menu>

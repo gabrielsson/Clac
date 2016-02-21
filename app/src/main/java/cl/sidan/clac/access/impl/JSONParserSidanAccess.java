@@ -353,6 +353,11 @@ public class JSONParserSidanAccess implements SidanAccess {
         return result;
     }
 
+    @Override
+    public boolean updatePassword(String forSignature, String password, String admin) {
+        JSONObject jsonObject = invoke("ChangePassword", "User=" + forSignature + "&Password=" + password + "&Admin=" + admin);
+        return true;
+    }
 
     private JSONObject invoke(String function, String requestString) {
         String fullUrl = BASE_URL + function + "/json";

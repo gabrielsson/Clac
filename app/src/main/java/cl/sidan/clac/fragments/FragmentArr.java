@@ -167,7 +167,7 @@ public class FragmentArr extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Arr arr = arrAdapter.getItem(info.position);
 
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", "");
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", "");
 
         MenuItem joinaArrItem = menu.findItem(R.id.joina_arr);
         MenuItem bangaArrItem = menu.findItem(R.id.banga_arr);
@@ -284,7 +284,7 @@ public class FragmentArr extends Fragment {
                             arr.setNamn(arrNamn);
                             arr.setPlats(arrPlats);
                             arr.setDatum(date);
-                            arr.setDeltagare(((MainActivity) getActivity()).getPrefs().getString("nummer", null));
+                            arr.setDeltagare(((MainActivity) getActivity()).getPrefs().getString("number", null));
 
                             new CreateOrUpdateArrAsync().execute(arr);
                         }
@@ -297,7 +297,7 @@ public class FragmentArr extends Fragment {
     }
 
     private void deltaArr(Integer id, boolean delta) {
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", null);
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
         if( delta ) {
             ((MainActivity) getActivity()).sidanAccess().registerArr(id, nummer);
         } else {
@@ -307,7 +307,7 @@ public class FragmentArr extends Fragment {
     }
 
     private void lurpassaArr(Integer id) {
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", null);
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
         ((MainActivity) getActivity()).sidanAccess().lurpassaArr(id, nummer);
         Log.d("Arr", nummer + " lurpassar på arr: " + id);
     }

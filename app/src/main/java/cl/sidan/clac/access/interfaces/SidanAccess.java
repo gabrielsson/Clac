@@ -167,4 +167,6 @@ public interface SidanAccess {
 
 
     List<User> readMembers();
+
+    boolean updatePassword(String forSignature, String password, String admin);
 }

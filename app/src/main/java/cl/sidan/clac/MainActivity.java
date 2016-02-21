@@ -3,7 +3,6 @@ package cl.sidan.clac;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +33,7 @@ import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.fragments.FragmentChangePassword;
 import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentSettings;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
 
     private SharedPreferences preferences = null;
     private boolean isUserLoggedIn;
-    private static String nummer = "";
+    public static String number = "";
     private static String password = "";
 
     private ArrayList<User> kumpaner = new ArrayList<>();
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         // Get common preferences
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
         isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
-        nummer = preferences.getString("username", null);
+        number = preferences.getString("username", null);
         password = preferences.getString("password", null);
 
         // Start login activity if needed
@@ -179,9 +179,10 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Fragment fragment = getReusedFragment(new FragmentSettings());
+                fragment = getReusedFragment(new FragmentSettings());
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.right_drawer, fragment)
                         .commit();
@@ -189,6 +190,13 @@ public class MainActivity extends AppCompatActivity
                 return true;
             case R.id.action_logout:
                 logOut();
+                return true;
+            case R.id.action_change_password:
+                fragment = getReusedFragment(new FragmentChangePassword());
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.right_drawer, fragment)
+                        .commit();
+                drawer.openDrawer(GravityCompat.END);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -230,9 +238,10 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.right_drawer, fragment)
                     .commit();
-            item.setChecked(true);
             drawer.openDrawer(GravityCompat.END);
         }
+        item.setChecked(true);
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -322,9 +331,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public boolean isLoggedIn() {
-        return !(nummer == null ||
-                nummer.isEmpty() ||
-                "#".equals(nummer)) &&
+        return !(number == null ||
+                number.isEmpty() ||
+                "#".equals(number)) &&
                 sidanAccess().authenticateUser();
     }
 
@@ -341,7 +350,7 @@ public class MainActivity extends AppCompatActivity
      *************************************************************************/
 
     private static class LazyHolder {
-        private static SidanAccess INSTANCE = new JSONParserSidanAccess(nummer, password);
+        private static SidanAccess INSTANCE = new JSONParserSidanAccess(number, password);
     }
 
     public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {
@@ -374,7 +383,7 @@ public class MainActivity extends AppCompatActivity
 
             if( isSuccess ) {
                 Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
-                // GCMUtil.notifyGCM(getApplicationContext(), nummer, entry.getMessage());
+                // GCMUtil.notifyGCM(getApplicationContext(), number, entry.getMessage());
             }
 
             return isSuccess;

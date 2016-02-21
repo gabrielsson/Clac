@@ -119,7 +119,7 @@ public class FragmentReadEntries extends Fragment {
         Entry e = entriesAdapter.getItem(info.position);
 
         MenuItem likeItem = menu.findItem(R.id.like_entry);
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", "");
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", "");
         if (e != null) {
             likeItem.setEnabled(!nummer.equals(e.getSignature()));
         }
@@ -264,7 +264,7 @@ public class FragmentReadEntries extends Fragment {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("nummer", null);
+        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
         ((MainActivity) getActivity()).sidanAccess().createLike(i, nummer, host);
         Log.d("Debug", "Liked " + i);
     }

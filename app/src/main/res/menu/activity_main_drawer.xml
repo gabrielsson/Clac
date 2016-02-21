@@ -27,6 +27,16 @@
             android:id="@+id/nav_manage"
             android:icon="@android:drawable/ic_menu_manage"
             android:title="Inställningar" />
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="Kart-mode" />
+        <item
+            android:id="@+id/nav_ninja"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="Ninja-mode" />
+
+
     </group>
 
 </menu>

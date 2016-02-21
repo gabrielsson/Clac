@@ -56,7 +56,7 @@ public class MainActivity_old extends ActionBarActivity {
         Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
         preferences = getSharedPreferences("cl.sidan", 0);
-        nummer = preferences.getString("nummer", null);
+        nummer = preferences.getString("number", null);
         password = preferences.getString("password", null);
 
         if( preferences.getBoolean("positionSetting", true) ) {
@@ -131,7 +131,7 @@ public class MainActivity_old extends ActionBarActivity {
      * så att MainActivity är så liten som möjligt.
      */
     public final void removeLogin() {
-        nummer = preferences.getString("nummer", null);
+        nummer = preferences.getString("number", null);
         password = preferences.getString("password", null);
 
         if( loggedIn() ) {
@@ -342,7 +342,7 @@ public class MainActivity_old extends ActionBarActivity {
 
         if( isSuccess ) {
             Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
-            // GCMUtil.notifyGCM(getApplicationContext(), nummer, entry.getMessage());
+            // GCMUtil.notifyGCM(getApplicationContext(), number, entry.getMessage());
         }
 
         return isSuccess;

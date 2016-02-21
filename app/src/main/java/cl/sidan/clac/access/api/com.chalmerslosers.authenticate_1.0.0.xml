@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?><fileRep:Module xmlns:fileRep="http://jeeves.se/api/repository/file" id="com.chalmerslosers.authenticate" version="1.0.0" moduleFormatVersion="2" xmlns:q0="http://jeeves.se/api/core" xmlns:q1="http://jeeves.se/api/interception/text/definition" xmlns:q2="http://jeeves.se/api/interception/javascript/definition" xmlns:q3="http://jeeves.se/api/db" xmlns:q4="http://jeeves.se/api/interception/codec/definition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <q0:Repository fileRep:id="com.chalmerslosers.authenticate.1" alias="Authenticate" namespace="http://chalmerslosers.com/authenticate">
+    <fileRep:properties>
+      <q0:alias>Authenticate</q0:alias>
+      <q0:namespace>http://chalmerslosers.com/authenticate</q0:namespace>
+    </fileRep:properties>
+    <q0:Services>
+      <q0:Service fileRep:id="com.chalmerslosers.authenticate.2" name="AuthenticateUser">
+        <fileRep:properties>
+          <q0:name>AuthenticateUser</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q1:SubstringTemplate fileRep:id="com.chalmerslosers.authenticate.3" contextVariable="User" name="extract number from username" startValue="1">
+            <fileRep:properties>
+              <q1:contextVariable>User</q1:contextVariable>
+              <q1:name>extract number from username</q1:name>
+              <q1:startValue>1</q1:startValue>
+            </fileRep:properties>
+          </q1:SubstringTemplate>
+        </q0:InputContextModifiers>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.authenticate.4" name="check password in db" noMatchesBehavior="fail">
+            <fileRep:properties>
+              <q0:name>check password in db</q0:name>
+              <q0:noMatchesBehavior>fail</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:InvocationGuards>
+              <q2:JavaScriptInvocationGuard fileRep:id="com.chalmerslosers.authenticate.34" text="User != &quot;ymposiet&quot;;">
+                <fileRep:properties>
+                  <q2:text>User != "ymposiet";</q2:text>
+                </fileRep:properties>
+                <q2:VariablesIn>
+                  <q2:VariableIn fileRep:id="com.chalmerslosers.authenticate.35" name="User">
+                    <fileRep:properties>
+                      <q2:name>User</q2:name>
+                    </fileRep:properties>
+                  </q2:VariableIn>
+                </q2:VariablesIn>
+              </q2:JavaScriptInvocationGuard>
+            </q0:InvocationGuards>
+            <q0:ResourceBinding>
+              <q3:DbResourceBinding fileRep:id="com.chalmerslosers.authenticate.5">
+                <q3:Table>
+                  <q3:Table fileRep:id="com.chalmerslosers.authenticate.6" name="cl2007_members">
+                    <fileRep:properties>
+                      <q3:name>cl2007_members</q3:name>
+                    </fileRep:properties>
+                    <q3:Columns>
+                      <q3:Column fileRep:id="com.chalmerslosers.authenticate.7" contextVariable="User" name="number">
+                        <fileRep:properties>
+                          <q3:contextVariable>User</q3:contextVariable>
+                          <q3:name>number</q3:name>
+                        </fileRep:properties>
+                      </q3:Column>
+                      <q3:Column fileRep:id="com.chalmerslosers.authenticate.8" contextVariable="Hash" name="password">
+                        <fileRep:properties>
+                          <q3:contextVariable>Hash</q3:contextVariable>
+                          <q3:name>password</q3:name>
+                        </fileRep:properties>
+                      </q3:Column>
+                    </q3:Columns>
+                  </q3:Table>
+                </q3:Table>
+              </q3:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.authenticate.11" contextVariable="Result" exportVariable="Result">
+                <fileRep:properties>
+                  <q0:contextVariable>Result</q0:contextVariable>
+                  <q0:exportVariable>Result</q0:exportVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+            <q0:OutputContextModifiers>
+              <q4:BCryptCheck fileRep:id="com.chalmerslosers.authenticate.12" contextVariable="Password" hashVariable="Hash" outputVariable="Result">
+                <fileRep:properties>
+                  <q4:contextVariable>Password</q4:contextVariable>
+                  <q4:hashVariable>Hash</q4:hashVariable>
+                  <q4:outputVariable>Result</q4:outputVariable>
+                </fileRep:properties>
+              </q4:BCryptCheck>
+              <q2:JavaScriptContextModifier fileRep:id="com.chalmerslosers.authenticate.13" text="if (result != &quot;true&quot;) {  throw &quot;User is not authorized&quot;; }">
+                <fileRep:properties>
+                  <q2:text>if (result != "true") {
+ throw "User is not authorized";
+}</q2:text>
+                </fileRep:properties>
+                <q2:VariablesIn>
+                  <q2:VariableIn fileRep:id="com.chalmerslosers.authenticate.14" jsVariable="result" name="Result">
+                    <fileRep:properties>
+                      <q2:jsVariable>result</q2:jsVariable>
+                      <q2:name>Result</q2:name>
+                    </fileRep:properties>
+                  </q2:VariableIn>
+                </q2:VariablesIn>
+              </q2:JavaScriptContextModifier>
+            </q0:OutputContextModifiers>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.9" name="User" required="true">
+            <fileRep:properties>
+              <q0:name>User</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.10" name="Password" required="true">
+            <fileRep:properties>
+              <q0:name>Password</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.authenticate.15" name="CreateHash">
+        <fileRep:properties>
+          <q0:name>CreateHash</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q4:BCryptHash fileRep:id="com.chalmerslosers.authenticate.16" contextVariable="In" outputVariable="Out" rounds="12">
+            <fileRep:properties>
+              <q4:contextVariable>In</q4:contextVariable>
+              <q4:outputVariable>Out</q4:outputVariable>
+              <q4:rounds>12</q4:rounds>
+            </fileRep:properties>
+          </q4:BCryptHash>
+        </q0:InputContextModifiers>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.17" name="In">
+            <fileRep:properties>
+              <q0:name>In</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.authenticate.18" name="Out">
+            <fileRep:properties>
+              <q0:name>Out</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.authenticate.19" name="CheckHash">
+        <fileRep:properties>
+          <q0:name>CheckHash</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q4:BCryptCheck fileRep:id="com.chalmerslosers.authenticate.20" contextVariable="Value" hashVariable="Hash" outputVariable="Out">
+            <fileRep:properties>
+              <q4:contextVariable>Value</q4:contextVariable>
+              <q4:hashVariable>Hash</q4:hashVariable>
+              <q4:outputVariable>Out</q4:outputVariable>
+            </fileRep:properties>
+          </q4:BCryptCheck>
+        </q0:InputContextModifiers>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.21" defaultValue="$2a$12$ahi2FVW6tAQiVJkiftKm2.dzBSCLuDnM41zrX1Jg9bMWaob0ofybC" name="Hash">
+            <fileRep:properties>
+              <q0:defaultValue>$2a$12$ahi2FVW6tAQiVJkiftKm2.dzBSCLuDnM41zrX1Jg9bMWaob0ofybC</q0:defaultValue>
+              <q0:name>Hash</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.22" defaultValue="123" name="Value">
+            <fileRep:properties>
+              <q0:defaultValue>123</q0:defaultValue>
+              <q0:name>Value</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.authenticate.23" name="Out">
+            <fileRep:properties>
+              <q0:name>Out</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.authenticate.24" name="UserInfo">
+        <fileRep:properties>
+          <q0:name>UserInfo</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q1:SubstringTemplate fileRep:id="com.chalmerslosers.authenticate.25" contextVariable="User" name="extract number from username" startValue="1">
+            <fileRep:properties>
+              <q1:contextVariable>User</q1:contextVariable>
+              <q1:name>extract number from username</q1:name>
+              <q1:startValue>1</q1:startValue>
+            </fileRep:properties>
+          </q1:SubstringTemplate>
+        </q0:InputContextModifiers>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.authenticate.26">
+            <q0:ResourceBinding>
+              <q3:DbResourceBinding fileRep:id="com.chalmerslosers.authenticate.27">
+                <q3:Table>
+                  <q3:Table fileRep:id="com.chalmerslosers.authenticate.28" name="cl2007_members">
+                    <fileRep:properties>
+                      <q3:name>cl2007_members</q3:name>
+                    </fileRep:properties>
+                    <q3:Columns>
+                      <q3:Column fileRep:id="com.chalmerslosers.authenticate.29" contextVariable="User" name="number">
+                        <fileRep:properties>
+                          <q3:contextVariable>User</q3:contextVariable>
+                          <q3:name>number</q3:name>
+                        </fileRep:properties>
+                      </q3:Column>
+                      <q3:Column fileRep:id="com.chalmerslosers.authenticate.30" contextVariable="Name" name="name">
+                        <fileRep:properties>
+                          <q3:contextVariable>Name</q3:contextVariable>
+                          <q3:name>name</q3:name>
+                        </fileRep:properties>
+                      </q3:Column>
+                      <q3:Column fileRep:id="com.chalmerslosers.authenticate.31"/>
+                    </q3:Columns>
+                  </q3:Table>
+                </q3:Table>
+              </q3:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.authenticate.32" name="Name">
+                <fileRep:properties>
+                  <q0:name>Name</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.33" name="User">
+            <fileRep:properties>
+              <q0:name>User</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.authenticate.36" name="ChangePassword">
+        <fileRep:properties>
+          <q0:name>ChangePassword</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q1:SubstringTemplate fileRep:id="com.chalmerslosers.authenticate.37" contextVariable="User" name="extract number from username" startValue="1">
+            <fileRep:properties>
+              <q1:contextVariable>User</q1:contextVariable>
+              <q1:name>extract number from username</q1:name>
+              <q1:startValue>1</q1:startValue>
+            </fileRep:properties>
+          </q1:SubstringTemplate>
+          <q4:BCryptHash fileRep:id="com.chalmerslosers.authenticate.38" contextVariable="Password" outputVariable="Password" rounds="12">
+            <fileRep:properties>
+              <q4:contextVariable>Password</q4:contextVariable>
+              <q4:outputVariable>Password</q4:outputVariable>
+              <q4:rounds>12</q4:rounds>
+            </fileRep:properties>
+          </q4:BCryptHash>
+        </q0:InputContextModifiers>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.authenticate.39" bindingStrategy="search" name="update pwd in db" noMatchesBehavior="ignore">
+            <fileRep:properties>
+              <q0:bindingStrategy>search</q0:bindingStrategy>
+              <q0:name>update pwd in db</q0:name>
+              <q0:noMatchesBehavior>ignore</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:InvocationGuards>
+              <q2:JavaScriptInvocationGuard fileRep:id="com.chalmerslosers.authenticate.40" name="check if admin pwd is correct" text="Admin == &quot;hora&quot;;">
+                <fileRep:properties>
+                  <q2:name>check if admin pwd is correct</q2:name>
+                  <q2:text>Admin == "hora";</q2:text>
+                </fileRep:properties>
+                <q2:VariablesIn>
+                  <q2:VariableIn fileRep:id="com.chalmerslosers.authenticate.41" name="Admin">
+                    <fileRep:properties>
+                      <q2:name>Admin</q2:name>
+                    </fileRep:properties>
+                  </q2:VariableIn>
+                </q2:VariablesIn>
+              </q2:JavaScriptInvocationGuard>
+            </q0:InvocationGuards>
+            <q0:ResourceBinding>
+              <q3:DbResourceBinding fileRep:id="com.chalmerslosers.authenticate.42">
+                <q3:UpdateOperations>
+                  <q3:Query fileRep:id="com.chalmerslosers.authenticate.43" query="UPDATE cl2007_members SET password=? WHERE number=? LIMIT 1;">
+                    <fileRep:properties>
+                      <q3:query>UPDATE cl2007_members
+SET password=?
+WHERE number=?
+LIMIT 1;</q3:query>
+                    </fileRep:properties>
+                    <q3:Parameters>
+                      <q3:QueryParameter fileRep:id="com.chalmerslosers.authenticate.44" contextVariable="Password">
+                        <fileRep:properties>
+                          <q3:contextVariable>Password</q3:contextVariable>
+                        </fileRep:properties>
+                      </q3:QueryParameter>
+                      <q3:QueryParameter fileRep:id="com.chalmerslosers.authenticate.45" contextVariable="User">
+                        <fileRep:properties>
+                          <q3:contextVariable>User</q3:contextVariable>
+                        </fileRep:properties>
+                      </q3:QueryParameter>
+                    </q3:Parameters>
+                  </q3:Query>
+                </q3:UpdateOperations>
+              </q3:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.authenticate.46" contextVariable="Result" exportVariable="Result">
+                <fileRep:properties>
+                  <q0:contextVariable>Result</q0:contextVariable>
+                  <q0:exportVariable>Result</q0:exportVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.authenticate.47" name="User">
+                <fileRep:properties>
+                  <q0:name>User</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.authenticate.48" name="Password">
+                <fileRep:properties>
+                  <q0:name>Password</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.49" name="User" required="true">
+            <fileRep:properties>
+              <q0:name>User</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.50" name="Password" required="true">
+            <fileRep:properties>
+              <q0:name>Password</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.authenticate.51" name="Admin">
+            <fileRep:properties>
+              <q0:name>Admin</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+    </q0:Services>
+  </q0:Repository>
+</fileRep:Module>

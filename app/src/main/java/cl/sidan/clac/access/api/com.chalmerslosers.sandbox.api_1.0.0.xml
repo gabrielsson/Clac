@@ -1,0 +1,2948 @@
+<?xml version="1.0" encoding="UTF-8"?><fileRep:Module xmlns:fileRep="http://jeeves.se/api/repository/file" id="com.chalmerslosers.sandbox.api" version="1.0.0" moduleFormatVersion="2" xmlns:q0="http://jeeves.se/api/core" xmlns:q1="http://jeeves.se/api/db" xmlns:q2="http://jeeves.se/api/interception/basic/definition" xmlns:q3="http://jeeves.se/api/interception/javascript/definition" xmlns:q4="http://jeeves.se/api/interception/codec/definition" xmlns:q5="http://jeeves.se/api/interception/text/definition" xmlns:q6="http://jeeves.se/api/file" xmlns:q7="http://jeeves.se/api/file/operation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <q0:Repository fileRep:id="com.chalmerslosers.sandbox.api.1" alias="Sandbox" description="This is the Sandbox environment. Any service is subject to change at any time. The service might not work either." namespace="http://chalmerslosers.com/sandbox/api">
+    <fileRep:properties>
+      <q0:alias>Sandbox</q0:alias>
+      <q0:description>This is the Sandbox environment. Any service is subject to change at any time. The service might not work either.</q0:description>
+      <q0:namespace>http://chalmerslosers.com/sandbox/api</q0:namespace>
+    </fileRep:properties>
+    <q0:Services>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.27" description="Reads items in the famous newspaper nätblaskan." name="ReadArticles">
+        <fileRep:properties>
+          <q0:description>Reads items in the famous newspaper nätblaskan.</q0:description>
+          <q0:name>ReadArticles</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.28" multipleMatchesbehavior="repeatForEach" resultName="Articles" resultType="Article">
+            <fileRep:properties>
+              <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+              <q0:resultName>Articles</q0:resultName>
+              <q0:resultType>Article</q0:resultType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.29" dataSource="cl">
+                <fileRep:properties>
+                  <q1:dataSource>cl</q1:dataSource>
+                </fileRep:properties>
+                <q1:SearchOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.30" query="SELECT Id, Header, Body, Date, Time FROM cl_news order by id desc LIMIT ? OFFSET ?;">
+                    <fileRep:properties>
+                      <q1:query>SELECT Id, Header, Body, Date, Time FROM cl_news
+order by id desc
+LIMIT ? OFFSET ?;</q1:query>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.31" columnName="Id" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:columnName>Id</q1:columnName>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.39" columnName="Header" contextVariable="Header">
+                        <fileRep:properties>
+                          <q1:columnName>Header</q1:columnName>
+                          <q1:contextVariable>Header</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.40" columnName="Body" contextVariable="Body">
+                        <fileRep:properties>
+                          <q1:columnName>Body</q1:columnName>
+                          <q1:contextVariable>Body</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.41" columnName="Date" contextVariable="Date">
+                        <fileRep:properties>
+                          <q1:columnName>Date</q1:columnName>
+                          <q1:contextVariable>Date</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.43" contextVariable="Take">
+                        <fileRep:properties>
+                          <q1:contextVariable>Take</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.44" contextVariable="Skip">
+                        <fileRep:properties>
+                          <q1:contextVariable>Skip</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.32" name="Id">
+                <fileRep:properties>
+                  <q0:name>Id</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.33" name="Header">
+                <fileRep:properties>
+                  <q0:name>Header</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.34" name="Body">
+                <fileRep:properties>
+                  <q0:name>Body</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.35" dataType="date" name="Date">
+                <fileRep:properties>
+                  <q0:dataType>date</q0:dataType>
+                  <q0:name>Date</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.36" dataType="date" name="Time">
+                <fileRep:properties>
+                  <q0:dataType>date</q0:dataType>
+                  <q0:name>Time</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.37" dataType="integer" name="Skip">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:name>Skip</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.38" dataType="integer" name="Take">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:name>Take</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.46" description="Adds &lt;code&gt;&lt;br&gt;&lt;br&gt;Edit CURDATE(): Message&lt;/code&gt; to the end of the message." name="EditEntry">
+        <fileRep:properties>
+          <q0:description>Adds &lt;code&gt;&lt;br&gt;&lt;br&gt;Edit CURDATE(): Message&lt;/code&gt; to the end of the message.</q0:description>
+          <q0:name>EditEntry</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.47">
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.48">
+                <q1:UpdateOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.49" query="UPDATE cl2003_msgs m SET m.msg = CONCAT(m.msg, '&lt;br&gt;Edit ', NOW(), ':',?) where m.id = ? LIMIT 1;">
+                    <fileRep:properties>
+                      <q1:query>UPDATE cl2003_msgs m SET m.msg = CONCAT(m.msg, '&lt;br&gt;Edit ', NOW(), ':',?) where m.id = ? LIMIT 1;</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.50" contextVariable="Message" dataType="string">
+                        <fileRep:properties>
+                          <q1:contextVariable>Message</q1:contextVariable>
+                          <q1:dataType>string</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.51" contextVariable="Id" dataType="integer">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:dataType>integer</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:UpdateOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.52" dataType="integer" name="Id" required="true">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:name>Id</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.53" name="Message" required="false">
+            <fileRep:properties>
+              <q0:name>Message</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.54" name="DeleteEntry">
+        <fileRep:properties>
+          <q0:name>DeleteEntry</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.55" bindingStrategy="bindAndRetrieve">
+            <fileRep:properties>
+              <q0:bindingStrategy>bindAndRetrieve</q0:bindingStrategy>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.56">
+                <q1:BindAndRetrieveOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.57" query="DELETE FROM cl2003_msgs WHERE id = ? LIMIT 1;">
+                    <fileRep:properties>
+                      <q1:query>DELETE FROM cl2003_msgs WHERE id = ? LIMIT 1;</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.58" contextVariable="Id" dataType="integer">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:dataType>integer</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:BindAndRetrieveOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.59" dataType="integer" name="Id" required="true">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:name>Id</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.60" description="Creates an entry, not implemented yet." name="CreateEntry">
+        <fileRep:properties>
+          <q0:description>Creates an entry, not implemented yet.</q0:description>
+          <q0:name>CreateEntry</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.63" bindingStrategy="create" name="Create entry">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:name>Create entry</q0:name>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.64">
+                <q1:InsertOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.61" query="INSERT INTO cl2003_msgs (sig, msg, lat, lon, enheter, status, host, date, time)  VALUES (?,?,?,?,?,?,?,CURDATE(),CURTIME())">
+                    <fileRep:properties>
+                      <q1:query>INSERT INTO cl2003_msgs (sig, msg, lat, lon, enheter, status, host, date, time) 
+VALUES (?,?,?,?,?,?,?,CURDATE(),CURTIME())</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.62" contextVariable="user.principal">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.65" contextVariable="Message">
+                        <fileRep:properties>
+                          <q1:contextVariable>Message</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.90" contextVariable="Latitude">
+                        <fileRep:properties>
+                          <q1:contextVariable>Latitude</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.91" contextVariable="Longitude">
+                        <fileRep:properties>
+                          <q1:contextVariable>Longitude</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.92" contextVariable="Enheter">
+                        <fileRep:properties>
+                          <q1:contextVariable>Enheter</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.93" contextVariable="Status">
+                        <fileRep:properties>
+                          <q1:contextVariable>Status</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.94" contextVariable="Host">
+                        <fileRep:properties>
+                          <q1:contextVariable>Host</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:InsertOperations>
+                <q1:SearchOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.95" query="SELECT LAST_INSERT_ID()">
+                    <fileRep:properties>
+                      <q1:query>SELECT LAST_INSERT_ID()</q1:query>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.96" columnIndex="1" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:columnIndex>1</q1:columnIndex>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                  </q1:Query>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.149" bindingStrategy="bindAndRetrieve" name="Create secret">
+                <fileRep:properties>
+                  <q0:bindingStrategy>bindAndRetrieve</q0:bindingStrategy>
+                  <q0:name>Create secret</q0:name>
+                </fileRep:properties>
+                <q0:InvocationGuards>
+                  <q2:RequireValueInvocationGuard fileRep:id="com.chalmerslosers.sandbox.api.150" compareValue="true" contextVariable="Secret" name="compare secret" outputType="boolean">
+                    <fileRep:properties>
+                      <q2:compareValue>true</q2:compareValue>
+                      <q2:contextVariable>Secret</q2:contextVariable>
+                      <q2:name>compare secret</q2:name>
+                      <q2:outputType>boolean</q2:outputType>
+                    </fileRep:properties>
+                  </q2:RequireValueInvocationGuard>
+                </q0:InvocationGuards>
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.164">
+                    <q1:BindAndRetrieveOperations>
+                      <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.165" query="INSERT INTO cl2003_permissions (id, user_id) VALUES(?, 0)">
+                        <fileRep:properties>
+                          <q1:query>INSERT INTO cl2003_permissions (id, user_id) VALUES(?, 0)</q1:query>
+                        </fileRep:properties>
+                        <q1:Parameters>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.198" contextVariable="Id">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                        </q1:Parameters>
+                      </q1:Query>
+                    </q1:BindAndRetrieveOperations>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.sandbox.api.199" contextVariable="Id" exportVariable="Id">
+                <fileRep:properties>
+                  <q0:contextVariable>Id</q0:contextVariable>
+                  <q0:exportVariable>Id</q0:exportVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.148" name="Id">
+                <fileRep:properties>
+                  <q0:name>Id</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.200" bindingStrategy="create" multipleMatchesbehavior="fail" name="Creates side kicks" noMatchesBehavior="ignore" requestDescription="These are the partners in crime, the accessories or kumpaner." requestName="SideKicks" requestType="SideKick">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:multipleMatchesbehavior>fail</q0:multipleMatchesbehavior>
+              <q0:name>Creates side kicks</q0:name>
+              <q0:noMatchesBehavior>ignore</q0:noMatchesBehavior>
+              <q0:requestDescription>These are the partners in crime, the accessories or kumpaner.</q0:requestDescription>
+              <q0:requestName>SideKicks</q0:requestName>
+              <q0:requestType>SideKick</q0:requestType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.201">
+                <q1:InsertOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.202" query="INSERT INTO cl2003_msgs_kumpaner (id, number) VALUES (?, ?)">
+                    <fileRep:properties>
+                      <q1:query>INSERT INTO cl2003_msgs_kumpaner (id, number) VALUES (?, ?)</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.203" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.204" contextVariable="Signature" dataType="integer">
+                        <fileRep:properties>
+                          <q1:contextVariable>Signature</q1:contextVariable>
+                          <q1:dataType>integer</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:InsertOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Inputs>
+              <q0:Input fileRep:id="com.chalmerslosers.sandbox.api.205" contextVariable="Signature" dataType="integer" name="Signature">
+                <fileRep:properties>
+                  <q0:contextVariable>Signature</q0:contextVariable>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>Signature</q0:name>
+                </fileRep:properties>
+              </q0:Input>
+            </q0:Inputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.66" name="Message">
+            <fileRep:properties>
+              <q0:name>Message</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.67" dataType="decimal" name="Latitude">
+            <fileRep:properties>
+              <q0:dataType>decimal</q0:dataType>
+              <q0:name>Latitude</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.68" dataType="decimal" name="Longitude">
+            <fileRep:properties>
+              <q0:dataType>decimal</q0:dataType>
+              <q0:name>Longitude</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.69" dataType="integer" defaultValue="0" name="Enheter">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>0</q0:defaultValue>
+              <q0:name>Enheter</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.70" dataType="integer" defaultValue="0" description="VALUES: 0 = normal&lt;br&gt;  1 = politics &lt;br&gt;  2 = complaints &lt;br&gt;  3 = noshow &lt;br&gt;  4 = nerd &lt;br&gt;  5 = NSFW &lt;br&gt;  blank = default" name="Status">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>0</q0:defaultValue>
+              <q0:description>VALUES: 0 = normal&lt;br&gt;
+ 1 = politics &lt;br&gt;
+ 2 = complaints &lt;br&gt;
+ 3 = noshow &lt;br&gt;
+ 4 = nerd &lt;br&gt;
+ 5 = NSFW &lt;br&gt;
+ blank = default</q0:description>
+              <q0:name>Status</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.97" name="Host">
+            <fileRep:properties>
+              <q0:name>Host</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.166" dataType="boolean" name="Secret">
+            <fileRep:properties>
+              <q0:dataType>boolean</q0:dataType>
+              <q0:name>Secret</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.2" name="Base64Image">
+            <fileRep:properties>
+              <q0:name>Base64Image</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.12" name="FileName">
+            <fileRep:properties>
+              <q0:name>FileName</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.71" description="Creates a like." name="CreateLike">
+        <fileRep:properties>
+          <q0:description>Creates a like.</q0:description>
+          <q0:name>CreateLike</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.76" bindingStrategy="search" noMatchesBehavior="create">
+            <fileRep:properties>
+              <q0:bindingStrategy>search</q0:bindingStrategy>
+              <q0:noMatchesBehavior>create</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.77">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.78" name="2003_likes">
+                    <fileRep:properties>
+                      <q1:name>2003_likes</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.79" contextVariable="Id" name="id" search="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:name>id</q1:name>
+                          <q1:search>true</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.80" contextVariable="user.principal" name="sig" requiredForInsert="true" requiredForSearch="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                          <q1:name>sig</q1:name>
+                          <q1:requiredForInsert>true</q1:requiredForInsert>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.81" contextVariable="Host" name="host">
+                        <fileRep:properties>
+                          <q1:contextVariable>Host</q1:contextVariable>
+                          <q1:name>host</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.82" contextVariable="Time" name="time" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Time</q1:contextVariable>
+                          <q1:name>time</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.83" contextVariable="Date" name="date" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Date</q1:contextVariable>
+                          <q1:name>date</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:InputContextModifiers>
+              <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.84" text="var date = new Date();     var time = date;//.getHours() + &quot;:&quot; + date.getMinutes() + &quot;:&quot; + date.getSeconds();">
+                <fileRep:properties>
+                  <q3:text>var date = new Date();
+    var time = date;//.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();</q3:text>
+                </fileRep:properties>
+                <q3:VariablesOut>
+                  <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.85" jsVariable="time" name="Time" type="date">
+                    <fileRep:properties>
+                      <q3:jsVariable>time</q3:jsVariable>
+                      <q3:name>Time</q3:name>
+                      <q3:type>date</q3:type>
+                    </fileRep:properties>
+                  </q3:VariableOut>
+                  <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.86" jsVariable="date" name="Date" type="date">
+                    <fileRep:properties>
+                      <q3:jsVariable>date</q3:jsVariable>
+                      <q3:name>Date</q3:name>
+                      <q3:type>date</q3:type>
+                    </fileRep:properties>
+                  </q3:VariableOut>
+                </q3:VariablesOut>
+              </q3:JavaScriptContextModifier>
+            </q0:InputContextModifiers>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.72" name="Id" required="true">
+            <fileRep:properties>
+              <q0:name>Id</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.74" description="Used to make sure not more than one like." name="Host" required="true">
+            <fileRep:properties>
+              <q0:description>Used to make sure not more than one like.</q0:description>
+              <q0:name>Host</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.87" name="CheckUserName">
+        <fileRep:properties>
+          <q0:name>CheckUserName</q0:name>
+        </fileRep:properties>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.131" name="Hash">
+            <fileRep:properties>
+              <q0:name>Hash</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.132" name="In">
+            <fileRep:properties>
+              <q0:name>In</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+        <q0:OutputContextModifiers>
+          <q4:BCryptCheck fileRep:id="com.chalmerslosers.sandbox.api.133" contextVariable="In" outputVariable="Out">
+            <fileRep:properties>
+              <q4:contextVariable>In</q4:contextVariable>
+              <q4:outputVariable>Out</q4:outputVariable>
+            </fileRep:properties>
+          </q4:BCryptCheck>
+        </q0:OutputContextModifiers>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.88" contextVariable="Out" name="Out">
+            <fileRep:properties>
+              <q0:contextVariable>Out</q0:contextVariable>
+              <q0:name>Out</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.73" description="Reads messages from the board." name="ReadEntries">
+        <fileRep:properties>
+          <q0:description>Reads messages from the board.</q0:description>
+          <q0:name>ReadEntries</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.98" description="An array of entry." multipleMatchesbehavior="repeatForEach" name="Entries" resultName="Entries" resultType="Entry">
+            <fileRep:properties>
+              <q0:description>An array of entry.</q0:description>
+              <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+              <q0:name>Entries</q0:name>
+              <q0:resultName>Entries</q0:resultName>
+              <q0:resultType>Entry</q0:resultType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.99" dataSource="cl">
+                <fileRep:properties>
+                  <q1:dataSource>cl</q1:dataSource>
+                </fileRep:properties>
+                <q1:SearchOperations>
+                  <q1:StoredProcedure fileRep:id="com.chalmerslosers.sandbox.api.100" name="ReadEntries">
+                    <fileRep:properties>
+                      <q1:name>ReadEntries</q1:name>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.113" columnName="sig" contextVariable="Signature">
+                        <fileRep:properties>
+                          <q1:columnName>sig</q1:columnName>
+                          <q1:contextVariable>Signature</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.114" columnName="lat" contextVariable="Latitude">
+                        <fileRep:properties>
+                          <q1:columnName>lat</q1:columnName>
+                          <q1:contextVariable>Latitude</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.115" columnName="lon" contextVariable="Longitude">
+                        <fileRep:properties>
+                          <q1:columnName>lon</q1:columnName>
+                          <q1:contextVariable>Longitude</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.116" columnName="msg" contextVariable="Message">
+                        <fileRep:properties>
+                          <q1:columnName>msg</q1:columnName>
+                          <q1:contextVariable>Message</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.117" columnName="date" contextVariable="Date">
+                        <fileRep:properties>
+                          <q1:columnName>date</q1:columnName>
+                          <q1:contextVariable>Date</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.118" columnName="enheter" contextVariable="Enheter">
+                        <fileRep:properties>
+                          <q1:columnName>enheter</q1:columnName>
+                          <q1:contextVariable>Enheter</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.119" columnName="status" contextVariable="Status">
+                        <fileRep:properties>
+                          <q1:columnName>status</q1:columnName>
+                          <q1:contextVariable>Status</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.120" columnName="likes" contextVariable="Likes">
+                        <fileRep:properties>
+                          <q1:columnName>likes</q1:columnName>
+                          <q1:contextVariable>Likes</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.121" columnName="id" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:columnName>id</q1:columnName>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.122" columnName="time" contextVariable="Time">
+                        <fileRep:properties>
+                          <q1:columnName>time</q1:columnName>
+                          <q1:contextVariable>Time</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.123" columnName="Secret" contextVariable="Secret">
+                        <fileRep:properties>
+                          <q1:columnName>Secret</q1:columnName>
+                          <q1:contextVariable>Secret</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.124" columnName="PersonalSecret" contextVariable="PersonalSecret">
+                        <fileRep:properties>
+                          <q1:columnName>PersonalSecret</q1:columnName>
+                          <q1:contextVariable>PersonalSecret</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                    <q1:Parameters>
+                      <q1:StoredProcedureParameter fileRep:id="com.chalmerslosers.sandbox.api.125" inVariable="user_id" name="user_id">
+                        <fileRep:properties>
+                          <q1:inVariable>user_id</q1:inVariable>
+                          <q1:name>user_id</q1:name>
+                        </fileRep:properties>
+                      </q1:StoredProcedureParameter>
+                      <q1:StoredProcedureParameter fileRep:id="com.chalmerslosers.sandbox.api.126" inVariable="Skip" name="skip" value="0">
+                        <fileRep:properties>
+                          <q1:inVariable>Skip</q1:inVariable>
+                          <q1:name>skip</q1:name>
+                          <q1:value>0</q1:value>
+                        </fileRep:properties>
+                      </q1:StoredProcedureParameter>
+                      <q1:StoredProcedureParameter fileRep:id="com.chalmerslosers.sandbox.api.127" inVariable="Take" name="take" value="100">
+                        <fileRep:properties>
+                          <q1:inVariable>Take</q1:inVariable>
+                          <q1:name>take</q1:name>
+                          <q1:value>100</q1:value>
+                        </fileRep:properties>
+                      </q1:StoredProcedureParameter>
+                    </q1:Parameters>
+                  </q1:StoredProcedure>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:InputContextModifiers>
+              <q5:SubstringTemplate fileRep:id="com.chalmerslosers.sandbox.api.128" contextVariable="user.principal" name="extract number from user.principal" startValue="1" variableOut="user_id">
+                <fileRep:properties>
+                  <q5:contextVariable>user.principal</q5:contextVariable>
+                  <q5:name>extract number from user.principal</q5:name>
+                  <q5:startValue>1</q5:startValue>
+                  <q5:variableOut>user_id</q5:variableOut>
+                </fileRep:properties>
+              </q5:SubstringTemplate>
+            </q0:InputContextModifiers>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.192" multipleMatchesbehavior="repeatForEach" name="Side Kicks" requestDescription="These are the partners in crime, the accessories or kumpaner." resultName="SideKicks" resultType="SideKick">
+                <fileRep:properties>
+                  <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+                  <q0:name>Side Kicks</q0:name>
+                  <q0:requestDescription>These are the partners in crime, the accessories or kumpaner.</q0:requestDescription>
+                  <q0:resultName>SideKicks</q0:resultName>
+                  <q0:resultType>SideKick</q0:resultType>
+                </fileRep:properties>
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.193">
+                    <q1:Table>
+                      <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.194" name="cl2003_msgs_kumpaner">
+                        <fileRep:properties>
+                          <q1:name>cl2003_msgs_kumpaner</q1:name>
+                        </fileRep:properties>
+                        <q1:Columns>
+                          <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.195" contextVariable="Id" name="id">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                              <q1:name>id</q1:name>
+                            </fileRep:properties>
+                          </q1:Column>
+                          <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.196" contextVariable="SideKickId" name="number">
+                            <fileRep:properties>
+                              <q1:contextVariable>SideKickId</q1:contextVariable>
+                              <q1:name>number</q1:name>
+                            </fileRep:properties>
+                          </q1:Column>
+                        </q1:Columns>
+                      </q1:Table>
+                    </q1:Table>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+                <q0:Outputs>
+                  <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.197" name="SideKickId">
+                    <fileRep:properties>
+                      <q0:name>SideKickId</q0:name>
+                    </fileRep:properties>
+                  </q0:Output>
+                </q0:Outputs>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.101" name="Signature">
+                <fileRep:properties>
+                  <q0:name>Signature</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.102" dataType="decimal" name="Latitude">
+                <fileRep:properties>
+                  <q0:dataType>decimal</q0:dataType>
+                  <q0:name>Latitude</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.103" dataType="decimal" name="Longitude">
+                <fileRep:properties>
+                  <q0:dataType>decimal</q0:dataType>
+                  <q0:name>Longitude</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.104" dataType="string" name="Message">
+                <fileRep:properties>
+                  <q0:dataType>string</q0:dataType>
+                  <q0:name>Message</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.105" dataType="string" description="This is the time as String on the format HH:mm:ss retrieved as DATE_FORMAT(m.time, '%H:%i:%s') as time" name="Time">
+                <fileRep:properties>
+                  <q0:dataType>string</q0:dataType>
+                  <q0:description>This is the time as String on the format HH:mm:ss retrieved as DATE_FORMAT(m.time, '%H:%i:%s') as time</q0:description>
+                  <q0:name>Time</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.106" dataType="date" name="Date">
+                <fileRep:properties>
+                  <q0:dataType>date</q0:dataType>
+                  <q0:name>Date</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.107" dataType="integer" name="Enheter">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>Enheter</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.108" dataType="integer" description="VALUES: 0 = normal&lt;br&gt;  1 = politics &lt;br&gt;  2 = complaints &lt;br&gt;  3 = noshow &lt;br&gt;  4 = nerd &lt;br&gt;  5 = NSFW &lt;br&gt;  blank = default" name="Status">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:description>VALUES: 0 = normal&lt;br&gt;
+ 1 = politics &lt;br&gt;
+ 2 = complaints &lt;br&gt;
+ 3 = noshow &lt;br&gt;
+ 4 = nerd &lt;br&gt;
+ 5 = NSFW &lt;br&gt;
+ blank = default</q0:description>
+                  <q0:name>Status</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.109" description="Sum of all likes" name="Likes">
+                <fileRep:properties>
+                  <q0:description>Sum of all likes</q0:description>
+                  <q0:name>Likes</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.110" dataType="integer" description="Identifier" name="Id">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:description>Identifier</q0:description>
+                  <q0:name>Id</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.129" dataType="boolean" name="Secret">
+                <fileRep:properties>
+                  <q0:dataType>boolean</q0:dataType>
+                  <q0:name>Secret</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.130" dataType="boolean" name="PersonalSecret">
+                <fileRep:properties>
+                  <q0:dataType>boolean</q0:dataType>
+                  <q0:name>PersonalSecret</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.111" dataType="integer" defaultValue="0" description="How many entries to skip" name="Skip">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>0</q0:defaultValue>
+              <q0:description>How many entries to skip</q0:description>
+              <q0:name>Skip</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.112" dataType="integer" defaultValue="10" description="How many entries to take" name="Take">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>10</q0:defaultValue>
+              <q0:description>How many entries to take</q0:description>
+              <q0:name>Take</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.134" name="CreateUserName">
+        <fileRep:properties>
+          <q0:name>CreateUserName</q0:name>
+        </fileRep:properties>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.135" name="Hash">
+            <fileRep:properties>
+              <q0:name>Hash</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+        <q0:OutputContextModifiers>
+          <q4:BCryptHash fileRep:id="com.chalmerslosers.sandbox.api.136" contextVariable="user.name" outputVariable="Out" rounds="10">
+            <fileRep:properties>
+              <q4:contextVariable>user.name</q4:contextVariable>
+              <q4:outputVariable>Out</q4:outputVariable>
+              <q4:rounds>10</q4:rounds>
+            </fileRep:properties>
+          </q4:BCryptHash>
+        </q0:OutputContextModifiers>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.137" name="Out">
+            <fileRep:properties>
+              <q0:name>Out</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.138" description="Register an regId for GCM." name="GCM_Register">
+        <fileRep:properties>
+          <q0:description>Register an regId for GCM.</q0:description>
+          <q0:name>GCM_Register</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.139" bindingStrategy="search" noMatchesBehavior="create">
+            <fileRep:properties>
+              <q0:bindingStrategy>search</q0:bindingStrategy>
+              <q0:noMatchesBehavior>create</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.141">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.142" name="cl2014_gcm">
+                    <fileRep:properties>
+                      <q1:name>cl2014_gcm</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.143" contextVariable="user.principal" name="sig" requiredForInsert="true" requiredForSearch="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                          <q1:name>sig</q1:name>
+                          <q1:requiredForInsert>true</q1:requiredForInsert>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.144" contextVariable="RegId" name="regId" requiredForInsert="true" requiredForSearch="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>RegId</q1:contextVariable>
+                          <q1:name>regId</q1:name>
+                          <q1:requiredForInsert>true</q1:requiredForInsert>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.177" contextVariable="DeviceId" name="deviceId" requiredForInsert="true" requiredForSearch="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>DeviceId</q1:contextVariable>
+                          <q1:name>deviceId</q1:name>
+                          <q1:requiredForInsert>true</q1:requiredForInsert>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.140" name="RegId" required="true">
+            <fileRep:properties>
+              <q0:name>RegId</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.178" name="DeviceId" required="true">
+            <fileRep:properties>
+              <q0:name>DeviceId</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.145" description="Unregister a regId." name="GCM_Unregister">
+        <fileRep:properties>
+          <q0:description>Unregister a regId.</q0:description>
+          <q0:name>GCM_Unregister</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.146" bindingStrategy="bindAndRetrieve" noMatchesBehavior="ignore">
+            <fileRep:properties>
+              <q0:bindingStrategy>bindAndRetrieve</q0:bindingStrategy>
+              <q0:noMatchesBehavior>ignore</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.147">
+                <q1:BindAndRetrieveOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.167" query="UPDATE cl2014_gcm g SET g.active = 0 where g.sig = ? and g.regId = ? LIMIT 1;">
+                    <fileRep:properties>
+                      <q1:query>UPDATE cl2014_gcm g SET g.active = 0 where g.sig = ? and g.regId = ? LIMIT 1;</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.168" contextVariable="user.principal" dataType="string">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                          <q1:dataType>string</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.169" contextVariable="RegId" dataType="string">
+                        <fileRep:properties>
+                          <q1:contextVariable>RegId</q1:contextVariable>
+                          <q1:dataType>string</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:BindAndRetrieveOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.151" name="RegId" required="true">
+            <fileRep:properties>
+              <q0:name>RegId</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.152" description="Get regId's from a list of sig's." name="GCM_GetRecipients">
+        <fileRep:properties>
+          <q0:description>Get regId's from a list of sig's.</q0:description>
+          <q0:name>GCM_GetRecipients</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.153" multipleMatchesbehavior="repeatForEach" name="Entries" resultName="Entries" resultType="Entry">
+            <fileRep:properties>
+              <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+              <q0:name>Entries</q0:name>
+              <q0:resultName>Entries</q0:resultName>
+              <q0:resultType>Entry</q0:resultType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.154">
+                <q1:SearchOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.155" query="SELECT g.sig as sig, g.regId as regId FROM cl2014_gcm g WHERE g.active = 1 and FIND_IN_SET(g.sig,?) and not g.sig = ?;">
+                    <fileRep:properties>
+                      <q1:query>SELECT g.sig as sig, g.regId as regId FROM cl2014_gcm g
+WHERE g.active = 1 and FIND_IN_SET(g.sig,?) and not g.sig = ?;</q1:query>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.156" columnName="sig" contextVariable="Signature">
+                        <fileRep:properties>
+                          <q1:columnName>sig</q1:columnName>
+                          <q1:contextVariable>Signature</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.157" columnName="regId" contextVariable="RegId">
+                        <fileRep:properties>
+                          <q1:columnName>regId</q1:columnName>
+                          <q1:contextVariable>RegId</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.158" contextVariable="CsvSigs" dataType="string">
+                        <fileRep:properties>
+                          <q1:contextVariable>CsvSigs</q1:contextVariable>
+                          <q1:dataType>string</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.159" contextVariable="user.principal" dataType="string">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                          <q1:dataType>string</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.160" name="Signature">
+                <fileRep:properties>
+                  <q0:name>Signature</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.161" name="RegId">
+                <fileRep:properties>
+                  <q0:name>RegId</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.162" name="CsvSigs" required="true">
+            <fileRep:properties>
+              <q0:name>CsvSigs</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.170" description="Get regId from deviceId." name="GCM_GetRegId">
+        <fileRep:properties>
+          <q0:description>Get regId from deviceId.</q0:description>
+          <q0:name>GCM_GetRegId</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.171">
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.172" maxResultRows="1">
+                <fileRep:properties>
+                  <q1:maxResultRows>1</q1:maxResultRows>
+                </fileRep:properties>
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.173" name="cl2014_gcm">
+                    <fileRep:properties>
+                      <q1:name>cl2014_gcm</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.174" contextVariable="RegId" insert="false" name="regId" requiredForSearch="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>RegId</q1:contextVariable>
+                          <q1:insert>false</q1:insert>
+                          <q1:name>regId</q1:name>
+                          <q1:requiredForSearch>false</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.175" contextVariable="DeviceId" insert="false" name="deviceId" requiredForSearch="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>DeviceId</q1:contextVariable>
+                          <q1:insert>false</q1:insert>
+                          <q1:name>deviceId</q1:name>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.179" insert="false" name="active" optional="false" requiredForSearch="true" value="1">
+                        <fileRep:properties>
+                          <q1:insert>false</q1:insert>
+                          <q1:name>active</q1:name>
+                          <q1:optional>false</q1:optional>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                          <q1:value>1</q1:value>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.180" name="RegId">
+                <fileRep:properties>
+                  <q0:name>RegId</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.176" name="DeviceId" required="true">
+            <fileRep:properties>
+              <q0:name>DeviceId</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.13" description="Lists all comming events" name="ReadArr">
+        <fileRep:properties>
+          <q0:description>Lists all comming events</q0:description>
+          <q0:name>ReadArr</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.14" multipleMatchesbehavior="repeatForEach" occurrences="many" requestType="Article" resultName="Arr" resultType="Arr">
+            <fileRep:properties>
+              <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+              <q0:occurrences>many</q0:occurrences>
+              <q0:requestType>Article</q0:requestType>
+              <q0:resultName>Arr</q0:resultName>
+              <q0:resultType>Arr</q0:resultType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.15">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.16" name="cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:name>cl2015_arrsidan</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.17" contextVariable="Id" name="id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:name>id</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.18" contextVariable="Namn" name="namn">
+                        <fileRep:properties>
+                          <q1:contextVariable>Namn</q1:contextVariable>
+                          <q1:name>namn</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.19" contextVariable="Datum" name="start_date">
+                        <fileRep:properties>
+                          <q1:contextVariable>Datum</q1:contextVariable>
+                          <q1:name>start_date</q1:name>
+                        </fileRep:properties>
+                        <q1:SortDirective>
+                          <q1:SortAscending fileRep:id="com.chalmerslosers.sandbox.api.191"/>
+                        </q1:SortDirective>
+                        <q1:Criteria>
+                          <q1:RangeCriteria fileRep:id="com.chalmerslosers.sandbox.api.189" minContextVariable="fromDate" minInclusive="false">
+                            <fileRep:properties>
+                              <q1:minContextVariable>fromDate</q1:minContextVariable>
+                              <q1:minInclusive>false</q1:minInclusive>
+                            </fileRep:properties>
+                          </q1:RangeCriteria>
+                        </q1:Criteria>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.187" contextVariable="Plats" name="plats">
+                        <fileRep:properties>
+                          <q1:contextVariable>Plats</q1:contextVariable>
+                          <q1:name>plats</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.20" contextVariable="Deltagare" name="deltagare">
+                        <fileRep:properties>
+                          <q1:contextVariable>Deltagare</q1:contextVariable>
+                          <q1:name>deltagare</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.215" contextVariable="Hetsade" name="hetsade">
+                        <fileRep:properties>
+                          <q1:contextVariable>Hetsade</q1:contextVariable>
+                          <q1:name>hetsade</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.216" contextVariable="Kanske" name="kanske">
+                        <fileRep:properties>
+                          <q1:contextVariable>Kanske</q1:contextVariable>
+                          <q1:name>kanske</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.21" dataType="integer" name="Id">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>Id</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.22" name="Namn">
+                <fileRep:properties>
+                  <q0:name>Namn</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.23" name="Datum">
+                <fileRep:properties>
+                  <q0:name>Datum</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.188" name="Plats">
+                <fileRep:properties>
+                  <q0:name>Plats</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.24" name="Deltagare">
+                <fileRep:properties>
+                  <q0:name>Deltagare</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.217" name="Hetsade">
+                <fileRep:properties>
+                  <q0:name>Hetsade</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.218" name="Kanske">
+                <fileRep:properties>
+                  <q0:name>Kanske</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.190" name="fromDate">
+            <fileRep:properties>
+              <q0:name>fromDate</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.3" name="AuthenticateUser">
+        <fileRep:properties>
+          <q0:name>AuthenticateUser</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q5:SubstringTemplate fileRep:id="com.chalmerslosers.sandbox.api.4" contextVariable="User" name="extract number from username" startValue="1">
+            <fileRep:properties>
+              <q5:contextVariable>User</q5:contextVariable>
+              <q5:name>extract number from username</q5:name>
+              <q5:startValue>1</q5:startValue>
+            </fileRep:properties>
+          </q5:SubstringTemplate>
+        </q0:InputContextModifiers>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.5" name="check password in db" noMatchesBehavior="fail">
+            <fileRep:properties>
+              <q0:name>check password in db</q0:name>
+              <q0:noMatchesBehavior>fail</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.6">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.7" name="cl2007_members">
+                    <fileRep:properties>
+                      <q1:name>cl2007_members</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.8" contextVariable="User" name="number">
+                        <fileRep:properties>
+                          <q1:contextVariable>User</q1:contextVariable>
+                          <q1:name>number</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.9" contextVariable="Hash" name="password">
+                        <fileRep:properties>
+                          <q1:contextVariable>Hash</q1:contextVariable>
+                          <q1:name>password</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.sandbox.api.10" contextVariable="Result" exportVariable="Result">
+                <fileRep:properties>
+                  <q0:contextVariable>Result</q0:contextVariable>
+                  <q0:exportVariable>Result</q0:exportVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+            <q0:OutputContextModifiers>
+              <q4:BCryptCheck fileRep:id="com.chalmerslosers.sandbox.api.11" contextVariable="Password" hashVariable="Hash" outputVariable="Result">
+                <fileRep:properties>
+                  <q4:contextVariable>Password</q4:contextVariable>
+                  <q4:hashVariable>Hash</q4:hashVariable>
+                  <q4:outputVariable>Result</q4:outputVariable>
+                </fileRep:properties>
+              </q4:BCryptCheck>
+              <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.206" text="if (result != &quot;true&quot;) {    authenticated = false; } else {    authenticated = true; }">
+                <fileRep:properties>
+                  <q3:text>if (result != "true") {
+   authenticated = false;
+} else {
+   authenticated = true;
+}</q3:text>
+                </fileRep:properties>
+                <q3:VariablesOut>
+                  <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.207" jsVariable="authenticated" name="Authenticated" type="boolean">
+                    <fileRep:properties>
+                      <q3:jsVariable>authenticated</q3:jsVariable>
+                      <q3:name>Authenticated</q3:name>
+                      <q3:type>boolean</q3:type>
+                    </fileRep:properties>
+                  </q3:VariableOut>
+                </q3:VariablesOut>
+                <q3:VariablesIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.208" jsVariable="result" name="Result">
+                    <fileRep:properties>
+                      <q3:jsVariable>result</q3:jsVariable>
+                      <q3:name>Result</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                </q3:VariablesIn>
+              </q3:JavaScriptContextModifier>
+            </q0:OutputContextModifiers>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.209" contextVariable="Authenticated" dataType="boolean" defaultValue="false" name="Authenticated">
+                <fileRep:properties>
+                  <q0:contextVariable>Authenticated</q0:contextVariable>
+                  <q0:dataType>boolean</q0:dataType>
+                  <q0:defaultValue>false</q0:defaultValue>
+                  <q0:name>Authenticated</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.210" name="User" required="true">
+            <fileRep:properties>
+              <q0:name>User</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.211" name="Password" required="true">
+            <fileRep:properties>
+              <q0:name>Password</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.212" dataType="boolean" name="Authenticated">
+            <fileRep:properties>
+              <q0:dataType>boolean</q0:dataType>
+              <q0:name>Authenticated</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.213" name="AuthTest">
+        <fileRep:properties>
+          <q0:name>AuthTest</q0:name>
+        </fileRep:properties>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.214" dataType="integer" defaultValue="1" name="Test">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>1</q0:defaultValue>
+              <q0:name>Test</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.219" name="TestMedFiler">
+        <fileRep:properties>
+          <q0:name>TestMedFiler</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.220" bindingStrategy="create" name="File">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:name>File</q0:name>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q6:FileResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.221">
+                <q6:CommitOperations>
+                  <q7:Move fileRep:id="com.chalmerslosers.sandbox.api.222" directory="work/Test">
+                    <fileRep:properties>
+                      <q7:directory>work/Test</q7:directory>
+                    </fileRep:properties>
+                  </q7:Move>
+                </q6:CommitOperations>
+              </q6:FileResourceBinding>
+            </q0:ResourceBinding>
+            <q0:InputContextModifiers>
+              <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.223" text="var timedate = new Date();">
+                <fileRep:properties>
+                  <q3:text>var timedate = new Date();</q3:text>
+                </fileRep:properties>
+                <q3:VariablesIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.224" jsVariable="timedate" name="TimeDate" type="date">
+                    <fileRep:properties>
+                      <q3:jsVariable>timedate</q3:jsVariable>
+                      <q3:name>TimeDate</q3:name>
+                      <q3:type>date</q3:type>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                </q3:VariablesIn>
+              </q3:JavaScriptContextModifier>
+            </q0:InputContextModifiers>
+            <q0:Inputs>
+              <q0:Input fileRep:id="com.chalmerslosers.sandbox.api.225" name="File">
+                <fileRep:properties>
+                  <q0:name>File</q0:name>
+                </fileRep:properties>
+              </q0:Input>
+            </q0:Inputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.226" description="Reads one question" name="ReadPoll">
+        <fileRep:properties>
+          <q0:description>Reads one question</q0:description>
+          <q0:name>ReadPoll</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.227" multipleMatchesbehavior="repeatForEach" resultName="Poll" resultType="Poll">
+            <fileRep:properties>
+              <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+              <q0:resultName>Poll</q0:resultName>
+              <q0:resultType>Poll</q0:resultType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.228" dataSource="cl">
+                <fileRep:properties>
+                  <q1:dataSource>cl</q1:dataSource>
+                </fileRep:properties>
+                <q1:SearchOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.229" query="SELECT ID, theme, yae, nay, date, time FROM cl2004_poll order by id desc LIMIT 1;">
+                    <fileRep:properties>
+                      <q1:query>SELECT ID, theme, yae, nay, date, time FROM cl2004_poll
+order by id desc
+LIMIT 1;</q1:query>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.230" columnName="Id" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:columnName>Id</q1:columnName>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.231" columnName="theme" contextVariable="Question">
+                        <fileRep:properties>
+                          <q1:columnName>theme</q1:columnName>
+                          <q1:contextVariable>Question</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.232" columnName="yae" contextVariable="Yae">
+                        <fileRep:properties>
+                          <q1:columnName>yae</q1:columnName>
+                          <q1:contextVariable>Yae</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.233" columnName="nay" contextVariable="Nay">
+                        <fileRep:properties>
+                          <q1:columnName>nay</q1:columnName>
+                          <q1:contextVariable>Nay</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.234" columnName="Date" contextVariable="Date">
+                        <fileRep:properties>
+                          <q1:columnName>Date</q1:columnName>
+                          <q1:contextVariable>Date</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                  </q1:Query>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.308">
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.309">
+                    <q1:SearchOperations>
+                      <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.310" query="select count(case vote when 1 then 1 end) as nr_yay, count(case vote when 0 then 1 end) as nr_nay from cl2004_poll_votes where poll_ID=?;">
+                        <fileRep:properties>
+                          <q1:query>select count(case vote when 1 then 1 end) as nr_yay, count(case vote when 0 then 1 end) as nr_nay from cl2004_poll_votes where poll_ID=?;</q1:query>
+                        </fileRep:properties>
+                        <q1:ResultSetValues>
+                          <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.311" columnName="nr_yay" contextVariable="NrYay">
+                            <fileRep:properties>
+                              <q1:columnName>nr_yay</q1:columnName>
+                              <q1:contextVariable>NrYay</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:ResultSetValue>
+                          <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.312" columnName="nr_nay" contextVariable="NrNay">
+                            <fileRep:properties>
+                              <q1:columnName>nr_nay</q1:columnName>
+                              <q1:contextVariable>NrNay</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:ResultSetValue>
+                        </q1:ResultSetValues>
+                        <q1:Parameters>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.313" contextVariable="Id" dataType="integer">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                              <q1:dataType>integer</q1:dataType>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                        </q1:Parameters>
+                      </q1:Query>
+                    </q1:SearchOperations>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+                <q0:Outputs>
+                  <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.314" contextVariable="NrYay" dataType="integer" defaultValue="0" name="NrYay">
+                    <fileRep:properties>
+                      <q0:contextVariable>NrYay</q0:contextVariable>
+                      <q0:dataType>integer</q0:dataType>
+                      <q0:defaultValue>0</q0:defaultValue>
+                      <q0:name>NrYay</q0:name>
+                    </fileRep:properties>
+                  </q0:Output>
+                  <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.315" contextVariable="NrNay" dataType="integer" defaultValue="0" name="NrNay">
+                    <fileRep:properties>
+                      <q0:contextVariable>NrNay</q0:contextVariable>
+                      <q0:dataType>integer</q0:dataType>
+                      <q0:defaultValue>0</q0:defaultValue>
+                      <q0:name>NrNay</q0:name>
+                    </fileRep:properties>
+                  </q0:Output>
+                </q0:Outputs>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.235" name="Id">
+                <fileRep:properties>
+                  <q0:name>Id</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.236" name="Question">
+                <fileRep:properties>
+                  <q0:name>Question</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.237" name="Yae">
+                <fileRep:properties>
+                  <q0:name>Yae</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.238" dataType="string" name="Nay">
+                <fileRep:properties>
+                  <q0:dataType>string</q0:dataType>
+                  <q0:name>Nay</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.239" dataType="date" name="Date">
+                <fileRep:properties>
+                  <q0:dataType>date</q0:dataType>
+                  <q0:name>Date</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.316" dataType="integer" name="NrYay">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>NrYay</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.317" dataType="integer" name="NrNay">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>NrNay</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.25" description="Attend to an Arr" name="RegisterArr">
+        <fileRep:properties>
+          <q0:description>Attend to an Arr</q0:description>
+          <q0:name>RegisterArr</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.26" name="getCurrentDeltagare" noMatchesBehavior="ignore">
+            <fileRep:properties>
+              <q0:name>getCurrentDeltagare</q0:name>
+              <q0:noMatchesBehavior>ignore</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.42">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.45" name="cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:name>cl2015_arrsidan</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.75" contextVariable="Id" name="id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:name>id</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.89" contextVariable="Deltagare" modify="false" name="deltagare">
+                        <fileRep:properties>
+                          <q1:contextVariable>Deltagare</q1:contextVariable>
+                          <q1:modify>false</q1:modify>
+                          <q1:name>deltagare</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.181"/>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.182"/>
+            </q0:ResourceBinding>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.183" name="updateDeltagare">
+                <fileRep:properties>
+                  <q0:name>updateDeltagare</q0:name>
+                </fileRep:properties>
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.184">
+                    <q1:UpdateOperations>
+                      <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.185" query="update cl2015_arrsidan set deltagare=? where id=?">
+                        <fileRep:properties>
+                          <q1:query>update cl2015_arrsidan set deltagare=? where id=?</q1:query>
+                        </fileRep:properties>
+                        <q1:Parameters>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.186" contextVariable="Deltagare" dataType="string">
+                            <fileRep:properties>
+                              <q1:contextVariable>Deltagare</q1:contextVariable>
+                              <q1:dataType>string</q1:dataType>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.240" contextVariable="Id">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                        </q1:Parameters>
+                      </q1:Query>
+                    </q1:UpdateOperations>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:OutputContextModifiers>
+              <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.241" text="var splitDeltagare = []; if( typeof deltagare != 'undefined' ) {   splitDeltagare = deltagare.split(/\s*,\s*/); } var newDeltagare; // Deltagare är redan med if( splitDeltagare.indexOf(nummer) &gt;= 0 ) {   newDeltagare = splitDeltagare.join(&quot;,&quot;);  // Lägg till nummer } else {   splitDeltagare.push(nummer);   newDeltagare = splitDeltagare.join(&quot;,&quot;); }">
+                <fileRep:properties>
+                  <q3:text>var splitDeltagare = [];
+if( typeof deltagare != 'undefined' ) {
+  splitDeltagare = deltagare.split(/\s*,\s*/);
+}
+var newDeltagare;
+// Deltagare är redan med
+if( splitDeltagare.indexOf(nummer) &gt;= 0 ) {
+  newDeltagare = splitDeltagare.join(",");
+
+// Lägg till nummer
+} else {
+  splitDeltagare.push(nummer);
+  newDeltagare = splitDeltagare.join(",");
+}</q3:text>
+                </fileRep:properties>
+                <q3:VariablesOut>
+                  <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.242" jsVariable="newDeltagare" name="Deltagare">
+                    <fileRep:properties>
+                      <q3:jsVariable>newDeltagare</q3:jsVariable>
+                      <q3:name>Deltagare</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableOut>
+                </q3:VariablesOut>
+                <q3:VariablesIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.243" jsVariable="deltagare" name="Deltagare">
+                    <fileRep:properties>
+                      <q3:jsVariable>deltagare</q3:jsVariable>
+                      <q3:name>Deltagare</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.244" jsVariable="nummer" name="user.principal">
+                    <fileRep:properties>
+                      <q3:jsVariable>nummer</q3:jsVariable>
+                      <q3:name>user.principal</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                </q3:VariablesIn>
+              </q3:JavaScriptContextModifier>
+            </q0:OutputContextModifiers>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.245" name="Deltagare">
+                <fileRep:properties>
+                  <q0:name>Deltagare</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.246" name="Id" required="true">
+            <fileRep:properties>
+              <q0:name>Id</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.247" description="Un attend to an Arr" name="UnregisterArr">
+        <fileRep:properties>
+          <q0:description>Un attend to an Arr</q0:description>
+          <q0:name>UnregisterArr</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.248" name="getCurrentDeltagare" noMatchesBehavior="fail">
+            <fileRep:properties>
+              <q0:name>getCurrentDeltagare</q0:name>
+              <q0:noMatchesBehavior>fail</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.249">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.250" name="cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:name>cl2015_arrsidan</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.251" contextVariable="Id" name="id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:name>id</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.252" contextVariable="Deltagare" modify="false" name="deltagare">
+                        <fileRep:properties>
+                          <q1:contextVariable>Deltagare</q1:contextVariable>
+                          <q1:modify>false</q1:modify>
+                          <q1:name>deltagare</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.253"/>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.254"/>
+            </q0:ResourceBinding>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.255" name="updateDeltagare">
+                <fileRep:properties>
+                  <q0:name>updateDeltagare</q0:name>
+                </fileRep:properties>
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.256">
+                    <q1:UpdateOperations>
+                      <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.257" query="update cl2015_arrsidan set deltagare=? where id=?">
+                        <fileRep:properties>
+                          <q1:query>update cl2015_arrsidan set deltagare=? where id=?</q1:query>
+                        </fileRep:properties>
+                        <q1:Parameters>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.258" contextVariable="Deltagare" dataType="string">
+                            <fileRep:properties>
+                              <q1:contextVariable>Deltagare</q1:contextVariable>
+                              <q1:dataType>string</q1:dataType>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.259" contextVariable="Id">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                        </q1:Parameters>
+                      </q1:Query>
+                    </q1:UpdateOperations>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:OutputContextModifiers>
+              <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.260" text="var splitDeltagare = deltagare.split(/\s*,\s*/); var newDeltagare; var position = splitDeltagare.indexOf(nummer); if( position &gt;= 0 ) {   splitDeltagare.splice(position, 1); }  newDeltagare = splitDeltagare.join(&quot;,&quot;);">
+                <fileRep:properties>
+                  <q3:text>var splitDeltagare = deltagare.split(/\s*,\s*/);
+var newDeltagare;
+var position = splitDeltagare.indexOf(nummer);
+if( position &gt;= 0 ) {
+  splitDeltagare.splice(position, 1);
+}
+
+newDeltagare = splitDeltagare.join(",");</q3:text>
+                </fileRep:properties>
+                <q3:VariablesOut>
+                  <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.261" jsVariable="newDeltagare" name="Deltagare">
+                    <fileRep:properties>
+                      <q3:jsVariable>newDeltagare</q3:jsVariable>
+                      <q3:name>Deltagare</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableOut>
+                </q3:VariablesOut>
+                <q3:VariablesIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.262" jsVariable="deltagare" name="Deltagare">
+                    <fileRep:properties>
+                      <q3:jsVariable>deltagare</q3:jsVariable>
+                      <q3:name>Deltagare</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.263" jsVariable="nummer" name="user.principal">
+                    <fileRep:properties>
+                      <q3:jsVariable>nummer</q3:jsVariable>
+                      <q3:name>user.principal</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                </q3:VariablesIn>
+              </q3:JavaScriptContextModifier>
+            </q0:OutputContextModifiers>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.264" name="Deltagare">
+                <fileRep:properties>
+                  <q0:name>Deltagare</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.265" name="Id">
+            <fileRep:properties>
+              <q0:name>Id</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.266" description="Lurpassa to an Arr" name="LurpassaArr">
+        <fileRep:properties>
+          <q0:description>Lurpassa to an Arr</q0:description>
+          <q0:name>LurpassaArr</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.267" name="getCurrentLurpassare" noMatchesBehavior="fail">
+            <fileRep:properties>
+              <q0:name>getCurrentLurpassare</q0:name>
+              <q0:noMatchesBehavior>fail</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.268">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.269" name="cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:name>cl2015_arrsidan</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.270" contextVariable="Id" name="id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:name>id</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.271" contextVariable="Deltagare" modify="false" name="kanske">
+                        <fileRep:properties>
+                          <q1:contextVariable>Deltagare</q1:contextVariable>
+                          <q1:modify>false</q1:modify>
+                          <q1:name>kanske</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.272"/>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.273"/>
+            </q0:ResourceBinding>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.274" name="updateLurpassare">
+                <fileRep:properties>
+                  <q0:name>updateLurpassare</q0:name>
+                </fileRep:properties>
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.275">
+                    <q1:UpdateOperations>
+                      <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.276" query="update cl2015_arrsidan set kanske=? where id=?">
+                        <fileRep:properties>
+                          <q1:query>update cl2015_arrsidan set kanske=? where id=?</q1:query>
+                        </fileRep:properties>
+                        <q1:Parameters>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.277" contextVariable="Deltagare" dataType="string">
+                            <fileRep:properties>
+                              <q1:contextVariable>Deltagare</q1:contextVariable>
+                              <q1:dataType>string</q1:dataType>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.278" contextVariable="Id">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                        </q1:Parameters>
+                      </q1:Query>
+                    </q1:UpdateOperations>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:OutputContextModifiers>
+              <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.279" text="var splitDeltagare = deltagare.split(/\s*,\s*/); var newDeltagare; // Deltagare med if( splitDeltagare.indexOf(nummer) &gt;= 0 ) {   newDeltagare = splitDeltagare.join(&quot;,&quot;);  // Ingen är tidigare med } else if ( &quot;&quot;.equals(deltagare) ) {   newDeltagare = nummer;  // Deltagare inte med } else {   splitDeltagare.push(nummer);   newDeltagare = splitDeltagare.join(&quot;,&quot;); }">
+                <fileRep:properties>
+                  <q3:text>var splitDeltagare = deltagare.split(/\s*,\s*/);
+var newDeltagare;
+// Deltagare med
+if( splitDeltagare.indexOf(nummer) &gt;= 0 ) {
+  newDeltagare = splitDeltagare.join(",");
+
+// Ingen är tidigare med
+} else if ( "".equals(deltagare) ) {
+  newDeltagare = nummer;
+
+// Deltagare inte med
+} else {
+  splitDeltagare.push(nummer);
+  newDeltagare = splitDeltagare.join(",");
+}</q3:text>
+                </fileRep:properties>
+                <q3:VariablesOut>
+                  <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.280" jsVariable="newDeltagare" name="Deltagare">
+                    <fileRep:properties>
+                      <q3:jsVariable>newDeltagare</q3:jsVariable>
+                      <q3:name>Deltagare</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableOut>
+                </q3:VariablesOut>
+                <q3:VariablesIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.281" jsVariable="deltagare" name="Deltagare">
+                    <fileRep:properties>
+                      <q3:jsVariable>deltagare</q3:jsVariable>
+                      <q3:name>Deltagare</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.282" jsVariable="nummer" name="user.principal">
+                    <fileRep:properties>
+                      <q3:jsVariable>nummer</q3:jsVariable>
+                      <q3:name>user.principal</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                </q3:VariablesIn>
+              </q3:JavaScriptContextModifier>
+            </q0:OutputContextModifiers>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.283" name="Deltagare">
+                <fileRep:properties>
+                  <q0:name>Deltagare</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.284" name="Id">
+            <fileRep:properties>
+              <q0:name>Id</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.285" description="Creates or updates a new arr" name="CreateOrUpdateArrDefault">
+        <fileRep:properties>
+          <q0:description>Creates or updates a new arr</q0:description>
+          <q0:name>CreateOrUpdateArrDefault</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.286" invokeWhenEmpty="false" noMatchesBehavior="create" occurrences="one" requestType="Arr">
+            <fileRep:properties>
+              <q0:invokeWhenEmpty>false</q0:invokeWhenEmpty>
+              <q0:noMatchesBehavior>create</q0:noMatchesBehavior>
+              <q0:occurrences>one</q0:occurrences>
+              <q0:requestType>Arr</q0:requestType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.287">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.288" name="cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:name>cl2015_arrsidan</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.289" contextVariable="Id" insert="true" name="id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:insert>true</q1:insert>
+                          <q1:name>id</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.290" contextVariable="Namn" modify="true" name="namn" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Namn</q1:contextVariable>
+                          <q1:modify>true</q1:modify>
+                          <q1:name>namn</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.291" modify="true" name="plats" search="false">
+                        <fileRep:properties>
+                          <q1:modify>true</q1:modify>
+                          <q1:name>plats</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.292" contextVariable="Datum" modify="true" name="start_date" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Datum</q1:contextVariable>
+                          <q1:modify>true</q1:modify>
+                          <q1:name>start_date</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.304" defaultValue="-1" name="Id" required="false">
+            <fileRep:properties>
+              <q0:defaultValue>-1</q0:defaultValue>
+              <q0:name>Id</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.305" name="Namn">
+            <fileRep:properties>
+              <q0:name>Namn</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.306" name="Plats">
+            <fileRep:properties>
+              <q0:name>Plats</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.307" name="Datum" required="false">
+            <fileRep:properties>
+              <q0:name>Datum</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.318" name="VotePoll">
+        <fileRep:properties>
+          <q0:name>VotePoll</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.319" bindingStrategy="create" name="voteOnPoll" noMatchesBehavior="create">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:name>voteOnPoll</q0:name>
+              <q0:noMatchesBehavior>create</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.320">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.321" name="cl2004_poll_votes">
+                    <fileRep:properties>
+                      <q1:name>cl2004_poll_votes</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.322" contextVariable="Id" name="poll_ID">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:name>poll_ID</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.323" contextVariable="VotedOn" name="vote">
+                        <fileRep:properties>
+                          <q1:contextVariable>VotedOn</q1:contextVariable>
+                          <q1:name>vote</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.324" contextVariable="user.principal" name="host">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                          <q1:name>host</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.325" name="Id">
+            <fileRep:properties>
+              <q0:name>Id</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.326" name="VotedOn">
+            <fileRep:properties>
+              <q0:name>VotedOn</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.327" contextVariable="user.principal" name="user.principal">
+            <fileRep:properties>
+              <q0:contextVariable>user.principal</q0:contextVariable>
+              <q0:name>user.principal</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.293" description="Creates an entry, not implemented yet." name="CreateEntryPictures">
+        <fileRep:properties>
+          <q0:description>Creates an entry, not implemented yet.</q0:description>
+          <q0:name>CreateEntryPictures</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q3:JavaScriptContextModifier fileRep:id="com.chalmerslosers.sandbox.api.294" text="if(message == &quot;empty&quot;) {   message = &quot;&quot;; } var newMessage = message; var newFileName = fileName; if(fileName != null &amp;&amp; fileName != &quot;empty&quot;) {      newFileName = new Date().getTime();      var ending = fileName;//.substring(fileName.indexOf(&quot;.&quot;));      newFileName +=ending;      newMessage = '&lt;a href=&quot;/inmailat/clappen/' + newFileName + '&quot;&gt;'+fileName+'&lt;/a&gt;&lt;br&gt;'+message; }">
+            <fileRep:properties>
+              <q3:text>if(message == "empty") {
+  message = "";
+}
+var newMessage = message;
+var newFileName = fileName;
+if(fileName != null &amp;&amp; fileName != "empty") {
+     newFileName = new Date().getTime();
+     var ending = fileName;//.substring(fileName.indexOf("."));
+     newFileName +=ending;
+     newMessage = '&lt;a href="/inmailat/clappen/' + newFileName + '"&gt;'+fileName+'&lt;/a&gt;&lt;br&gt;'+message;
+}</q3:text>
+            </fileRep:properties>
+            <q3:VariablesOut>
+              <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.295" jsVariable="newMessage" name="Message">
+                <fileRep:properties>
+                  <q3:jsVariable>newMessage</q3:jsVariable>
+                  <q3:name>Message</q3:name>
+                </fileRep:properties>
+              </q3:VariableOut>
+              <q3:VariableOut fileRep:id="com.chalmerslosers.sandbox.api.296" jsVariable="newFileName" name="FileName">
+                <fileRep:properties>
+                  <q3:jsVariable>newFileName</q3:jsVariable>
+                  <q3:name>FileName</q3:name>
+                </fileRep:properties>
+              </q3:VariableOut>
+            </q3:VariablesOut>
+            <q3:VariablesIn>
+              <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.297" jsVariable="fileName" name="FileName">
+                <fileRep:properties>
+                  <q3:jsVariable>fileName</q3:jsVariable>
+                  <q3:name>FileName</q3:name>
+                </fileRep:properties>
+              </q3:VariableIn>
+              <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.298" jsVariable="message" name="Message">
+                <fileRep:properties>
+                  <q3:jsVariable>message</q3:jsVariable>
+                  <q3:name>Message</q3:name>
+                </fileRep:properties>
+              </q3:VariableIn>
+            </q3:VariablesIn>
+          </q3:JavaScriptContextModifier>
+        </q0:InputContextModifiers>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.299" bindingStrategy="create" name="Create entry">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:name>Create entry</q0:name>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.300">
+                <q1:InsertOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.301" query="INSERT INTO cl2003_msgs (sig, msg, lat, lon, enheter, status, host, date, time)  VALUES (?,?,?,?,?,?,?,CURDATE(),CURTIME())">
+                    <fileRep:properties>
+                      <q1:query>INSERT INTO cl2003_msgs (sig, msg, lat, lon, enheter, status, host, date, time) 
+VALUES (?,?,?,?,?,?,?,CURDATE(),CURTIME())</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.302" contextVariable="user.principal">
+                        <fileRep:properties>
+                          <q1:contextVariable>user.principal</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.303" contextVariable="Message">
+                        <fileRep:properties>
+                          <q1:contextVariable>Message</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.328" contextVariable="Latitude">
+                        <fileRep:properties>
+                          <q1:contextVariable>Latitude</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.329" contextVariable="Longitude">
+                        <fileRep:properties>
+                          <q1:contextVariable>Longitude</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.330" contextVariable="Enheter">
+                        <fileRep:properties>
+                          <q1:contextVariable>Enheter</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.331" contextVariable="Status">
+                        <fileRep:properties>
+                          <q1:contextVariable>Status</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.332" contextVariable="Host">
+                        <fileRep:properties>
+                          <q1:contextVariable>Host</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:InsertOperations>
+                <q1:SearchOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.333" query="SELECT LAST_INSERT_ID()">
+                    <fileRep:properties>
+                      <q1:query>SELECT LAST_INSERT_ID()</q1:query>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.334" columnIndex="1" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:columnIndex>1</q1:columnIndex>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                  </q1:Query>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:MappingNodes>
+              <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.335" bindingStrategy="bindAndRetrieve" name="Create secret">
+                <fileRep:properties>
+                  <q0:bindingStrategy>bindAndRetrieve</q0:bindingStrategy>
+                  <q0:name>Create secret</q0:name>
+                </fileRep:properties>
+                <q0:InvocationGuards>
+                  <q2:RequireValueInvocationGuard fileRep:id="com.chalmerslosers.sandbox.api.336" compareValue="true" contextVariable="Secret" name="compare secret" outputType="boolean">
+                    <fileRep:properties>
+                      <q2:compareValue>true</q2:compareValue>
+                      <q2:contextVariable>Secret</q2:contextVariable>
+                      <q2:name>compare secret</q2:name>
+                      <q2:outputType>boolean</q2:outputType>
+                    </fileRep:properties>
+                  </q2:RequireValueInvocationGuard>
+                </q0:InvocationGuards>
+                <q0:ResourceBinding>
+                  <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.337">
+                    <q1:BindAndRetrieveOperations>
+                      <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.338" query="INSERT INTO cl2003_permissions (id, user_id) VALUES(?, 0)">
+                        <fileRep:properties>
+                          <q1:query>INSERT INTO cl2003_permissions (id, user_id) VALUES(?, 0)</q1:query>
+                        </fileRep:properties>
+                        <q1:Parameters>
+                          <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.339" contextVariable="Id">
+                            <fileRep:properties>
+                              <q1:contextVariable>Id</q1:contextVariable>
+                            </fileRep:properties>
+                          </q1:QueryParameter>
+                        </q1:Parameters>
+                      </q1:Query>
+                    </q1:BindAndRetrieveOperations>
+                  </q1:DbResourceBinding>
+                </q0:ResourceBinding>
+              </q0:MappingNode>
+            </q0:MappingNodes>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.sandbox.api.340" contextVariable="Id" exportVariable="Id">
+                <fileRep:properties>
+                  <q0:contextVariable>Id</q0:contextVariable>
+                  <q0:exportVariable>Id</q0:exportVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.341" name="Id">
+                <fileRep:properties>
+                  <q0:name>Id</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.342" bindingStrategy="create" multipleMatchesbehavior="fail" name="Creates side kicks" noMatchesBehavior="ignore" requestDescription="These are the partners in crime, the accessories or kumpaner." requestName="SideKicks" requestType="SideKick">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:multipleMatchesbehavior>fail</q0:multipleMatchesbehavior>
+              <q0:name>Creates side kicks</q0:name>
+              <q0:noMatchesBehavior>ignore</q0:noMatchesBehavior>
+              <q0:requestDescription>These are the partners in crime, the accessories or kumpaner.</q0:requestDescription>
+              <q0:requestName>SideKicks</q0:requestName>
+              <q0:requestType>SideKick</q0:requestType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.343">
+                <q1:InsertOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.344" query="INSERT INTO cl2003_msgs_kumpaner (id, number) VALUES (?, ?)">
+                    <fileRep:properties>
+                      <q1:query>INSERT INTO cl2003_msgs_kumpaner (id, number) VALUES (?, ?)</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.345" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.346" contextVariable="Signature" dataType="integer">
+                        <fileRep:properties>
+                          <q1:contextVariable>Signature</q1:contextVariable>
+                          <q1:dataType>integer</q1:dataType>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:InsertOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Inputs>
+              <q0:Input fileRep:id="com.chalmerslosers.sandbox.api.347" contextVariable="Signature" dataType="integer" name="Signature">
+                <fileRep:properties>
+                  <q0:contextVariable>Signature</q0:contextVariable>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>Signature</q0:name>
+                </fileRep:properties>
+              </q0:Input>
+            </q0:Inputs>
+          </q0:MappingNode>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.348" bindingStrategy="create" name="Creates the image">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:name>Creates the image</q0:name>
+            </fileRep:properties>
+            <q0:InvocationGuards>
+              <q2:RequireValueInvocationGuard fileRep:id="com.chalmerslosers.sandbox.api.349" compareValue="null" contextVariable="Base64Image" invertResult="true">
+                <fileRep:properties>
+                  <q2:compareValue>null</q2:compareValue>
+                  <q2:contextVariable>Base64Image</q2:contextVariable>
+                  <q2:invertResult>true</q2:invertResult>
+                </fileRep:properties>
+              </q2:RequireValueInvocationGuard>
+            </q0:InvocationGuards>
+            <q0:ResourceBinding>
+              <q6:FileResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.351" contentVariable="Data" directory="/home/cl/webapps/inmailat/clappen/" filenameVariable="FileName">
+                <fileRep:properties>
+                  <q6:contentVariable>Data</q6:contentVariable>
+                  <q6:directory>/home/cl/webapps/inmailat/clappen/</q6:directory>
+                  <q6:filenameVariable>FileName</q6:filenameVariable>
+                </fileRep:properties>
+              </q6:FileResourceBinding>
+            </q0:ResourceBinding>
+            <q0:InputContextModifiers>
+              <q4:Base64DecodeContextModifier fileRep:id="com.chalmerslosers.sandbox.api.352" contextVariable="Base64Image" outputVariable="Data">
+                <fileRep:properties>
+                  <q4:contextVariable>Base64Image</q4:contextVariable>
+                  <q4:outputVariable>Data</q4:outputVariable>
+                </fileRep:properties>
+              </q4:Base64DecodeContextModifier>
+            </q0:InputContextModifiers>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.353" defaultValue="empty" name="Message">
+            <fileRep:properties>
+              <q0:defaultValue>empty</q0:defaultValue>
+              <q0:name>Message</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.354" dataType="decimal" name="Latitude">
+            <fileRep:properties>
+              <q0:dataType>decimal</q0:dataType>
+              <q0:name>Latitude</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.355" dataType="decimal" name="Longitude">
+            <fileRep:properties>
+              <q0:dataType>decimal</q0:dataType>
+              <q0:name>Longitude</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.356" dataType="integer" defaultValue="0" name="Enheter">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>0</q0:defaultValue>
+              <q0:name>Enheter</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.357" dataType="integer" defaultValue="0" description="VALUES: 0 = normal&lt;br&gt;  1 = politics &lt;br&gt;  2 = complaints &lt;br&gt;  3 = noshow &lt;br&gt;  4 = nerd &lt;br&gt;  5 = NSFW &lt;br&gt;  blank = default" name="Status">
+            <fileRep:properties>
+              <q0:dataType>integer</q0:dataType>
+              <q0:defaultValue>0</q0:defaultValue>
+              <q0:description>VALUES: 0 = normal&lt;br&gt;
+ 1 = politics &lt;br&gt;
+ 2 = complaints &lt;br&gt;
+ 3 = noshow &lt;br&gt;
+ 4 = nerd &lt;br&gt;
+ 5 = NSFW &lt;br&gt;
+ blank = default</q0:description>
+              <q0:name>Status</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.358" name="Host">
+            <fileRep:properties>
+              <q0:name>Host</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.359" dataType="boolean" name="Secret">
+            <fileRep:properties>
+              <q0:dataType>boolean</q0:dataType>
+              <q0:name>Secret</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.360" name="Base64Image">
+            <fileRep:properties>
+              <q0:name>Base64Image</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.361" defaultValue="empty" name="FileName">
+            <fileRep:properties>
+              <q0:defaultValue>empty</q0:defaultValue>
+              <q0:name>FileName</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.350" description="Creates or updates a new arr" name="CreateOrUpdateMax">
+        <fileRep:properties>
+          <q0:description>Creates or updates a new arr</q0:description>
+          <q0:name>CreateOrUpdateMax</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.362" name="Get the biggest largest id">
+            <fileRep:properties>
+              <q0:name>Get the biggest largest id</q0:name>
+            </fileRep:properties>
+            <q0:InvocationGuards>
+              <q2:RequireValueInvocationGuard fileRep:id="com.chalmerslosers.sandbox.api.363" compareValue="-1" contextVariable="Id">
+                <fileRep:properties>
+                  <q2:compareValue>-1</q2:compareValue>
+                  <q2:contextVariable>Id</q2:contextVariable>
+                </fileRep:properties>
+              </q2:RequireValueInvocationGuard>
+            </q0:InvocationGuards>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.364">
+                <q1:SearchOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.365" query="select max(id) + 1 from cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:query>select max(id) + 1 from cl2015_arrsidan</q1:query>
+                    </fileRep:properties>
+                    <q1:ResultSetValues>
+                      <q1:ResultSetValue fileRep:id="com.chalmerslosers.sandbox.api.366" columnIndex="1" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:columnIndex>1</q1:columnIndex>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:ResultSetValue>
+                    </q1:ResultSetValues>
+                  </q1:Query>
+                </q1:SearchOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.sandbox.api.367" contextVariable="Id">
+                <fileRep:properties>
+                  <q0:contextVariable>Id</q0:contextVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+          </q0:MappingNode>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.368" invokeWhenEmpty="false" noMatchesBehavior="create" occurrences="one" requestType="Arr">
+            <fileRep:properties>
+              <q0:invokeWhenEmpty>false</q0:invokeWhenEmpty>
+              <q0:noMatchesBehavior>create</q0:noMatchesBehavior>
+              <q0:occurrences>one</q0:occurrences>
+              <q0:requestType>Arr</q0:requestType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.369">
+                <q1:InsertOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.370" query="INSERT INTO cl2015_arrsidan (id, namn, plats, start_date) VALUES(?,?,?,?)">
+                    <fileRep:properties>
+                      <q1:query>INSERT INTO cl2015_arrsidan (id, namn, plats, start_date) VALUES(?,?,?,?)</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.371" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.372" contextVariable="Namn">
+                        <fileRep:properties>
+                          <q1:contextVariable>Namn</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.373" contextVariable="Plats">
+                        <fileRep:properties>
+                          <q1:contextVariable>Plats</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.374" contextVariable="Datum">
+                        <fileRep:properties>
+                          <q1:contextVariable>Datum</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:InsertOperations>
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.375" name="cl2015_arrsidan">
+                    <fileRep:properties>
+                      <q1:name>cl2015_arrsidan</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.376" contextVariable="Id" insert="false" name="id" requiredForSearch="true">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                          <q1:insert>false</q1:insert>
+                          <q1:name>id</q1:name>
+                          <q1:requiredForSearch>true</q1:requiredForSearch>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.377" contextVariable="Namn" insert="false" modify="true" name="namn" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Namn</q1:contextVariable>
+                          <q1:insert>false</q1:insert>
+                          <q1:modify>true</q1:modify>
+                          <q1:name>namn</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.378" contextVariable="Plats" insert="false" modify="true" name="plats" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Plats</q1:contextVariable>
+                          <q1:insert>false</q1:insert>
+                          <q1:modify>true</q1:modify>
+                          <q1:name>plats</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.379" contextVariable="Datum" insert="false" modify="true" name="start_date" search="false">
+                        <fileRep:properties>
+                          <q1:contextVariable>Datum</q1:contextVariable>
+                          <q1:insert>false</q1:insert>
+                          <q1:modify>true</q1:modify>
+                          <q1:name>start_date</q1:name>
+                          <q1:search>false</q1:search>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.380" name="Id" required="false">
+            <fileRep:properties>
+              <q0:name>Id</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.381" name="Namn">
+            <fileRep:properties>
+              <q0:name>Namn</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.382" name="Plats">
+            <fileRep:properties>
+              <q0:name>Plats</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.383" name="Datum" required="false">
+            <fileRep:properties>
+              <q0:name>Datum</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.384" description="Creates or updates a new arr" name="CreateOrUpdateArr">
+        <fileRep:properties>
+          <q0:description>Creates or updates a new arr</q0:description>
+          <q0:name>CreateOrUpdateArr</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.385" bindingStrategy="create" invokeWhenEmpty="false" noMatchesBehavior="create" occurrences="one" requestType="Arr">
+            <fileRep:properties>
+              <q0:bindingStrategy>create</q0:bindingStrategy>
+              <q0:invokeWhenEmpty>false</q0:invokeWhenEmpty>
+              <q0:noMatchesBehavior>create</q0:noMatchesBehavior>
+              <q0:occurrences>one</q0:occurrences>
+              <q0:requestType>Arr</q0:requestType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.386">
+                <q1:InsertOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.387" query="insert into cl2015_arrsidan(id, namn, start_date, plats) values (?, ?, ?, ?) on duplicate key update namn=?, start_date=?, plats=?;">
+                    <fileRep:properties>
+                      <q1:query>insert into cl2015_arrsidan(id, namn, start_date, plats) values (?, ?, ?, ?) on duplicate key update namn=?, start_date=?, plats=?;</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.388" contextVariable="Id">
+                        <fileRep:properties>
+                          <q1:contextVariable>Id</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.389" contextVariable="Namn">
+                        <fileRep:properties>
+                          <q1:contextVariable>Namn</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.390" contextVariable="Datum">
+                        <fileRep:properties>
+                          <q1:contextVariable>Datum</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.391" contextVariable="Plats">
+                        <fileRep:properties>
+                          <q1:contextVariable>Plats</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.392" contextVariable="Namn">
+                        <fileRep:properties>
+                          <q1:contextVariable>Namn</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.393" contextVariable="Datum">
+                        <fileRep:properties>
+                          <q1:contextVariable>Datum</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.394" contextVariable="Plats">
+                        <fileRep:properties>
+                          <q1:contextVariable>Plats</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:InsertOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.395" dataType="string" name="Id" required="false">
+            <fileRep:properties>
+              <q0:dataType>string</q0:dataType>
+              <q0:name>Id</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.396" name="Namn">
+            <fileRep:properties>
+              <q0:name>Namn</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.397" name="Plats">
+            <fileRep:properties>
+              <q0:name>Plats</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.398" name="Datum" required="false">
+            <fileRep:properties>
+              <q0:name>Datum</q0:name>
+              <q0:required>false</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.399" description="Hämtar alla nummer som är registrerade." name="GetKumpaner">
+        <fileRep:properties>
+          <q0:description>Hämtar alla nummer som är registrerade.</q0:description>
+          <q0:name>GetKumpaner</q0:name>
+        </fileRep:properties>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.400" multipleMatchesbehavior="repeatForEach" resultName="Kumpaner" resultType="Kumpaner">
+            <fileRep:properties>
+              <q0:multipleMatchesbehavior>repeatForEach</q0:multipleMatchesbehavior>
+              <q0:resultName>Kumpaner</q0:resultName>
+              <q0:resultType>Kumpaner</q0:resultType>
+            </fileRep:properties>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.401">
+                <q1:Table>
+                  <q1:Table fileRep:id="com.chalmerslosers.sandbox.api.402" name="cl2007_members">
+                    <fileRep:properties>
+                      <q1:name>cl2007_members</q1:name>
+                    </fileRep:properties>
+                    <q1:Columns>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.403" contextVariable="Number" name="number">
+                        <fileRep:properties>
+                          <q1:contextVariable>Number</q1:contextVariable>
+                          <q1:name>number</q1:name>
+                        </fileRep:properties>
+                        <q1:SortDirective>
+                          <q1:SortAscending fileRep:id="com.chalmerslosers.sandbox.api.404"/>
+                        </q1:SortDirective>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.405" contextVariable="Name" name="name">
+                        <fileRep:properties>
+                          <q1:contextVariable>Name</q1:contextVariable>
+                          <q1:name>name</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.409" contextVariable="Winner" name="isvalid">
+                        <fileRep:properties>
+                          <q1:contextVariable>Winner</q1:contextVariable>
+                          <q1:name>isvalid</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.410" contextVariable="Title" name="title">
+                        <fileRep:properties>
+                          <q1:contextVariable>Title</q1:contextVariable>
+                          <q1:name>title</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.411" contextVariable="Im" name="im">
+                        <fileRep:properties>
+                          <q1:contextVariable>Im</q1:contextVariable>
+                          <q1:name>im</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.430" contextVariable="Phone" name="phone">
+                        <fileRep:properties>
+                          <q1:contextVariable>Phone</q1:contextVariable>
+                          <q1:name>phone</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                      <q1:Column fileRep:id="com.chalmerslosers.sandbox.api.432" contextVariable="OnlyValidUsers" name="isvalid">
+                        <fileRep:properties>
+                          <q1:contextVariable>OnlyValidUsers</q1:contextVariable>
+                          <q1:name>isvalid</q1:name>
+                        </fileRep:properties>
+                      </q1:Column>
+                    </q1:Columns>
+                  </q1:Table>
+                </q1:Table>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.406" dataType="integer" name="Number">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>Number</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.407" name="Name">
+                <fileRep:properties>
+                  <q0:name>Name</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.408" dataType="integer" name="Winner">
+                <fileRep:properties>
+                  <q0:dataType>integer</q0:dataType>
+                  <q0:name>Winner</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.412" name="Title">
+                <fileRep:properties>
+                  <q0:name>Title</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.413" name="Im">
+                <fileRep:properties>
+                  <q0:name>Im</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.431" name="Phone">
+                <fileRep:properties>
+                  <q0:name>Phone</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.433" dataType="boolean" name="OnlyValidUsers">
+            <fileRep:properties>
+              <q0:dataType>boolean</q0:dataType>
+              <q0:name>OnlyValidUsers</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.414" name="ChangePassword">
+        <fileRep:properties>
+          <q0:name>ChangePassword</q0:name>
+        </fileRep:properties>
+        <q0:InputContextModifiers>
+          <q5:SubstringTemplate fileRep:id="com.chalmerslosers.sandbox.api.415" contextVariable="User" name="extract number from username" startValue="1">
+            <fileRep:properties>
+              <q5:contextVariable>User</q5:contextVariable>
+              <q5:name>extract number from username</q5:name>
+              <q5:startValue>1</q5:startValue>
+            </fileRep:properties>
+          </q5:SubstringTemplate>
+          <q4:BCryptHash fileRep:id="com.chalmerslosers.sandbox.api.416" contextVariable="Password" outputVariable="Password" rounds="12">
+            <fileRep:properties>
+              <q4:contextVariable>Password</q4:contextVariable>
+              <q4:outputVariable>Password</q4:outputVariable>
+              <q4:rounds>12</q4:rounds>
+            </fileRep:properties>
+          </q4:BCryptHash>
+        </q0:InputContextModifiers>
+        <q0:MappingNodes>
+          <q0:MappingNode fileRep:id="com.chalmerslosers.sandbox.api.417" bindingStrategy="search" name="update pwd in db" noMatchesBehavior="ignore">
+            <fileRep:properties>
+              <q0:bindingStrategy>search</q0:bindingStrategy>
+              <q0:name>update pwd in db</q0:name>
+              <q0:noMatchesBehavior>ignore</q0:noMatchesBehavior>
+            </fileRep:properties>
+            <q0:InvocationGuards>
+              <q3:JavaScriptInvocationGuard fileRep:id="com.chalmerslosers.sandbox.api.418" name="check if admin pwd is correct" text="Admin == &quot;losenord&quot;;">
+                <fileRep:properties>
+                  <q3:name>check if admin pwd is correct</q3:name>
+                  <q3:text>Admin == "losenord";</q3:text>
+                </fileRep:properties>
+                <q3:VariablesIn>
+                  <q3:VariableIn fileRep:id="com.chalmerslosers.sandbox.api.419" name="Admin">
+                    <fileRep:properties>
+                      <q3:name>Admin</q3:name>
+                    </fileRep:properties>
+                  </q3:VariableIn>
+                </q3:VariablesIn>
+              </q3:JavaScriptInvocationGuard>
+            </q0:InvocationGuards>
+            <q0:ResourceBinding>
+              <q1:DbResourceBinding fileRep:id="com.chalmerslosers.sandbox.api.420">
+                <q1:UpdateOperations>
+                  <q1:Query fileRep:id="com.chalmerslosers.sandbox.api.421" query="UPDATE cl2007_members SET password=? WHERE number=? LIMIT 1;">
+                    <fileRep:properties>
+                      <q1:query>UPDATE cl2007_members
+SET password=?
+WHERE number=?
+LIMIT 1;</q1:query>
+                    </fileRep:properties>
+                    <q1:Parameters>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.422" contextVariable="Password">
+                        <fileRep:properties>
+                          <q1:contextVariable>Password</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                      <q1:QueryParameter fileRep:id="com.chalmerslosers.sandbox.api.423" contextVariable="User">
+                        <fileRep:properties>
+                          <q1:contextVariable>User</q1:contextVariable>
+                        </fileRep:properties>
+                      </q1:QueryParameter>
+                    </q1:Parameters>
+                  </q1:Query>
+                </q1:UpdateOperations>
+              </q1:DbResourceBinding>
+            </q0:ResourceBinding>
+            <q0:VariableExports>
+              <q0:VariableExport fileRep:id="com.chalmerslosers.sandbox.api.424" contextVariable="Result" exportVariable="Result">
+                <fileRep:properties>
+                  <q0:contextVariable>Result</q0:contextVariable>
+                  <q0:exportVariable>Result</q0:exportVariable>
+                </fileRep:properties>
+              </q0:VariableExport>
+            </q0:VariableExports>
+            <q0:Outputs>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.425" name="User">
+                <fileRep:properties>
+                  <q0:name>User</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+              <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.426" name="Password">
+                <fileRep:properties>
+                  <q0:name>Password</q0:name>
+                </fileRep:properties>
+              </q0:Output>
+            </q0:Outputs>
+          </q0:MappingNode>
+        </q0:MappingNodes>
+        <q0:Inputs>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.427" name="User" required="true">
+            <fileRep:properties>
+              <q0:name>User</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.428" name="Password" required="true">
+            <fileRep:properties>
+              <q0:name>Password</q0:name>
+              <q0:required>true</q0:required>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+          <q0:TopLevelInput fileRep:id="com.chalmerslosers.sandbox.api.429" name="Admin">
+            <fileRep:properties>
+              <q0:name>Admin</q0:name>
+            </fileRep:properties>
+          </q0:TopLevelInput>
+        </q0:Inputs>
+      </q0:Service>
+      <q0:Service fileRep:id="com.chalmerslosers.sandbox.api.434" name="AuthenticateTest">
+        <fileRep:properties>
+          <q0:name>AuthenticateTest</q0:name>
+        </fileRep:properties>
+        <q0:Outputs>
+          <q0:Output fileRep:id="com.chalmerslosers.sandbox.api.435" dataType="boolean" defaultValue="true" name="Authenticated">
+            <fileRep:properties>
+              <q0:dataType>boolean</q0:dataType>
+              <q0:defaultValue>true</q0:defaultValue>
+              <q0:name>Authenticated</q0:name>
+            </fileRep:properties>
+          </q0:Output>
+        </q0:Outputs>
+      </q0:Service>
+    </q0:Services>
+    <q0:CallVariables>
+      <q0:CallVariable fileRep:id="com.chalmerslosers.sandbox.api.163" name="user.principal">
+        <fileRep:properties>
+          <q0:name>user.principal</q0:name>
+        </fileRep:properties>
+      </q0:CallVariable>
+    </q0:CallVariables>
+  </q0:Repository>
+</fileRep:Module>

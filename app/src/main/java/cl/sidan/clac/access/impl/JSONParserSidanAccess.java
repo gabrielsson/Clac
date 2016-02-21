@@ -332,12 +332,13 @@ public class JSONParserSidanAccess implements SidanAccess {
 
     @Override
     public final boolean authenticateUser() {
+        JSONObject json = null;
         try {
-            invoke("AuthenticateUser", "");
+            json = invoke("AuthenticateTest", "");
         } catch (Exception e) {
             return false;
         }
-        return true;
+        return json!=null;
     }
 
     @Override

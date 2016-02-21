@@ -341,9 +341,18 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public List<User> readMembers() {
-        JSONObject json = invoke("GetKumpaner", "");
-        JSONArray array = json.optJSONArray("Kumpaner");
+    public List<User> readMembers(boolean onlyValidMembers) {
+        String request = "";
+        if (onlyValidMembers) {
+            request="OnlyValidMembers=true";
+        }
+
+        JSONObject json = invoke("GetKumpaner", request);
+        JSONArray array = new JSONArray();
+        if(json != null) {
+            array = json.optJSONArray("Kumpaner");
+        }
+
         List<User> result = new ArrayList<>();
         if (array != null) {
             for (int i = 0; i<array.length(); i++) {

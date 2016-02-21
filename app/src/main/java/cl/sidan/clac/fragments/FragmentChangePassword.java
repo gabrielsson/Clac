@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,18 +64,12 @@ public class FragmentChangePassword extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button changePasswordButton = (Button) view.findViewById(R.id.change_password_button);
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ChangePasswordAsync().execute();
-            }
-        });
+
     }
 
     private void populateUserNames() {
         //run in background
-        userList = ((MainActivity) getActivity()).sidanAccess().readMembers();
+        userList = ((MainActivity) getActivity()).sidanAccess().readMembers(true);
 
         //run on ui thread
           /* Möjlig Nullpekare här. Om både denna kör och versionsasync eller något. */
@@ -106,8 +98,16 @@ public class FragmentChangePassword extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_change_password, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_change_password, container, false);
+        Button changePasswordButton = (Button) view.findViewById(R.id.change_password_button);
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ChangePasswordAsync().execute();
+            }
+        });
+        return view;
     }
 
 
@@ -118,14 +118,12 @@ public class FragmentChangePassword extends Fragment {
         EditText adminEditText = (EditText) getActivity().findViewById(R.id.admin_password);
         String adminPassword = adminEditText.getText().toString();
         String password = passWordEditText.getText().toString();
-        new ChangePasswordAsync().execute();
 
         ((MainActivity)getActivity()).sidanAccess().updatePassword(userName, password, adminPassword);
 
-
-        passWordEditText.setText("");
-        adminEditText.setText("");
-        spinner.setSelection(((ArrayAdapter)spinner.getAdapter()).getPosition(((MainActivity)getActivity()).number));
+        if(userName.equals(((MainActivity)getActivity()).number)) {
+            ((MainActivity) getActivity()).logOut();
+        }
     }
 
 

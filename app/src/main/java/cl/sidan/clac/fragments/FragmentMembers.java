@@ -1,6 +1,5 @@
 package cl.sidan.clac.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,10 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -19,18 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
-import cl.sidan.clac.access.interfaces.Arr;
-import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.User;
 
 /**
@@ -155,7 +145,8 @@ public class FragmentMembers extends Fragment {
         @Override
         protected Void doInBackground(String... strings) {
             members.clear();
-            members.addAll(((MainActivity) getActivity()).sidanAccess().readMembers());
+            members.addAll(((MainActivity) getActivity())
+                    .sidanAccess().readMembers(false)); //want to show all numbers in the memberlist
             if(getActivity() != null) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

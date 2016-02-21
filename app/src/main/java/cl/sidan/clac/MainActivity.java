@@ -260,9 +260,10 @@ public class MainActivity extends AppCompatActivity
         preferences.edit().clear().apply();
 
         // Broadcast logout to other activities
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction("com.package.ACTION_LOGOUT");
-        sendBroadcast(broadcastIntent);
+
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 

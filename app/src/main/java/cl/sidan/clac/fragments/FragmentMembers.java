@@ -52,11 +52,10 @@ public class FragmentMembers extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_member_list, container, false);
         context = rootView.getContext();
 
-        final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
-        float font_size = preferences.getFloat("font_size", 15);
+        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
 
         if(memberAdapter == null) {
-            memberAdapter = new AdapterMembers(inflater.getContext(), R.layout.fragment_member, members, font_size);
+            memberAdapter = new AdapterMembers(inflater.getContext(), R.layout.adapter_member_item, members, font_size);
             memberAdapter.setNotifyOnChange(true);
         }
 
@@ -133,7 +132,7 @@ public class FragmentMembers extends Fragment {
         float font_size = preferences.getFloat("font_size", 15);
 
         if(memberAdapter == null) {
-            memberAdapter = new AdapterMembers(rootView.getContext(), R.layout.fragment_member, members, font_size);
+            memberAdapter = new AdapterMembers(rootView.getContext(), R.layout.adapter_member_item, members, font_size);
             memberAdapter.setNotifyOnChange(true);
         }
 

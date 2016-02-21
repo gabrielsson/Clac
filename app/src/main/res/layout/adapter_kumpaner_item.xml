@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:layout_gravity="start"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:button="@android:color/transparent"
+    android:textColor="@color/text_winered">
+
+    <TextView
+        android:textStyle="bold"
+        android:textColor="@color/text_winered"
+        android:id="@+id/memberSignature"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:text="#78" />
+</RelativeLayout>

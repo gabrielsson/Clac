@@ -36,6 +36,29 @@
             android:layout_height="50dp"
             />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/choose_kumpaner"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/nopo"
+                android:text="Kumpaner"
+                />
+            <TextView
+                android:id="@+id/kumpaner"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="50dp"
+                android:layout_toEndOf="@+id/choose_kumpaner"
+                />
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/write_entry_imagechoosen"
             android:contentDescription="@string/imagechosen"
@@ -43,12 +66,5 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/container_drawer"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content" />
-
-    <!-- <include layout="@layout/write_entry_drawer" android:id="@+id/write_entry_drawer" />-->
 
 </RelativeLayout>

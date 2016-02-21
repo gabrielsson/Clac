@@ -8,4 +8,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_turqoise"
-    tools:listitem="@layout/fragment_member" />
+    tools:listitem="@layout/adapter_member_item" />

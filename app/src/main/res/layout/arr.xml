@@ -34,7 +34,7 @@
         android:id="@+id/arr_deltagare"
         android:text="#15, #18, #40, #44"
         android:textStyle="italic"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/arr_datum" />
 
@@ -42,11 +42,10 @@
         android:id="@+id/arr_hetsade"
         android:text="| Hets: #62, #68, #71, #71sMamma"
         android:textStyle="italic"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/arr_datum"
-        android:layout_toEndOf="@id/arr_deltagare"
-        android:layout_toRightOf="@id/arr_deltagare"
+        android:layout_below="@id/arr_deltagare"
+
         />
 
     <View

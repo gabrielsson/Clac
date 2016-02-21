@@ -10,6 +10,9 @@
     android:background="@drawable/background">
 
     <TextView
+
+        android:textStyle="bold"
+        android:textColor="@color/text_winered"
         android:id="@+id/memberSignature"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
@@ -19,6 +22,8 @@
         android:text="#78" />
 
     <TextView
+        android:textStyle="bold"
+        android:textColor="@color/text_winered"
         android:id="@+id/memberName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,6 +33,8 @@
         android:text="Christofer Benett" />
 
     <TextView
+        android:textStyle="bold"
+        android:textColor="@color/text_winered"
         android:id="@+id/memberNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,6 +45,8 @@
         android:text="0730-257634" />
 
     <TextView
+        android:textStyle="bold"
+        android:textColor="@color/text_winered"
         android:id="@+id/memberTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

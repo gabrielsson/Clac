@@ -56,9 +56,6 @@ public class FragmentMembers extends Fragment {
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_member_list, container, false);
         context = rootView.getContext();
-        //members = ((MainActivity) getActivity()).sidanAccess().readMembers();
-        //members.add(new RequestUser("#78","Christofer Benett","0730257634","Yrkesmilitär"));
-        //members.add(new RequestUser("#78","Christofer Benett","0730257634","Yrkesmilitär"));
 
         final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
         float font_size = preferences.getFloat("font_size", 15);

@@ -371,7 +371,6 @@ public class FragmentArr extends Fragment {
                     }
                 });
             }
-
             return null;
         }
     }

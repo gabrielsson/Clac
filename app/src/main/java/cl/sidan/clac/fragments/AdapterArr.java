@@ -70,7 +70,7 @@ public class AdapterArr extends ArrayAdapter<Arr> {
         String arrText = (arrNamn.isEmpty() ? "" : arrNamn) +
                 (arrNamn.isEmpty() || arrPlats.isEmpty() ? "" : " @ ") +
                 (arrPlats.isEmpty() ? "" : arrPlats);
-        String arrHets = (arrHetsade.isEmpty() ? "" : " | Hets: " + arrHetsade) +
+        String arrHets = (arrHetsade.isEmpty() ? "" : "Hets: " + arrHetsade) +
                 (arrKanske.isEmpty() ? "" : " | Kanske: " + arrKanske);
         holder.txtArrNamn.setText(arrText);
         holder.txtArrDatum.setText(arr.getDatum());

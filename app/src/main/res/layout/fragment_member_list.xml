@@ -9,8 +9,3 @@
     android:layout_height="match_parent"
     android:background="@color/background_turqoise"
     tools:listitem="@layout/fragment_member" />
-
-<!--
-android:name="cl.sidan.clac.fragments.FragmentMembers"
-tools:context="cl.sidan.clac.fragments.FragmentMembers"
-app:layoutManager="LinearLayoutManager"-->

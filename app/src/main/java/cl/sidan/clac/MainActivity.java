@@ -34,6 +34,7 @@ import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
@@ -208,6 +209,9 @@ public class MainActivity extends AppCompatActivity
                 fragment = getReusedFragment(new FragmentWrite());
                 break;
             case R.id.nav_view:
+                break;
+            case R.id.nav_arr:
+                fragment = getReusedFragment(new FragmentArr());
                 break;
             case R.id.nav_members:
                 fragment = getReusedFragment(new FragmentMembers());

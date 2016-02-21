@@ -232,6 +232,8 @@ public class LoginActivity extends AppCompatActivity {
                         .putString("username", mUsername)
                         .putString("password", mPassword)
                         .apply();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                 startActivity(intent);
                 finish();
             } else {

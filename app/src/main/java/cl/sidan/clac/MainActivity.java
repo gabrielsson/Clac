@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
     }
 
+
+
     @Override
     protected void onRestart() {
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
@@ -104,6 +106,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else {
+            LazyHolder.INSTANCE = new JSONParserSidanAccess(number, password);
+
             // Report exceptions via mail
             //Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
@@ -265,6 +269,7 @@ public class MainActivity extends AppCompatActivity
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+
     }
 
     public boolean checkAndUpdateTime() {
@@ -351,7 +356,7 @@ public class MainActivity extends AppCompatActivity
      *************************************************************************/
 
     private static class LazyHolder {
-        private static SidanAccess INSTANCE = new JSONParserSidanAccess(number, password);
+        private static SidanAccess INSTANCE;//= new JSONParserSidanAccess(number, password);
     }
 
     public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {

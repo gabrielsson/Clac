@@ -62,6 +62,12 @@ public class FragmentChangePassword extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        new ReadMembersAsync().execute();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

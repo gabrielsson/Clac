@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment getReusedFragment(Fragment instanceFragment) {
         Fragment reusedFragment = getSupportFragmentManager().findFragmentByTag(instanceFragment.getClass().getCanonicalName());
         if (reusedFragment == null) {
-            getSupportFragmentManager().beginTransaction().add(instanceFragment, instanceFragment.getClass().getCanonicalName());
+            getSupportFragmentManager().beginTransaction().add(instanceFragment, instanceFragment.getClass().getCanonicalName()).commit();
             reusedFragment = instanceFragment;
         }
         return reusedFragment;

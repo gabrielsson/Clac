@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
@@ -49,7 +51,6 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences preferences = null;
     private boolean isUserLoggedIn;
     public static String number = "";
-    private static String password = "";
 
     private ArrayList<User> kumpaner = new ArrayList<>();
     private ArrayList<Integer> selectedItems = new ArrayList<>();
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Entry> notSentList = new ArrayList<>();
     private DrawerLayout drawer;
+
+    private HashMap<String, Fragment> fragments = new HashMap<>();
 
     @Override
     protected void onResume() {
@@ -96,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
         isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
         number = preferences.getString("username", null);
-        password = preferences.getString("password", null);
+        String password = preferences.getString("password", null);
 
         // Start login activity if needed
         if (!isUserLoggedIn) {
@@ -134,12 +137,7 @@ public class MainActivity extends AppCompatActivity
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Fragment fragment = getReusedFragment(new FragmentWrite());
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.right_drawer, fragment)
-                            .commit();
-
-                    drawer.openDrawer(GravityCompat.END);
+                    getReusedFragment(new FragmentWrite());
                 }
             });
 
@@ -153,7 +151,8 @@ public class MainActivity extends AppCompatActivity
                     .build();
             listView.setOnScrollListener(scrl);
 
-
+            getReusedFragment(new FragmentWrite());
+            drawer.closeDrawer(GravityCompat.END);
         }
     }
 
@@ -183,24 +182,15 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.action_settings:
-                fragment = getReusedFragment(new FragmentSettings());
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.right_drawer, fragment)
-                        .commit();
-                drawer.openDrawer(GravityCompat.END);
+                getReusedFragment(new FragmentSettings());
                 return true;
             case R.id.action_logout:
                 logOut();
                 return true;
             case R.id.action_change_password:
-                fragment = getReusedFragment(new FragmentChangePassword());
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.right_drawer, fragment)
-                        .commit();
-                drawer.openDrawer(GravityCompat.END);
+                getReusedFragment(new FragmentChangePassword());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -209,53 +199,56 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Fragment fragment = null;
-        // FragmentWrite is the default fragment
-
         switch (item.getItemId()) {
             case R.id.nav_read_entries:
-                item.setChecked(true);
                 //Do nothing, drawers will be closed since no new fragment is loaded.
                 break;
             case R.id.nav_write_entry:
-                fragment = getReusedFragment(new FragmentWrite());
-                break;
-            case R.id.nav_view:
+                getReusedFragment(new FragmentWrite());
                 break;
             case R.id.nav_arr:
-                fragment = getReusedFragment(new FragmentArr());
+                getReusedFragment(new FragmentArr());
                 break;
             case R.id.nav_members:
-                fragment = getReusedFragment(new FragmentMembers());
+                getReusedFragment(new FragmentMembers());
                 break;
-            case R.id.nav_slideshow:
+            case R.id.nav_tattarbilder:
                 break;
-            case R.id.nav_manage:
-                fragment = getReusedFragment(new FragmentWrite());
+            case R.id.nav_settings:
+                getReusedFragment(new FragmentSettings());
+                break;
+            case R.id.nav_map:
+                break;
+            case R.id.nav_ninja:
                 break;
             default:
                 // Kill
                 throw new RuntimeException("Some functionality is obviously not implemented yet.");
         }
 
-        if(fragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.right_drawer, fragment)
-                    .commit();
-            drawer.openDrawer(GravityCompat.END);
-        }
         item.setChecked(true);
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private Fragment getReusedFragment(Fragment instanceFragment) {
-        Fragment reusedFragment = getSupportFragmentManager().findFragmentByTag(instanceFragment.getClass().getCanonicalName());
-        if (reusedFragment == null) {
-            getSupportFragmentManager().beginTransaction().add(instanceFragment, instanceFragment.getClass().getCanonicalName()).commit();
-            reusedFragment = instanceFragment;
+    public Fragment getReusedFragment(Fragment instanceFragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        if ( null == fragments.get(instanceFragment.getClass().getCanonicalName()) ) {
+            fragments.put(instanceFragment.getClass().getCanonicalName(), instanceFragment);
+            ft.add(R.id.right_drawer, instanceFragment, instanceFragment.getClass().getCanonicalName());
         }
+
+        for( Fragment fragment : fragments.values() ) {
+            ft.hide(fragment);
+        }
+
+        Fragment reusedFragment = fragments.get(instanceFragment.getClass().getCanonicalName());
+        ft.show(reusedFragment);
+
+        ft.commit();
+        drawer.openDrawer(GravityCompat.END);
         return reusedFragment;
     }
 

@@ -28,17 +28,32 @@
             android:layout_height="wrap_content"
             android:text="@string/write_entry_send" />
 
-        <Spinner
-            android:id="@+id/number_of_beers"
-            android:layout_marginStart="10dp"
+        <RelativeLayout
             android:layout_marginTop="10dp"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <Spinner
+                android:id="@+id/number_of_beers"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                />
+
+            <CheckBox
+                android:id="@+id/write_entry_secret"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dp"
+                android:layout_centerInParent="true"
+                android:text="Hemlis" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/choose_kumpaner"

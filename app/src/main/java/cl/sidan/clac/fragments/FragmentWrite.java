@@ -191,10 +191,12 @@ public class FragmentWrite extends Fragment {
 
         float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
 
-        TextView tv = (TextView) rootView.findViewById(R.id.write_entry_text);
+        EditText tv = (EditText) rootView.findViewById(R.id.write_entry_text);
         tv.setTextSize(font_size);
+        tv.requestFocus();
 
         if(memberAdapter == null) {
+            Log.w(getTag(), "XXX_SWO: onResume: memberAdapter == null. If this row happen, then the this if statement is necessary.");
             memberAdapter = new AdapterMembers(getActivity(), R.layout.adapter_kumpaner_item, kumpaner, font_size);
             memberAdapter.setNotifyOnChange(true);
         }

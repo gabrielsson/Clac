@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.net.InetAddress;
@@ -158,6 +159,8 @@ public class FragmentReadEntries extends Fragment {
             case R.id.reply_entry_hemlis:
             case R.id.reply_entry:
 
+                View writeView = ((MainActivity) getActivity()).getReusedFragment(new FragmentWrite()).getView();
+
                 boolean hemlis = false;
                 /* Om det är hemlis eller inte */
                 if (item.getItemId() == R.id.reply_entry) {
@@ -174,10 +177,8 @@ public class FragmentReadEntries extends Fragment {
                     signed = "";
                 }
 
-                ((EditText) getActivity().findViewById(R.id.write_entry_text)).setText(signed);
-                ((CheckBox) getActivity().findViewById(R.id.write_entry_secret)).setChecked(hemlis);
-
-                //((MainActivity) getActivity()).setCurrentItem(MyFragmentPagerAdapter.FragmentOrder.writeentry);
+                ((EditText) writeView.findViewById(R.id.write_entry_text)).setText(signed);
+                ((CheckBox) writeView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
 
                 return true;
 

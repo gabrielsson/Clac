@@ -20,7 +20,7 @@
         android:layout_toEndOf="@+id/left_pic"
         android:padding="1dp"
         android:text="0"
-        android:textColor="#0022ee"
+        android:textColor="@color/text_winered"
         android:textStyle="bold" />
 
     <TextView

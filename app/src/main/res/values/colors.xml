@@ -2,9 +2,11 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryPink">#A02447</color>
+    <color name="colorAccent">#ff4081</color>
 
     <color name="background_turqoise">#b3dfd0</color>
+    <color name="background">#fffacd</color>
     <color name="background_pressed">#55b3dfd0</color>
     <color name="text_winered">#ad2447</color>
     <color name="text_link">#7070ff</color>

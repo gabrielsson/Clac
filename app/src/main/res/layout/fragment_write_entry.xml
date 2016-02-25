@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="@color/background_turqoise">
+    android:background="@color/background">
 
     <EditText
         android:id="@+id/write_entry_text"
@@ -19,12 +19,15 @@
         android:padding="10dp"
         android:inputType="textMultiLine|textCapSentences"
         android:background="#ffffffff"
+        android:textColor="@color/text_winered"
         android:hint="@string/write_entry_hint" />
 
     <Button
         android:id="@+id/write_entry_send"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryPink"
+        android:textColor="@color/background"
         android:text="@string/write_entry_send" />
 
     <RelativeLayout

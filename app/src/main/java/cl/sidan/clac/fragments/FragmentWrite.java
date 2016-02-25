@@ -2,7 +2,6 @@ package cl.sidan.clac.fragments;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -32,12 +31,9 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
@@ -180,7 +176,7 @@ public class FragmentWrite extends Fragment {
                     entry.setLongitude(BigDecimal.valueOf(myLocation.getLongitude()));
                 }
 
-                createEntryAndSend(entry);
+                new CreateEntryAsync().execute(entry);
 
                 // en Entry är skapat, resetta allt.
                 entryText.setText("");
@@ -323,36 +319,6 @@ public class FragmentWrite extends Fragment {
         }
 
         return path;
-    }
-
-    public void createEntryAndSend(Entry entry) {
-        if( checkAndUpdateTime() ) {
-            Log.d("Kumpaner", "Creating kumpaner.");
-            ((RequestEntry) entry).setKumpaner(selectedKumpaner);
-        } else {
-            Log.d("Kumpaner", "No kumpaner found.");
-        }
-        new CreateEntryAsync().execute(entry);
-    }
-
-    public boolean checkAndUpdateTime() {
-        /* Save date to see if information is up-to-date */
-        GregorianCalendar cal = new GregorianCalendar();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
-        cal.add(GregorianCalendar.HOUR, 5);
-        String dateNow = formatter.format(cal.getTime());
-        String dateOld = preferences.getString("lastTimeReportedKumpaner", "");
-        Log.d("Kumpaner", "Uppdatera tid: Now=" + dateNow + ", was=" + dateOld);
-        if( dateNow.compareTo(dateOld) >= 0 ){
-            Log.d("Kumpaner", "Fortfarande inom 5 timmar. Sparar nuvarande tid.");
-            preferences.edit().putString("lastTimeReportedKumpaner", dateNow).apply();
-            return true;
-        } else {
-            Log.d("Kumpaner", "Tiden har gått ut, rensar kumpan listan.");
-            selectedKumpaner.clear();
-            return false;
-        }
     }
 
     public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {

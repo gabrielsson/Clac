@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -22,26 +21,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Locale;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
-import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
-import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.fragments.FragmentChangePassword;
 import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.listeners.ListenerLocation;
-import cl.sidan.clac.objects.RequestEntry;
 import cl.sidan.clac.listeners.ListenerScroller;
 
 public class MainActivity extends AppCompatActivity
@@ -52,13 +41,9 @@ public class MainActivity extends AppCompatActivity
     private boolean isUserLoggedIn;
     public static String number = "";
 
-    private ArrayList<User> kumpaner = new ArrayList<>();
-    private ArrayList<Integer> selectedItems = new ArrayList<>();
-
     private ListenerLocation locationListener = null;
     private Location lastKnownLocation = null;
 
-    private ArrayList<Entry> notSentList = new ArrayList<>();
     private DrawerLayout drawer;
 
     private HashMap<String, Fragment> fragments = new HashMap<>();
@@ -265,34 +250,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public boolean checkAndUpdateTime() {
-        /* Save date to see if information is up-to-date */
-        GregorianCalendar cal = new GregorianCalendar();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        cal.add(GregorianCalendar.HOUR, 5);
-        String dateNow = formatter.format(cal.getTime());
-        String dateOld = preferences.getString("lastTimeReportedKumpaner", "");
-        Log.d("Kumpaner", "Uppdatera tid: Now=" + dateNow + ", was=" + dateOld);
-        if( dateNow.compareTo(dateOld) >= 0 ){
-            Log.d("Kumpaner", "Fortfarande inom 5 timmar. Sparar nuvarande tid.");
-            preferences.edit().putString("lastTimeReportedKumpaner", dateNow).apply();
-            return true;
-        } else {
-            Log.d("Kumpaner", "Tiden har gått ut, rensar kumpan listan.");
-            selectedItems.clear();
-            return false;
-        }
-    }
-
-    public void createEntryAndSend(Entry entry) {
-        if( checkAndUpdateTime() ) {
-            Log.d("Kumpaner", "Creating kumpaner.");
-            ((RequestEntry) entry).setKumpaner(kumpaner);
-        } else {
-            Log.d("Kumpaner", "No kumpaner found.");
-        }
-        new CreateEntryAsync().execute(entry);
-    }
 
     public final void notifyLocationChange() {
         if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
@@ -329,13 +286,6 @@ public class MainActivity extends AppCompatActivity
         return true; // ConnectionUtil.isNetworkConnected(this);
     }
 
-    public boolean isLoggedIn() {
-        return !(number == null ||
-                number.isEmpty() ||
-                "#".equals(number)) &&
-                sidanAccess().authenticateUser();
-    }
-
     public final Location getLocation() {
         if( locationListener != null ) {
             lastKnownLocation = locationListener.getLocation();
@@ -350,47 +300,5 @@ public class MainActivity extends AppCompatActivity
 
     private static class LazyHolder {
         private static SidanAccess INSTANCE;//= new JSONParserSidanAccess(number, password);
-    }
-
-    public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {
-        @Override
-        protected Boolean doInBackground(Entry... entries) {
-            Collections.addAll(notSentList, entries);
-
-            Entry e;
-            for(int i = 0; i < notSentList.size(); i++) {
-                e = notSentList.get(i);
-                if( onCreateEntry(e) ) {
-                    notSentList.remove(i);
-                }
-            }
-            return notSentList.isEmpty();
-        }
-
-
-        public final boolean onCreateEntry(Entry entry) {
-            String host = null;
-            try {
-                host = InetAddress.getLocalHost().getHostName();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-
-            boolean isSuccess = sidanAccess().createEntry(entry.getMessage(), entry.getLatitude(), entry.getLongitude(),
-                    entry.getEnheter(), entry.getStatus(), host, entry.getSecret(), entry.getImage(),
-                    entry.getFileName(), entry.getKumpaner());
-
-            if( isSuccess ) {
-                Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
-                // GCMUtil.notifyGCM(getApplicationContext(), number, entry.getMessage());
-            }
-
-            return isSuccess;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean retur) {
-            Log.e("WriteEntry", "Could not create some Entries.");
-        }
     }
 }

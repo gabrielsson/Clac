@@ -14,11 +14,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.net.InetAddress;
@@ -178,7 +178,10 @@ public class FragmentReadEntries extends Fragment {
                     signed = "";
                 }
 
-                ((EditText) writeView.findViewById(R.id.write_entry_text)).setText(signed);
+                EditText writeText = (EditText) writeView.findViewById(R.id.write_entry_text);
+                writeText.setText(signed);
+                writeText.requestFocus();
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 ((CheckBox) writeView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
 
                 return true;
@@ -245,16 +248,13 @@ public class FragmentReadEntries extends Fragment {
             entries.addAll(response);
         }
 
-        /* Möjlig Nullpekare här. Om både denna kör och versionsasync eller något. */
-        if( getActivity() != null ) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    entriesAdapter.notifyDataSetInvalidated();
-                    entriesContainer.setRefreshing(false);
-                }
-            });
-        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                entriesAdapter.notifyDataSetInvalidated();
+                entriesContainer.setRefreshing(false);
+            }
+        });
         Log.d(TAG, "Entries size " + entries.size());
     }
 

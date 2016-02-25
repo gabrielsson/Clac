@@ -2,7 +2,6 @@ package cl.sidan.clac.access.impl;
 
 import org.json.JSONObject;
 
-import cl.sidan.clac.access.interfaces.Arr;
 import cl.sidan.clac.access.interfaces.User;
 
 public class JSONObjectUser implements User {

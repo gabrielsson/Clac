@@ -2,6 +2,7 @@ package cl.sidan.clac.fragments;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,10 +30,18 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
+import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.adapters.AdapterBeer;
 import cl.sidan.clac.adapters.AdapterMembers;
@@ -44,8 +53,9 @@ public class FragmentWrite extends Fragment {
 
     private View rootView = null;
 
-    private ArrayList<User> kumpaner = new ArrayList<User>();
-    private ArrayList<User> selectedKumpaner = new ArrayList<User>();
+    private ArrayList<User> kumpaner = new ArrayList<>();
+    private ArrayList<User> selectedKumpaner = new ArrayList<>();
+    private ArrayList<Entry> notSentList = new ArrayList<>();
 
     private static FragmentWrite writeFragment;
     private AdapterMembers memberAdapter;
@@ -135,6 +145,8 @@ public class FragmentWrite extends Fragment {
                     entry.setEnheter(numBeers);
                 }
 
+                entry.setKumpaner(selectedKumpaner);
+
                 /* Ladda upp bild */
                 ImageView imageView = (ImageView) getActivity().findViewById(R.id.write_entry_imagechoosen);
                 String base64Image = null;
@@ -168,9 +180,7 @@ public class FragmentWrite extends Fragment {
                     entry.setLongitude(BigDecimal.valueOf(myLocation.getLongitude()));
                 }
 
-                // Vi sätter kumpaner i MainActivity också
-                ((MainActivity) getActivity()).createEntryAndSend(entry);
-                getActivity().getSupportFragmentManager().popBackStack();
+                createEntryAndSend(entry);
 
                 // en Entry är skapat, resetta allt.
                 entryText.setText("");
@@ -288,13 +298,14 @@ public class FragmentWrite extends Fragment {
     private final class GetKumpanerAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            kumpaner.clear();
-            kumpaner.addAll(((MainActivity) getActivity()).sidanAccess().readMembers(true));
-
-            if( !kumpaner.isEmpty() ) {
+            List<User> tempKumpaner = ((MainActivity) getActivity()).sidanAccess().readMembers(true);
+            if ( !tempKumpaner.isEmpty() ) {
+                kumpaner.clear();
+                kumpaner.addAll(tempKumpaner);
                 memberAdapter.notifyDataSetInvalidated();
+                Log.d("Kumpaner", "New Kumpaner! Yay!");
             } else {
-                Log.e("Kumpaner", "Could not get kumpaner");
+                Log.e("Kumpaner", "Could not get new kumpaner");
             }
             return null;
         }
@@ -312,6 +323,79 @@ public class FragmentWrite extends Fragment {
         }
 
         return path;
+    }
+
+    public void createEntryAndSend(Entry entry) {
+        if( checkAndUpdateTime() ) {
+            Log.d("Kumpaner", "Creating kumpaner.");
+            ((RequestEntry) entry).setKumpaner(selectedKumpaner);
+        } else {
+            Log.d("Kumpaner", "No kumpaner found.");
+        }
+        new CreateEntryAsync().execute(entry);
+    }
+
+    public boolean checkAndUpdateTime() {
+        /* Save date to see if information is up-to-date */
+        GregorianCalendar cal = new GregorianCalendar();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        cal.add(GregorianCalendar.HOUR, 5);
+        String dateNow = formatter.format(cal.getTime());
+        String dateOld = preferences.getString("lastTimeReportedKumpaner", "");
+        Log.d("Kumpaner", "Uppdatera tid: Now=" + dateNow + ", was=" + dateOld);
+        if( dateNow.compareTo(dateOld) >= 0 ){
+            Log.d("Kumpaner", "Fortfarande inom 5 timmar. Sparar nuvarande tid.");
+            preferences.edit().putString("lastTimeReportedKumpaner", dateNow).apply();
+            return true;
+        } else {
+            Log.d("Kumpaner", "Tiden har gått ut, rensar kumpan listan.");
+            selectedKumpaner.clear();
+            return false;
+        }
+    }
+
+    public final class CreateEntryAsync extends AsyncTask<Entry, Entry, Boolean> {
+        @Override
+        protected Boolean doInBackground(Entry... entries) {
+            Collections.addAll(notSentList, entries);
+
+            Entry e;
+            for(int i = 0; i < notSentList.size(); i++) {
+                e = notSentList.get(i);
+                if( onCreateEntry(e) ) {
+                    notSentList.remove(i);
+                }
+            }
+            return notSentList.isEmpty();
+        }
+
+
+        public final boolean onCreateEntry(Entry entry) {
+            String host = null;
+            try {
+                host = InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+
+            boolean isSuccess = ((MainActivity) getActivity()).sidanAccess().createEntry(
+                    entry.getMessage(), entry.getLatitude(), entry.getLongitude(),
+                    entry.getEnheter(), entry.getStatus(), host, entry.getSecret(), entry.getImage(),
+                    entry.getFileName(), entry.getKumpaner());
+
+            if( isSuccess ) {
+                Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
+                // GCMUtil.notifyGCM(getApplicationContext(), number, entry.getMessage());
+            }
+
+            return isSuccess;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean retur) {
+            Log.e("WriteEntry", "Could not create some Entries.");
+        }
     }
 }
 

@@ -342,10 +342,10 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public List<User> readMembers(boolean onlyValidMembers) {
+    public List<User> readMembers(boolean onlyValidUsers) {
         String request = "";
-        if (onlyValidMembers) {
-            request="OnlyValidMembers=true";
+        if (onlyValidUsers) {
+            request="OnlyValidUsers=true";
         }
 
         JSONObject json = invoke("GetKumpaner", request);

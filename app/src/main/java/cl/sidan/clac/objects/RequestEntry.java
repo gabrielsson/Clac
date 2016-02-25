@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.objects;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

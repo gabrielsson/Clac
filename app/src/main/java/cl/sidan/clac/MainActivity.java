@@ -40,9 +40,9 @@ import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentWrite;
-import cl.sidan.clac.fragments.MyLocationListener;
-import cl.sidan.clac.fragments.RequestEntry;
-import cl.sidan.clac.interfaces.ScrollListener;
+import cl.sidan.clac.listeners.ListenerLocation;
+import cl.sidan.clac.objects.RequestEntry;
+import cl.sidan.clac.listeners.ListenerScroller;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<User> kumpaner = new ArrayList<>();
     private ArrayList<Integer> selectedItems = new ArrayList<>();
 
-    private MyLocationListener locationListener = null;
+    private ListenerLocation locationListener = null;
     private Location lastKnownLocation = null;
 
     private ArrayList<Entry> notSentList = new ArrayList<>();
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
             });
 
 
-            final ScrollListener scrl = new ScrollListener
+            final ListenerScroller scrl = new ListenerScroller
                     .Builder()
                     .footer(fab)
                     .minFooterTranslation(getResources().getDimensionPixelSize(R.dimen.fab_height))
@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity
 
     public final void notifyLocationChange() {
         if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
-            locationListener = new MyLocationListener(this, lastKnownLocation);
+            locationListener = new ListenerLocation(this, lastKnownLocation);
             Log.d("Location", "New Location listener created.");
         } else if(locationListener != null) {
             locationListener.stopLocationUpdates();

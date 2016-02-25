@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.objects;
 
 import cl.sidan.clac.access.interfaces.User;
 

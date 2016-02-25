@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.other;
 
 
 import android.app.ActivityManager;

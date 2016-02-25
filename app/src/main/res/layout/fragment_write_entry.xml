@@ -1,85 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/write_drawer_layout"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="@color/background_turqoise">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1"
-        android:background="@color/background_turqoise">
+    <EditText
+        android:id="@+id/write_entry_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="5"
+        android:maxLines="20"
+        android:gravity="top"
+        android:padding="10dp"
+        android:inputType="textMultiLine|textCapSentences"
+        android:background="#ffffffff"
+        android:hint="@string/write_entry_hint" />
 
-        <EditText android:id="@+id/write_entry_text"
-            android:layout_width="match_parent"
+    <Button
+        android:id="@+id/write_entry_send"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/write_entry_send" />
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/number_of_beers"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            />
+
+        <CheckBox
+            android:id="@+id/write_entry_secret"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minLines="5"
-            android:maxLines="20"
-            android:gravity="top"
-            android:padding="10dp"
-            android:inputType="textMultiLine|textCapSentences"
-            android:background="#ffffffff"
-            android:hint="@string/write_entry_hint" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:layout_centerInParent="true"
+            android:text="@string/write_entry_secret_text" />
+    </RelativeLayout>
 
-        <Button android:id="@+id/write_entry_send"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/write_entry_send" />
-
-        <RelativeLayout
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-            <Spinner
-                android:id="@+id/number_of_beers"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                />
-
-            <CheckBox
-                android:id="@+id/write_entry_secret"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="30dp"
-                android:layout_centerInParent="true"
-                android:text="Hemlis" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/choose_kumpaner"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/nopo"
-                android:text="Kumpaner"
-                />
-            <TextView
-                android:id="@+id/kumpaner"
-                android:layout_width="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_height="50dp"
-                android:layout_toEndOf="@+id/choose_kumpaner"
-                />
-        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/write_entry_imagechoosen"
-            android:contentDescription="@string/imagechosen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/choose_kumpaner"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/nopo"
+            android:text="Kumpaner"
+            />
+        <TextView
+            android:id="@+id/kumpaner"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@+id/choose_kumpaner"
+            />
+    </RelativeLayout>
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/write_entry_imagechoosen"
+        android:contentDescription="@string/imagechosen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-</RelativeLayout>
+</LinearLayout>

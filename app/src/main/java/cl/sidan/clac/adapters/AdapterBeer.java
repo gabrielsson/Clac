@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import cl.sidan.clac.R;
 
-public class MyBeerAdapter extends ArrayAdapter<String> {
+public class AdapterBeer extends ArrayAdapter<String> {
     LayoutInflater inflater;
     String[] objects;
     String[] subtext;
 
-    public MyBeerAdapter(LayoutInflater inflater, Context context, int textViewResourceId, String[] objects, String[] subtext) {
+    public AdapterBeer(LayoutInflater inflater, Context context, int textViewResourceId, String[] objects, String[] subtext) {
         super(context, textViewResourceId, objects);
         this.inflater = inflater;
         this.objects = objects;

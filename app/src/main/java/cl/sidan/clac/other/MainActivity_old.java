@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.other;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -31,6 +31,10 @@ import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.adapters.MyFragmentPagerAdapter;
+import cl.sidan.clac.listeners.ListenerLocation;
+import cl.sidan.clac.objects.RequestEntry;
+import cl.sidan.clac.objects.RequestUser;
 // import cl.sidan.util.ConnectionUtil;
 // import cl.sidan.util.GCMUtil;
 
@@ -47,7 +51,7 @@ public class MainActivity_old extends ActionBarActivity {
 
     private ViewPager mViewPager = null;
 
-    private MyLocationListener locationListener = null;
+    private ListenerLocation locationListener = null;
     private Location lastKnownLocation = null;
 
     @Override
@@ -381,7 +385,7 @@ public class MainActivity_old extends ActionBarActivity {
 
     public final void notifyLocationChange() {
         if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
-            locationListener = new MyLocationListener(this, lastKnownLocation);
+            locationListener = new ListenerLocation(this, lastKnownLocation);
             Log.d("Location", "New Location listener created.");
         } else if(locationListener != null) {
             locationListener.stopLocationUpdates();

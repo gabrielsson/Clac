@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.adapters.AdapterBeer;
+import cl.sidan.clac.adapters.AdapterMembers;
+import cl.sidan.clac.objects.RequestEntry;
 
 public class FragmentWrite extends Fragment {
     boolean hemlis = false;
@@ -69,7 +72,7 @@ public class FragmentWrite extends Fragment {
         final Spinner beers = (Spinner) rootView.findViewById(R.id.number_of_beers);
         String[] bira = {"0", "1", "2", "3", "4", "5", "??"};
         String[] biraSubtext = {"Inga öl", "Helan", "Halvan", "Tersen", "Kvarten", "Kvinten", "Kreaturens (åter)uppståndelse"};
-        beers.setAdapter(new MyBeerAdapter(inflater, getActivity(), R.layout.beer_spinner_item, bira, biraSubtext));
+        beers.setAdapter(new AdapterBeer(inflater, getActivity(), R.layout.beer_spinner_item, bira, biraSubtext));
 
         ImageView choose_kumpaner = (ImageView) rootView.findViewById(R.id.choose_kumpaner);
         choose_kumpaner.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.listeners;
 
 import android.content.Context;
 import android.location.Location;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-public class MyLocationListener implements LocationListener
+public class ListenerLocation implements LocationListener
 {
     private static final int LOCATION_UPDATE_TIME = 1000 * 60 * 2;
     private Location lastKnownLocation = null;
@@ -16,7 +16,7 @@ public class MyLocationListener implements LocationListener
 
     private Context context = null;
 
-    public MyLocationListener(Context context, Location lastKnownLocation) {
+    public ListenerLocation(Context context, Location lastKnownLocation) {
         this.context = context;
         // Experimental, get lastKnownLocation from activity if the location listener has been recreated.
         this.lastKnownLocation = lastKnownLocation;

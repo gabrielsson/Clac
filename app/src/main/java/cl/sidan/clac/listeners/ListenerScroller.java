@@ -1,4 +1,4 @@
-package cl.sidan.clac.interfaces;
+package cl.sidan.clac.listeners;
 
 import android.animation.ObjectAnimator;
 import android.support.v7.app.ActionBar;
@@ -8,7 +8,7 @@ import android.widget.AbsListView;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-public class ScrollListener implements AbsListView.OnScrollListener
+public class ListenerScroller implements AbsListView.OnScrollListener
 {
     private static Dictionary<Integer, Integer> itemHeights = new Hashtable<Integer, Integer>();
 
@@ -23,7 +23,7 @@ public class ScrollListener implements AbsListView.OnScrollListener
     private int previousScrollY = 0;
     private int totalFooterDiff = 0;
 
-    private ScrollListener(Builder builder)
+    private ListenerScroller(Builder builder)
     {
         footerView = builder.footer;
         actionbar = builder.actionbar;
@@ -142,8 +142,8 @@ public class ScrollListener implements AbsListView.OnScrollListener
             return this;
         }
 
-        public ScrollListener build() {
-            return new ScrollListener(this);
+        public ListenerScroller build() {
+            return new ListenerScroller(this);
         }
 
         public Builder actionbar(ActionBar ab) {

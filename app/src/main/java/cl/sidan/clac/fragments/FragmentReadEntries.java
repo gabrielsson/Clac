@@ -29,6 +29,7 @@ import java.util.List;
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
+import cl.sidan.clac.adapters.AdapterEntries;
 
 public class FragmentReadEntries extends Fragment {
     private final String TAG = getClass().getCanonicalName();
@@ -256,7 +257,6 @@ public class FragmentReadEntries extends Fragment {
         }
         Log.d(TAG, "Entries size " + entries.size());
     }
-
 
     private void onCreateLike(Integer i) {
         String host = null;

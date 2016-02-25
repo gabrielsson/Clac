@@ -22,6 +22,7 @@ import java.util.List;
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.User;
+import cl.sidan.clac.adapters.AdapterMembers;
 
 /**
  * A fragment representing a list of Items.

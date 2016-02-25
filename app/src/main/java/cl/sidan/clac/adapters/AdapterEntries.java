@@ -1,4 +1,4 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.adapters;
 
 import android.app.Activity;
 import android.content.Context;

@@ -40,6 +40,8 @@ import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Arr;
 import cl.sidan.clac.access.interfaces.Poll;
+import cl.sidan.clac.adapters.AdapterArr;
+import cl.sidan.clac.objects.RequestArr;
 
 
 public class FragmentArr extends Fragment {

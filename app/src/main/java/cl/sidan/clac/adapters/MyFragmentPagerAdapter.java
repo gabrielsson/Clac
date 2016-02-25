@@ -1,10 +1,17 @@
-package cl.sidan.clac.fragments;
+package cl.sidan.clac.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+
+import cl.sidan.clac.fragments.FragmentArr;
+import cl.sidan.clac.fragments.FragmentMembers;
+import cl.sidan.clac.fragments.FragmentReadEntries;
+import cl.sidan.clac.fragments.FragmentSettings;
+import cl.sidan.clac.fragments.FragmentVersionUpdate;
+import cl.sidan.clac.fragments.FragmentWrite;
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<String> mFragmentTags;

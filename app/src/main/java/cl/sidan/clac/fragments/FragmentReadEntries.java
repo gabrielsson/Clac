@@ -71,8 +71,6 @@ public class FragmentReadEntries extends Fragment {
         }
 
         entriesContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.entriesContainer);
-        entriesContainer.setRefreshing(true);
-
         entriesContainer.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -81,13 +79,12 @@ public class FragmentReadEntries extends Fragment {
                     }
                 }
         );
+        entriesContainer.setRefreshing(true);
+        new ReadEntriesAsync().execute();
 
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
-
         registerForContextMenu(listView);
-
-        new ReadEntriesAsync().execute();
 
         return rootView;
     }

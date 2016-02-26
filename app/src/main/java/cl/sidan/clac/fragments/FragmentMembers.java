@@ -145,8 +145,10 @@ public class FragmentMembers extends Fragment {
         @Override
         protected Void doInBackground(String... strings) {
             members.clear();
-            members.addAll(((MainActivity) getActivity())
-                    .sidanAccess().readMembers(false)); //want to show all numbers in the memberlist
+            /* We want to show all numbers in the memberlist, thats why we set onlyValidUsers
+             * to false below.
+             */
+            members.addAll(((MainActivity) getActivity()).sidanAccess().readMembers(false));
             if(getActivity() != null) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

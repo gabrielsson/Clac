@@ -169,4 +169,11 @@ public interface SidanAccess {
     List<User> readMembers(boolean onlyValidMembers);
 
     boolean updatePassword(String forSignature, String password, String admin);
+
+    /**
+     * Read the current top lists of a given type
+     * @param type
+     * @return List of top users
+     */
+    List<Stats> readStats(String type);
 }

@@ -22,7 +22,6 @@
         android:layout_below="@+id/add_arr" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:id="@+id/arrContainer"
         android:layout_width="match_parent"

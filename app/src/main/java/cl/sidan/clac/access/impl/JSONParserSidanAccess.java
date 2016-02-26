@@ -20,6 +20,7 @@ import cl.sidan.clac.access.interfaces.Article;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.Poll;
 import cl.sidan.clac.access.interfaces.SidanAccess;
+import cl.sidan.clac.access.interfaces.Stats;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.access.util.JsbJSONInvoker;
 
@@ -356,8 +357,28 @@ public class JSONParserSidanAccess implements SidanAccess {
 
         List<User> result = new ArrayList<>();
         if (array != null) {
-            for (int i = 0; i<array.length(); i++) {
+            for (int i = 0; i < array.length(); i++) {
                 result.add(new JSONObjectUser(array.optJSONObject(i)));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Stats> readStats(String type) {
+        int take = 5;
+        String request = "Take="+take;
+
+        JSONObject json = invoke("GetStats"+type, request);
+        JSONArray array = new JSONArray();
+        if(json != null) {
+            array = json.optJSONArray("Stats");
+        }
+
+        List<Stats> result = new ArrayList<>();
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                result.add(new JSONObjectStats(array.optJSONObject(i)));
             }
         }
         return result;

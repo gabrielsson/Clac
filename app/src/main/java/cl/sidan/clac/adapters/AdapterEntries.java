@@ -210,14 +210,11 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
          *  <a></a>-tags. Then we delete the <a></a>-tags if the url is already enclosed in them.
          *  We also add the full url to local images that has been uploaded to /inmailat/.
          **/
-        // convert href=link to href='link'
-        html = Pattern.compile("href=(?!['\"])([^\\s>]*)", Pattern.CASE_INSENSITIVE)
-                .matcher(html).replaceAll("'$1'");
-        // convert links that does not start with "href=" to real <a href='link'>link</a>
-        html = Pattern.compile("(?<!href=['\"])((?:https?://|ftps?://|www\\d{0,3}[.])(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
+        // convert links that does not start with "=" to real <a href='link'>link</a>
+        html = Pattern.compile("(?<!=['\"]?)((?:https?://|ftps?://|www\\d{0,3}[.])(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("<a href='$1'>$1</a>");
         // if the link is in the form "inmailat/...jpg" prepend full url.
-        html = Pattern.compile("(inmailat/.*\\.)(jpg|jpeg|gif|png)", Pattern.CASE_INSENSITIVE)
+        html = Pattern.compile("(?<!/)(inmailat/.*\\.)(jpg|jpeg|gif|png)", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("http://sidan.cl/$1$2");
 
         /* Convert the html */
@@ -251,6 +248,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
                 "minipics/Smiley12.gif",
                 "minipics/Smiley13.gif",
                 "minipics/svina.gif",
+                "minipics/supa.gif",
                 "minipics/proppeller.gif"
         };
         Integer[]  localImagesResources = {
@@ -275,6 +273,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
                 R.drawable.smiley12,
                 R.drawable.smiley13,
                 R.drawable.svina,
+                R.drawable.olsug_32,
                 R.drawable.proppeller
         };
         Context c;
@@ -293,9 +292,9 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
             Drawable localOrEmpty;
             LevelListDrawable d = new LevelListDrawable();
             if( localImage >= 0 ) {
-                localOrEmpty = c.getResources().getDrawable(localImagesResArray.get(localImage));
+                localOrEmpty = c.getResources().getDrawable(localImagesResArray.get(localImage), c.getTheme());
             } else {
-                localOrEmpty = c.getResources().getDrawable(R.drawable.proppeller);
+                localOrEmpty = c.getResources().getDrawable(R.drawable.proppeller, c.getTheme());
             }
             d.addLevel(0, 0, localOrEmpty);
             int width = localOrEmpty != null ? localOrEmpty.getIntrinsicWidth() : 0;
@@ -304,7 +303,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
 
             if( localImage < 0 ) {
                 if (source.startsWith("inmailat")) {
-                    new LoadImage(container).execute("http://chalmerslosers.com" + source, d);
+                    new LoadImage(container).execute("http://chalmerslosers.com/" + source, d);
                 } else {
                     new LoadImage(container).execute(source, d);
                 }

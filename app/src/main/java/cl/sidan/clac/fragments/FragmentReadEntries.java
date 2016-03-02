@@ -1,5 +1,6 @@
 package cl.sidan.clac.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,13 +39,6 @@ public class FragmentReadEntries extends Fragment {
     private SwipeRefreshLayout entriesContainer = null;
     private static FragmentReadEntries readEntriesFragment;
     private View rootView;
-
-    public static FragmentReadEntries newInstance() {
-        if( null == readEntriesFragment ) {
-            readEntriesFragment = new FragmentReadEntries();
-        }
-        return readEntriesFragment;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -245,13 +239,16 @@ public class FragmentReadEntries extends Fragment {
             entries.addAll(response);
         }
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                entriesAdapter.notifyDataSetInvalidated();
-                entriesContainer.setRefreshing(false);
-            }
-        });
+        Activity main = getActivity();
+        if ( main != null ) {
+            main.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    entriesAdapter.notifyDataSetInvalidated();
+                    entriesContainer.setRefreshing(false);
+                }
+            });
+        }
         Log.d(TAG, "Entries size " + entries.size());
     }
 

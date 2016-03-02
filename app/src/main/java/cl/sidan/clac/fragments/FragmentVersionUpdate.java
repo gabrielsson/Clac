@@ -50,15 +50,6 @@ public class FragmentVersionUpdate extends Fragment implements VersionUpdateList
     private Context context;
     private View rootView;
 
-    private static FragmentVersionUpdate versionUpdateFragment;
-
-    public static FragmentVersionUpdate newInstance() {
-        if( null == versionUpdateFragment ) {
-            versionUpdateFragment = new FragmentVersionUpdate();
-        }
-        return versionUpdateFragment;
-    }
-
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -53,15 +53,7 @@ public class FragmentWrite extends Fragment {
     private ArrayList<User> selectedKumpaner = new ArrayList<>();
     private ArrayList<Entry> notSentList = new ArrayList<>();
 
-    private static FragmentWrite writeFragment;
     private AdapterMembers memberAdapter;
-
-    public static FragmentWrite newInstance() {
-        if( null == writeFragment ) {
-            writeFragment = new FragmentWrite();
-        }
-        return writeFragment;
-    }
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
@@ -101,8 +93,6 @@ public class FragmentWrite extends Fragment {
             kumpanString += u.getSignature() + ", ";
         }
         kumpanText.setText(kumpanString);
-
-        new GetKumpanerAsync().execute();
 
        /* rootView.findViewById(R.id.bilduppladdning).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,6 +206,8 @@ public class FragmentWrite extends Fragment {
             kumpanString += u.getSignature() + ", ";
         }
         kumpanText.setText(kumpanString);
+
+        new GetKumpanerAsync().execute();
     }
 
     @Override

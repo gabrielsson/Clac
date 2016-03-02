@@ -1,7 +1,6 @@
 package cl.sidan.clac.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -52,17 +51,7 @@ public class FragmentArr extends Fragment {
     private ViewHolder holder = new ViewHolder();
     private Poll currentPoll = null;
 
-    private Context context;
     private View rootView;
-
-    private static FragmentArr arrFragment;
-
-    public static FragmentArr newInstance() {
-        if( null == arrFragment ) {
-            arrFragment = new FragmentArr();
-        }
-        return arrFragment;
-    }
 
     private static class ViewHolder {
         TextView txtQuestion = null;
@@ -81,7 +70,6 @@ public class FragmentArr extends Fragment {
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_arr, container, false);
-        context = rootView.getContext();
 
         final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
         float font_size = preferences.getFloat("font_size", 15);
@@ -230,11 +218,11 @@ public class FragmentArr extends Fragment {
     }
 
     private void showSkapaEllerUppdateraArr(Arr arr) {
-        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(rootView.getContext());
         helpBuilder.setTitle(arr != null ? "Uppdatera Arr" : "Skapa nytt arr");
         // helpBuilder.setIcon(R.drawable.olsug_32);
 
-        LayoutInflater factory = LayoutInflater.from(context);
+        LayoutInflater factory = LayoutInflater.from(rootView.getContext());
         final View textEntryView = factory.inflate(R.layout.popup_new_arr, null);
         helpBuilder.setView(textEntryView);
         final TimePicker timePicker = (TimePicker) textEntryView.findViewById(R.id.arr_popup_timepicker);

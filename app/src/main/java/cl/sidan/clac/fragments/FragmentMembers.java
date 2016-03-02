@@ -1,6 +1,5 @@
 package cl.sidan.clac.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -35,23 +34,11 @@ public class FragmentMembers extends Fragment {
     private AdapterMembers memberAdapter = null;
     private List<User> members = new ArrayList<>();
 
-    private Context context;
     private View rootView;
-
-    private static FragmentMembers membersFragment;
-
-    public static FragmentMembers newInstance() {
-        if( null == membersFragment ) {
-            membersFragment = new FragmentMembers();
-        }
-        return membersFragment;
-    }
-
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_member_list, container, false);
-        context = rootView.getContext();
 
         float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
 

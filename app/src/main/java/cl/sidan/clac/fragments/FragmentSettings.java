@@ -24,15 +24,6 @@ public class FragmentSettings extends Fragment implements cl.sidan.clac.interfac
     private CheckBox cbNotifications = null;
     private CheckBox cbPosition = null;
 
-    private static FragmentSettings settingsFragment;
-
-    public static FragmentSettings newInstance() {
-        if( null == settingsFragment ) {
-            settingsFragment = new FragmentSettings();
-        }
-        return settingsFragment;
-    }
-
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);

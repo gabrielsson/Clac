@@ -203,10 +203,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_settings:
                 getReusedFragment(new FragmentSettings());
                 break;
+            case R.id.nav_stats:
+                getReusedFragment(new FragmentStats());
+
             case R.id.nav_map:
                 break;
             case R.id.nav_ninja:
-                getReusedFragment(new FragmentStats());
                 break;
             default:
                 // Kill

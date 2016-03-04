@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
@@ -14,19 +14,12 @@
         android:text="+"
         android:enabled="true" />
 
-    <Space
-        android:id="@+id/arr_space1"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/add_arr" />
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:orientation="vertical"
         android:id="@+id/arrContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/arr_space1">
+        android:layout_weight="1">
 
         <ListView
             android:id="@+id/arr_lista"
@@ -35,18 +28,11 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <Space
-        android:id="@+id/arr_space2"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@id/arrContainer" />
-
     <RelativeLayout
         android:id="@+id/poll_lista"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_weight="0">
 
         <TextView
             android:id="@+id/poll_question_text"
@@ -64,6 +50,7 @@
             android:id="@+id/poll_answer_1_progress_holder"
             android:gravity="center"
             android:visibility="invisible">
+
             <ProgressBar
                 android:id="@+id/poll_answer_1_progress"
                 android:layout_height="wrap_content"
@@ -71,10 +58,12 @@
                 android:progress="00"
                 android:max="100"
                 style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" />
+
             <TextView
                 android:id="@+id/poll_answer_1_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -84,6 +73,7 @@
             android:layout_below="@id/poll_answer_1_progress_holder"
             android:gravity="center"
             android:visibility="invisible">
+
             <ProgressBar
                 android:id="@+id/poll_answer_2_progress"
                 android:layout_height="wrap_content"
@@ -91,6 +81,7 @@
                 android:progress="0"
                 android:max="100"
                 style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" />
+
             <TextView
                 android:id="@+id/poll_answer_2_progress_text"
                 android:layout_width="wrap_content"
@@ -126,11 +117,7 @@
             android:text="Rösta"
             android:layout_below="@id/poll_answer_group"
             android:layout_centerInParent="true"
+            android:layout_marginBottom="8dp"
             android:visibility="invisible" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_below="@id/poll_vote_button" />
     </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>

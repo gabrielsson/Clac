@@ -198,18 +198,20 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_members:
                 getReusedFragment(new FragmentMembers());
                 break;
-            case R.id.nav_tattarbilder:
-                break;
             case R.id.nav_settings:
                 getReusedFragment(new FragmentSettings());
                 break;
             case R.id.nav_stats:
                 getReusedFragment(new FragmentStats());
 
+/*
+            case R.id.nav_tattarbilder:
+                break;
             case R.id.nav_map:
                 break;
             case R.id.nav_ninja:
                 break;
+*/
             default:
                 // Kill
                 throw new RuntimeException("Some functionality is obviously not implemented yet.");

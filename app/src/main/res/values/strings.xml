@@ -152,5 +152,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="write_entry_secret_text">Hemlis</string>
+    <string name="ignorera">Ignorera</string>
+    <string name="ring">Ring</string>
+    <string name="smsa">Smsa</string>
+    <string name="maila">Maila</string>
 
 </resources>

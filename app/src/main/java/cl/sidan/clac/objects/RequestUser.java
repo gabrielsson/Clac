@@ -8,6 +8,7 @@ public class RequestUser implements User {
     private String im = "";
     private String title = "";
     private String phone = "";
+    private String email = "";
 
     RequestUser(String signature, String name, String im, String title){
         this.signature = signature;
@@ -49,4 +50,8 @@ public class RequestUser implements User {
         return phone;
     }
 
+    @Override
+    public String getEmail(){
+        return email;
+    }
 }

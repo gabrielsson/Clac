@@ -51,8 +51,6 @@ public class FragmentMembers extends Fragment {
         memberList.setAdapter(memberAdapter);
         registerForContextMenu(memberList);
 
-        registerForContextMenu(memberList);
-
         new ReadMembersAsync().execute();
 
         return rootView;
@@ -104,6 +102,15 @@ public class FragmentMembers extends Fragment {
                 return true;
 
             case R.id.member_mail:
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/text");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{
+                        user.getEmail()
+                });
+                intent.putExtra(Intent.EXTRA_TEXT, "\n\n\nMvh\n" + ((MainActivity) getActivity()).getPrefs().getString("username", "#"));
+                intent.putExtra(Intent.EXTRA_SUBJECT, "");
+
+                startActivity(intent);
                 return true;
 
             default:

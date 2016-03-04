@@ -2,12 +2,17 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/member_call"
-        android:title="Ring" />
-    <item android:id="@+id/member_sms"
-        android:title="Smsa"
-        android:enabled="false" />
-    <item android:id="@+id/member_mail"
-        android:title="Maila" />
+    <item
+        android:id="@+id/member_ignore"
+        android:title="@string/ignorera" />
+    <item
+        android:id="@+id/member_call"
+        android:title="@string/ring" />
+    <item
+        android:id="@+id/member_sms"
+        android:title="@string/smsa" />
+    <item
+        android:id="@+id/member_mail"
+        android:title="@string/maila" />
 
 </menu>

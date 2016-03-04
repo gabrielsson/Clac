@@ -39,4 +39,9 @@ public class JSONObjectUser implements User {
     public String getPhone() {
         return obj.optString("Phone");
     }
+
+    @Override
+    public String getEmail() {
+        return obj.optString("Email");
+    }
 }

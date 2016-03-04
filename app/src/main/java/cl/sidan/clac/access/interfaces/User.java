@@ -7,4 +7,5 @@ public interface User {
     String getTitle();
     String getPhone();
     String getEmail();
+    Boolean isIgnored();
 }

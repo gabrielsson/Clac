@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -69,17 +70,13 @@ public class FragmentMembers extends Fragment {
         MenuItem smsItem = menu.findItem(R.id.member_sms);
         MenuItem mailItem = menu.findItem(R.id.member_mail);
 
-        if (user != null) {
-           callItem.setEnabled(true);
-           smsItem.setEnabled(true);
-           mailItem.setEnabled(true);
-        }
-        else{
-            smsItem.setEnabled(false);
+        if ( null == user.getPhone() || user.getPhone().isEmpty() ) {
             callItem.setEnabled(false);
+            smsItem.setEnabled(false);
+        }
+        if ( null == user.getEmail() || user.getEmail().isEmpty() ) {
             mailItem.setEnabled(false);
         }
-
     }
 
     @Override
@@ -89,6 +86,17 @@ public class FragmentMembers extends Fragment {
         User user = memberAdapter.getItem(info.position);
 
         switch (item.getItemId()) {
+            case R.id.member_ignore:
+                // Ignorera mera.
+                if ( user.isIgnored() ) {
+                    Log.d("XXX_SWO", "The user is already ignored. Unignoring!");
+                    // unignore
+                } else {
+                    Log.d("XXX_SWO", "The user is not yet ignored. Ignoring " + user.getSignature() + "!");
+                    // ignore
+                }
+                return true;
+
             case R.id.member_call:
                 intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + user.getPhone()));
@@ -104,9 +112,7 @@ public class FragmentMembers extends Fragment {
             case R.id.member_mail:
                 intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("plain/text");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{
-                        user.getEmail()
-                });
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
                 intent.putExtra(Intent.EXTRA_TEXT, "\n\n\nMvh\n" + ((MainActivity) getActivity()).getPrefs().getString("username", "#"));
                 intent.putExtra(Intent.EXTRA_SUBJECT, "");
 

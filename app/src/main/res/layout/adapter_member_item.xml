@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/memberHolder"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
@@ -10,14 +11,13 @@
     android:background="@drawable/background">
 
     <TextView
-
         android:textStyle="bold"
         android:textColor="@color/text_winered"
         android:id="@+id/memberSignature"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"
-        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginStart="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
         android:text="#78" />
 
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:textAppearance="?attr/textAppearanceListItem"
         android:layout_toEndOf="@id/memberName"
         android:text="0730-257634" />

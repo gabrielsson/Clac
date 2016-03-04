@@ -9,6 +9,7 @@ public class RequestUser implements User {
     private String title = "";
     private String phone = "";
     private String email = "";
+    private Boolean isIgnored = false;
 
     RequestUser(String signature, String name, String im, String title){
         this.signature = signature;
@@ -53,5 +54,10 @@ public class RequestUser implements User {
     @Override
     public String getEmail(){
         return email;
+    }
+
+    @Override
+    public Boolean isIgnored(){
+        return isIgnored;
     }
 }

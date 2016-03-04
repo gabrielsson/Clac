@@ -247,12 +247,15 @@ public class FragmentWrite extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Log.d("XXX_SWO", "pos: " + position + ", id: " + id);
+
                 if (!selectedKumpaner.contains(kumpaner.get(position))) {
+                    v.setSelected(true);
                     selectedKumpaner.add(memberAdapter.getItem(position));
-                    v.setBackground(getActivity().getDrawable(R.color.background_floating_material_dark));
+                    User u = (User) memberAdapter.getItem(position);
+                    // v.setBackgroundResource(R.drawable.list_selector_ignored);
                 } else {
+                    v.setSelected(false);
                     selectedKumpaner.remove(memberAdapter.getItem(position));
-                    v.setBackground(getActivity().getDrawable(R.color.background_floating_material_light));
                 }
             }
         });

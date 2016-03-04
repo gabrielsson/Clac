@@ -44,4 +44,9 @@ public class JSONObjectUser implements User {
     public String getEmail() {
         return obj.optString("Email");
     }
+
+    @Override
+    public Boolean isIgnored() {
+        return obj.optBoolean("isIgnored");
+    }
 }

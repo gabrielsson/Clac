@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,9 +15,6 @@ import java.util.List;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.User;
 
-/**
- * Created by Christofer on 2016-02-20.
- */
 public class AdapterMembers extends ArrayAdapter<User> {
 
     private Context context;
@@ -32,12 +30,13 @@ public class AdapterMembers extends ArrayAdapter<User> {
     }
 
     private static class ViewHolder {
+        RelativeLayout memberHolder = null;
+
         TextView txtSignature = null;
         TextView txtName = null;
         TextView txtPhone = null;
         //TextView txtIm = null;
         TextView txtTitle = null;
-
     }
 
     public void setSelected(List<User> objects) {
@@ -63,6 +62,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
             holder = new ViewHolder();
             convertView = inflater.inflate(layout, null);
 
+            holder.memberHolder = (RelativeLayout) convertView.findViewById(R.id.memberHolder);
             holder.txtSignature = (TextView) convertView.findViewById(R.id.memberSignature);
             holder.txtName = (TextView) convertView.findViewById(R.id.memberName);
             holder.txtPhone = (TextView) convertView.findViewById(R.id.memberNumber);
@@ -77,14 +77,22 @@ public class AdapterMembers extends ArrayAdapter<User> {
             return convertView;
         }
 
-       if ( holder.txtSignature != null ) {
-           holder.txtSignature.setText(user.getSignature());
-           holder.txtSignature.setTextSize(fontsize);
+        if ( holder.memberHolder != null ) {
+            holder.memberHolder.setBackgroundResource(R.drawable.background);
+            if (user.isIgnored()) {
+                holder.memberHolder.setBackgroundResource(R.drawable.list_selector_ignored);
+            }
+        }
 
-           if ( selectedObjects.contains(user) ) {
-               holder.txtSignature.setBackground(context.getDrawable(R.color.background_floating_material_dark));
-           }
-       }
+        if ( holder.txtSignature != null ) {
+            holder.txtSignature.setText(user.getSignature());
+            holder.txtSignature.setTextSize(fontsize);
+
+            holder.txtSignature.setBackgroundResource(R.drawable.background);
+            if ( selectedObjects.contains(user) ) {
+                holder.txtSignature.setBackgroundResource(R.drawable.list_selector_ignored);
+            }
+        }
         if ( holder.txtName != null ) {
             holder.txtName.setText(user.getName());
             holder.txtName.setTextSize(fontsize);

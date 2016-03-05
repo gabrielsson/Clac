@@ -246,17 +246,14 @@ public class FragmentWrite extends Fragment {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Log.d("XXX_SWO", "pos: " + position + ", id: " + id);
-
                 if (!selectedKumpaner.contains(kumpaner.get(position))) {
                     v.setSelected(true);
                     selectedKumpaner.add(memberAdapter.getItem(position));
-                    User u = (User) memberAdapter.getItem(position);
-                    // v.setBackgroundResource(R.drawable.list_selector_ignored);
                 } else {
                     v.setSelected(false);
                     selectedKumpaner.remove(memberAdapter.getItem(position));
                 }
+                memberAdapter.notifyDataSetChanged();
             }
         });
 

@@ -2,6 +2,7 @@ package cl.sidan.clac.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
@@ -37,7 +39,6 @@ public class FragmentReadEntries extends Fragment {
     private List<Entry> entries = new ArrayList<>();
     private AdapterEntries entriesAdapter = null;
     private SwipeRefreshLayout entriesContainer = null;
-    private static FragmentReadEntries readEntriesFragment;
     private View rootView;
 
     @Override
@@ -57,9 +58,9 @@ public class FragmentReadEntries extends Fragment {
                                    Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_readentries, container, false);
 
-        float fontsize = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
-
         if(entriesAdapter == null) {
+            float fontsize = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
+
             entriesAdapter = new AdapterEntries(inflater.getContext(), R.layout.entry, entries, fontsize);
             entriesAdapter.setNotifyOnChange(true);
         }
@@ -235,6 +236,16 @@ public class FragmentReadEntries extends Fragment {
             } );
         } else {
             Log.d(TAG, "Entries from server: " + response.size());
+            SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+            HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
+            for( int i = response.size() - 1; i >= 0; i-- ) {
+                Entry e = response.get(i);
+                if ( ignoredMembers.contains(e.getSignature()) ) {
+                    response.remove(e);
+                    Log.d(TAG, "Removed entry " + e.getMessage() + " from " + e.getSignature());
+                }
+            }
+
             entries.clear();
             entries.addAll(response);
         }

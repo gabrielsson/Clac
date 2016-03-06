@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import cl.sidan.clac.R;
@@ -21,6 +22,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
     private int layout;
     private float fontsize = 15;
     private List<User> selectedObjects = new ArrayList<>();
+    private HashSet<String> ignoredMembers;
 
     public AdapterMembers(Context context, int resource, List<User> objects, float fontsize) {
         super(context, resource, objects);
@@ -41,6 +43,10 @@ public class AdapterMembers extends ArrayAdapter<User> {
 
     public void setSelected(List<User> objects) {
         selectedObjects = objects;
+    }
+
+    public void setIgnoredMembers(HashSet<String> ignoredMembers) {
+        this.ignoredMembers = ignoredMembers;
     }
 
     @Override
@@ -79,7 +85,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
 
         if ( holder.memberHolder != null ) {
             holder.memberHolder.setBackgroundResource(R.drawable.background);
-            if (user.isIgnored()) {
+            if ( ignoredMembers.contains(user.getSignature()) ) {
                 holder.memberHolder.setBackgroundResource(R.drawable.list_selector_ignored);
             }
         }
@@ -89,7 +95,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
             holder.txtSignature.setTextSize(fontsize);
 
             holder.txtSignature.setBackgroundResource(R.drawable.background);
-            if ( selectedObjects.contains(user) ) {
+            if ( selectedObjects.contains(user) || ignoredMembers.contains(user.getSignature()) ) {
                 holder.txtSignature.setBackgroundResource(R.drawable.list_selector_ignored);
             }
         }

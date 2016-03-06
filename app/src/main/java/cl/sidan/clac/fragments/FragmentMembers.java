@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
@@ -41,10 +42,13 @@ public class FragmentMembers extends Fragment {
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_member_list, container, false);
 
-        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
-
         if(memberAdapter == null) {
+            float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
+            SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+            HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
+
             memberAdapter = new AdapterMembers(inflater.getContext(), R.layout.adapter_member_item, members, font_size);
+            memberAdapter.setIgnoredMembers(ignoredMembers);
             memberAdapter.setNotifyOnChange(true);
         }
 
@@ -88,13 +92,21 @@ public class FragmentMembers extends Fragment {
         switch (item.getItemId()) {
             case R.id.member_ignore:
                 // Ignorera mera.
-                if ( user.isIgnored() ) {
-                    Log.d("XXX_SWO", "The user is already ignored. Unignoring!");
+                SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+                HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
+                if ( ignoredMembers.contains(user.getSignature()) ) {
                     // unignore
+                    Log.d("XXX_SWO", "The user is already ignored. Unignoring!");
+                    ignoredMembers.remove(user.getSignature());
                 } else {
-                    Log.d("XXX_SWO", "The user is not yet ignored. Ignoring " + user.getSignature() + "!");
                     // ignore
+                    Log.d("XXX_SWO", "The user is not yet ignored. Ignoring " + user.getSignature() + "!");
+                    ignoredMembers.add(user.getSignature());
                 }
+                preferences.edit().putStringSet("ignoredMembers", ignoredMembers).apply();
+                memberAdapter.setIgnoredMembers(ignoredMembers);
+                memberAdapter.notifyDataSetInvalidated();
+
                 return true;
 
             case R.id.member_call:
@@ -129,10 +141,11 @@ public class FragmentMembers extends Fragment {
     {
         super.onResume();
 
-        SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
-        float font_size = preferences.getFloat("font_size", 15);
-
+        /* XXX_SWO: I don't think any of this happends/need to happen */
         if(memberAdapter == null) {
+            SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+            float font_size = preferences.getFloat("font_size", 15);
+
             memberAdapter = new AdapterMembers(rootView.getContext(), R.layout.adapter_member_item, members, font_size);
             memberAdapter.setNotifyOnChange(true);
         }
@@ -161,5 +174,4 @@ public class FragmentMembers extends Fragment {
         }
 
     }
-
 }

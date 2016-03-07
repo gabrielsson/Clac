@@ -46,7 +46,7 @@ public class JSONObjectUser implements User {
     }
 
     @Override
-    public Boolean isIgnored() {
-        return obj.optBoolean("isIgnored");
+    public Boolean isValid() {
+        return obj.optBoolean("IsValid");
     }
 }

@@ -70,9 +70,18 @@ public class FragmentMembers extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         User user = memberAdapter.getItem(info.position);
 
+        MenuItem ignoreItem = menu.findItem(R.id.member_ignore);
         MenuItem callItem = menu.findItem(R.id.member_call);
         MenuItem smsItem = menu.findItem(R.id.member_sms);
         MenuItem mailItem = menu.findItem(R.id.member_mail);
+
+        SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
+        if ( ignoredMembers.contains(user.getSignature()) ) {
+            ignoreItem.setTitle("Ignorerad");
+        }
+
+        ignoreItem.setEnabled(!user.isValid());
 
         if ( null == user.getPhone() || user.getPhone().isEmpty() ) {
             callItem.setEnabled(false);

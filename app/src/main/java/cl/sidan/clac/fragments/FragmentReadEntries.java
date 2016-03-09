@@ -23,7 +23,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -112,11 +115,16 @@ public class FragmentReadEntries extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Entry e = entriesAdapter.getItem(info.position);
 
-        MenuItem likeItem = menu.findItem(R.id.like_entry);
         String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", "");
+
         if (e != null) {
+            MenuItem likeItem = menu.findItem(R.id.like_entry);
             likeItem.setEnabled(!nummer.equals(e.getSignature()));
+
+            MenuItem viewPosItem = menu.findItem(R.id.view_position);
+            viewPosItem.setEnabled(0 != e.getLatitude().compareTo(BigDecimal.ZERO) && 0 != e.getLongitude().compareTo(BigDecimal.ZERO));
         }
+
         MenuItem editItem = menu.findItem(R.id.edit_entry);
         editItem.setEnabled(false);
     }
@@ -130,6 +138,41 @@ public class FragmentReadEntries extends Fragment {
         Entry e;
 
         switch (item.getItemId()) {
+            case R.id.view_position:
+                e = entriesAdapter.getItem(info.position);
+
+                /**
+                 * Det här är en fattigmanslösning och bör bytas ut snarast mot ett MapFragment.
+                 * Se https://developers.google.com/maps/documentation/android-api/map#code_samples
+                 * för exempel.
+                 */
+
+                String label = "";
+                if (0 < e.getEnheter()) {
+                    try {
+                        label = e.getEnheter() + "+enheter+rapporterade+av+" + URLEncoder.encode(e.getSignature(), "UTF-8");
+                    } catch (UnsupportedEncodingException err) {
+                        label = e.getEnheter() + "+enheter+rapporterade+av+" + e.getSignature().replace("#", "");
+                    }
+                } else {
+                    try {
+                        label = URLEncoder.encode(e.getMessage(), "UTF-8") + "++/" + URLEncoder.encode(e.getSignature(), "UTF-8");
+                    } catch (UnsupportedEncodingException err) {
+                        label = e.getSignature().replace("#", "") + "s position";
+                    }
+                }
+
+                String  lon = e.getLongitude().toString(),
+                        lat = e.getLatitude().toString(),
+                        uriString = "geo:0,0?q=" + lat + "," + lon + "(" + label + ")";
+                Uri gmmIntentUri = Uri.parse(uriString);
+                Log.d(TAG, "Creating intent with URI " + uriString);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+
+                return true;
+
             case R.id.edit_entry:
                 Log.d("Context menu", "Edit entry " + info.id);
                 return true;

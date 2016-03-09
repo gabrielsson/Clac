@@ -5,6 +5,9 @@
     <item android:id="@+id/reply_entry"
         android:title="@string/svara_med_inlagg" />
 
+    <item android:id="@+id/view_position"
+        android:title="Öppna position" />
+
     <item android:id="@+id/reply_entry_via"
         android:title="@string/svara_privat">
 

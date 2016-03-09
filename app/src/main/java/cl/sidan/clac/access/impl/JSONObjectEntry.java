@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import cl.sidan.clac.access.interfaces.Entry;
@@ -44,7 +45,7 @@ public class JSONObjectEntry implements Entry, Parcelable {
             kumpanString = obj.optJSONArray("SideKicks");
         }
 
-        List<User> kumpaner = new ArrayList<User>();
+        List<User> kumpaner = new ArrayList<>();
         if( kumpanString != null ) {
             for (int i = 0; i < kumpanString.length(); i++) {
                 JSONObject kumpan = kumpanString.optJSONObject(i);
@@ -61,10 +62,7 @@ public class JSONObjectEntry implements Entry, Parcelable {
 
     @Override
     public BigDecimal getLongitude() {
-
-
         return JSONObjectUtil.getBigDecimal(obj.optString("Longitude"));
-
     }
 
     @Override
@@ -74,13 +72,11 @@ public class JSONObjectEntry implements Entry, Parcelable {
 
     @Override
     public Date getDate() {
-        DateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        DateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
         try {
             return format.parse(obj.optString("Date"));
         } catch (ParseException e) {
-            Log.e("Error", "Cannot parse date: " + e.getMessage());
-        } catch (Exception e) {
             Log.e("Error", "Cannot parse date: " + e.getMessage());
         }
 
@@ -95,16 +91,14 @@ public class JSONObjectEntry implements Entry, Parcelable {
     @Override
     public Date getDateTime() {
         try {
-            DateFormat format = new SimpleDateFormat(DATE_FORMAT);
+            DateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
             Long date = format.parse(obj.optString("Date")).getTime();
-            format = new SimpleDateFormat(TIME_FORMAT);
+            format = new SimpleDateFormat(TIME_FORMAT, Locale.getDefault());
             format.setTimeZone(TimeZone.getTimeZone("CEST"));
             Long time = format.parse(obj.optString("Time")).getTime();
             format.setTimeZone(TimeZone.getTimeZone("CEST"));
             return new Date(date + time);
         } catch (ParseException e) {
-            Log.e("Error", "Cannot parse date: " + e.getMessage());
-        } catch (Exception e) {
             Log.e("Error", "Cannot parse date: " + e.getMessage());
         }
 
@@ -113,12 +107,7 @@ public class JSONObjectEntry implements Entry, Parcelable {
 
     @Override
     public Integer getEnheter() {
-        Integer enheter = obj.optInt("Enheter");
-        if(enheter != null) {
-            return enheter;
-        }
-
-        return 0;
+        return obj.optInt("Enheter");
     }
 
     @Override

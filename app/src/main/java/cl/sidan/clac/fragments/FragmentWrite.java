@@ -68,8 +68,8 @@ public class FragmentWrite extends Fragment {
         rootView.findViewById(R.id.write_entry_text).requestFocus();
 
         final Spinner beers = (Spinner) rootView.findViewById(R.id.number_of_beers);
-        String[] bira = {"0", "1", "2", "3", "4", "5", "??"};
-        String[] biraSubtext = {"Inga öl", "Helan", "Halvan", "Tersen", "Kvarten", "Kvinten", "Kreaturens (åter)uppståndelse"};
+        String[] bira = {"0", "1", "2", "3", "4", "5"};
+        String[] biraSubtext = {"Inga öl", "Helan", "Halvan", "Tersen", "Kvarten", "Kvinten"};
         beers.setAdapter(new AdapterBeer(inflater, getActivity(), R.layout.beer_spinner_item, bira, biraSubtext));
 
         ImageView choose_kumpaner = (ImageView) rootView.findViewById(R.id.choose_kumpaner);
@@ -125,11 +125,7 @@ public class FragmentWrite extends Fragment {
 
                 int numBeers = entryBeers.getSelectedItemPosition();
                 Log.d(getClass().getCanonicalName(), "Reporting " + numBeers + " beers");
-                if (numBeers == 6) {
-                    entry.setEnheter(16);
-                } else {
-                    entry.setEnheter(numBeers);
-                }
+                entry.setEnheter(numBeers);
 
                 entry.setKumpaner(selectedKumpaner);
 

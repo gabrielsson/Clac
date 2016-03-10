@@ -22,7 +22,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
     private int layout;
     private float fontsize = 15;
     private List<User> selectedObjects = new ArrayList<>();
-    private HashSet<String> ignoredMembers;
+    private HashSet<String> ignoredMembers = new HashSet<>();
 
     public AdapterMembers(Context context, int resource, List<User> objects, float fontsize) {
         super(context, resource, objects);

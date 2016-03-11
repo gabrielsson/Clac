@@ -3,9 +3,9 @@ package cl.sidan.clac.access.util;
 import android.util.Base64;
 import android.util.Log;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.params.BasicHttpParams;
+//import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,8 +70,8 @@ public class JsbJSONInvoker {
                 Log.e("Error....", "Failed to download file");
             }
             connection.disconnect();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

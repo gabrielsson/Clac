@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
+import cl.sidan.clac.MapsActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.adapters.AdapterEntries;
@@ -148,27 +149,23 @@ public class FragmentReadEntries extends Fragment {
                  */
 
                 String label = "";
+                if ( !e.getMessage().isEmpty() ) {
+                    label += e.getMessage() + "  /" + e.getSignature();
+                }
                 if (0 < e.getEnheter()) {
-                    try {
-                        label = e.getEnheter() + "+enheter+rapporterade+av+" + URLEncoder.encode(e.getSignature(), "UTF-8");
-                    } catch (UnsupportedEncodingException err) {
-                        label = e.getEnheter() + "+enheter+rapporterade+av+" + e.getSignature().replace("#", "");
-                    }
-                } else {
-                    try {
-                        label = URLEncoder.encode(e.getMessage(), "UTF-8") + "++/" + URLEncoder.encode(e.getSignature(), "UTF-8");
-                    } catch (UnsupportedEncodingException err) {
-                        label = e.getSignature().replace("#", "") + "s position";
-                    }
+                    label += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
                 }
 
-                String  lon = e.getLongitude().toString(),
-                        lat = e.getLatitude().toString(),
-                        uriString = "geo:0,0?q=" + lat + "," + lon + "(" + label + ")";
-                Uri gmmIntentUri = Uri.parse(uriString);
-                Log.d(TAG, "Creating intent with URI " + uriString);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
+                Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+
+                float[] lats = {e.getLatitude().floatValue()},
+                        lngs = {e.getLongitude().floatValue()};
+                String[] labels = {label};
+
+                mapIntent.putExtra("Latitudes", lats);
+                mapIntent.putExtra("Longitudes", lngs);
+                mapIntent.putExtra("Labels", labels);
+
                 startActivity(mapIntent);
 
                 return true;

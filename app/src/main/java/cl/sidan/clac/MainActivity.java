@@ -21,13 +21,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
+import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.fragments.FragmentChangePassword;
 import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
+import cl.sidan.clac.fragments.FragmentReadEntries;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentStats;
 import cl.sidan.clac.fragments.FragmentWrite;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
 
     private HashMap<String, Fragment> fragments = new HashMap<>();
+    private FragmentReadEntries fragmentReadEntries;
 
     @Override
     protected void onResume() {
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity
 
         // Start login activity if needed
         if (!isUserLoggedIn) {
-            Log.d("XXX_SWO","User not logged in. Starting LoginActivity");
+            Log.d("XXX_SWO","User not logged in. Starting LoginActivity.");
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -200,16 +205,53 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_stats:
                 getReusedFragment(new FragmentStats());
+                break;
             case R.id.nav_map:
-                Intent intent = new Intent(this, MapsActivity.class);
-                startActivity(intent);
+                ArrayList<Entry> entries = fragmentReadEntries.returnEntries();
+                HashMap<String, Entry> hm = new HashMap<>();
+
+                for ( Entry e : entries ) {
+                    if ( // !hm.containsKey(e.getSignature()) && // not registered yet
+                            !e.getLongitude().equals(BigDecimal.ZERO) ) { // has a position
+                        hm.put(e.getSignature(), e);
+                    }
+                }
+
+                int i = 0, size = hm.size();
+                float[] lats = new float[size],
+                        lngs = new float[size];
+                String[] titles = new String[size],
+                        snippets = new String[size];
+
+                Log.d("MapIntent", "Will plot " + size + " entries in the map.");
+
+                for (Entry e : hm.values()) {
+                    lats[i] = e.getLatitude().floatValue();
+                    lngs[i] = e.getLongitude().floatValue();
+                    titles[i] = e.getSignature() + " kl. " + e.getTime();
+                    snippets[i] = "";
+
+                    if ( !e.getMessage().isEmpty() ) {
+                        snippets[i] += e.getMessage() + "  /" + e.getSignature();
+                    }
+                    if (0 < e.getEnheter()) {
+                        snippets[i] += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
+                    }
+                    i++;
+                }
+
+                Intent mapIntent = new Intent(this, MapsActivity.class);
+                mapIntent.putExtra("Latitudes", lats);
+                mapIntent.putExtra("Longitudes", lngs);
+                mapIntent.putExtra("Titles", titles);
+                mapIntent.putExtra("Snippets", snippets);
+
+                startActivity(mapIntent);
                 break;
 
             case R.id.nav_settings:
                 getReusedFragment(new FragmentSettings());
                 break;
-
-
 /*
             case R.id.nav_tattarbilder:
                 break;
@@ -225,6 +267,10 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void registerReadEntriesFragment(FragmentReadEntries fragmentReadEntries) {
+        this.fragmentReadEntries = fragmentReadEntries;
     }
 
     public Fragment getReusedFragment(Fragment instanceFragment) {

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +20,6 @@ import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.User;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentChangePassword.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentChangePassword#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentChangePassword extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
@@ -118,7 +111,7 @@ public class FragmentChangePassword extends Fragment {
 
 
     public void onChangePassword() {
-        Spinner spinner = (Spinner)getActivity().findViewById(R.id.change_username);
+        Spinner spinner = (Spinner) getActivity().findViewById(R.id.change_username);
         String userName = (String) spinner.getSelectedItem();
         EditText passWordEditText = (EditText) getActivity().findViewById(R.id.change_password);
         EditText adminEditText = (EditText) getActivity().findViewById(R.id.admin_password);
@@ -130,9 +123,14 @@ public class FragmentChangePassword extends Fragment {
         if(userName.equals(((MainActivity)getActivity()).number)) {
             ((MainActivity) getActivity()).logOut();
         }
+
+        passWordEditText.setText("");
+        adminEditText.setText("");
+
+        Toast.makeText(getContext(),
+                "Lösenord uppdaterat!",
+                Toast.LENGTH_SHORT).show();
     }
-
-
 
     @Override
     public void onDetach() {
@@ -164,12 +162,9 @@ public class FragmentChangePassword extends Fragment {
     }
 
     public final class ChangePasswordAsync extends AsyncTask<String, Void, Boolean> {
-
-
         @Override
         protected Boolean doInBackground(String... params) {
-
-                    onChangePassword();
+            onChangePassword();
             return true;
         }
     }

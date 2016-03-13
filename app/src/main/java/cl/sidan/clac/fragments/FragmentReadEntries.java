@@ -23,10 +23,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.InetAddress;
-import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,7 +38,7 @@ import cl.sidan.clac.adapters.AdapterEntries;
 
 public class FragmentReadEntries extends Fragment {
     private final String TAG = getClass().getCanonicalName();
-    private List<Entry> entries = new ArrayList<>();
+    private ArrayList<Entry> entries = new ArrayList<>();
     private AdapterEntries entriesAdapter = null;
     private SwipeRefreshLayout entriesContainer = null;
     private View rootView;
@@ -84,6 +82,8 @@ public class FragmentReadEntries extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
         registerForContextMenu(listView);
+
+        ((MainActivity) getActivity()).registerReadEntriesFragment(this);
 
         return rootView;
     }
@@ -130,6 +130,10 @@ public class FragmentReadEntries extends Fragment {
         editItem.setEnabled(false);
     }
 
+    public ArrayList<Entry> returnEntries() {
+        return entries;
+    }
+
     Entry lastClicked = null;
     @Override
     public final boolean onContextItemSelected(MenuItem item) {
@@ -142,29 +146,28 @@ public class FragmentReadEntries extends Fragment {
             case R.id.view_position:
                 e = entriesAdapter.getItem(info.position);
 
-                /**
-                 * Det här är en fattigmanslösning och bör bytas ut snarast mot ett MapFragment.
-                 * Se https://developers.google.com/maps/documentation/android-api/map#code_samples
-                 * för exempel.
-                 */
+                String title = "",
+                        snippet = "";
+                title = e.getSignature() + " kl. " + e.getTime();
 
-                String label = "";
                 if ( !e.getMessage().isEmpty() ) {
-                    label += e.getMessage() + "  /" + e.getSignature();
+                    snippet += e.getMessage() + "  /" + e.getSignature();
                 }
                 if (0 < e.getEnheter()) {
-                    label += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
+                    snippet += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
                 }
 
                 Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
 
-                float[] lats = {e.getLatitude().floatValue()},
-                        lngs = {e.getLongitude().floatValue()};
-                String[] labels = {label};
+                float[] lats = { e.getLatitude().floatValue() },
+                        lngs = { e.getLongitude().floatValue() };
+                String[] titles = { title },
+                        snippets = { snippet };
 
                 mapIntent.putExtra("Latitudes", lats);
                 mapIntent.putExtra("Longitudes", lngs);
-                mapIntent.putExtra("Labels", labels);
+                mapIntent.putExtra("Titles", titles);
+                mapIntent.putExtra("Snippets", snippets);
 
                 startActivity(mapIntent);
 

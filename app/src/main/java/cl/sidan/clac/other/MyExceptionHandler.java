@@ -1,16 +1,14 @@
 package cl.sidan.clac.other;
 
-
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Debug;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.StatFs;
 import android.util.Log;
@@ -26,14 +24,79 @@ import java.util.Locale;
 public class MyExceptionHandler implements UncaughtExceptionHandler {
     private final String NL = "\n";
 
-    private static final String[] RECIPIENTS = new String[]{
-            "sebastiw@student.chalmers.se", "max.gabrielsson@gmail.com", "johan.onsjo@gmail.com "};
     private Context context;
-    private static Context context1;
 
     public MyExceptionHandler(Context ctx) {
         context = ctx;
-        context1 = ctx;
+    }
+
+    @Override
+    public final void uncaughtException(Thread t, Throwable e) {
+        e.printStackTrace(); // not all Android versions will print the stack trace automatically
+
+        final StringBuilder report = getErrorContent(e);
+
+        if(isUIThread()) {
+            invokeLogActivity(report);
+        } else {  // Handle non UI thread throw uncaught exception
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    invokeLogActivity(report);
+                }
+            });
+        }
+    }
+
+    public boolean isUIThread(){
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
+    }
+
+    private void invokeLogActivity(StringBuilder report) {
+        Intent errorIntent = new Intent("cl.sidan.clac.SEND_LOG");
+        errorIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // required when starting from Application
+        errorIntent.putExtra("ErrorContent", report.toString());
+
+        context.startActivity(errorIntent);
+
+        System.exit(1);
+    }
+
+    private StringBuilder getErrorContent(Throwable e) {
+        StringBuilder report = new StringBuilder();
+        Date curDate = new Date();
+        report.append("Error Report collected on : ").append(curDate.toString()).append(NL).append(NL);
+        report.append("****** ADDITIONAL INFORMATION ******").append(NL);
+        report.append("To be filled in by user....").append(NL).append(NL).append(NL);
+
+        report.append("****** DEVICE INFORMATION ******").append(NL);
+        addHWInformation(report);
+        report.append(NL).append(NL);
+
+        report.append("****** FIRMWARE ******").append(NL);
+        addSWInformation(report);
+        report.append(NL).append(NL);
+
+        report.append("****** CAUSE OF ERROR ******").append(NL);
+        report.append("Is user a monkey? ").append(ActivityManager.isUserAMonkey() ? "Yes" : "No")
+                .append(NL);
+        report.append("UI thread? ").append(isUIThread() ? "Yes" : "No").append(NL).append(NL);
+
+        // Print Stacktrace
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        e.printStackTrace(printWriter);
+        report.append(result.toString());
+        printWriter.close();
+        report.append(NL).append(NL);
+
+        // report.append("****** EXTENDED STACKTRACE ******").append(NL).append(NL);
+        // TO BE ADDED
+        //report.append(NL);
+
+        report.append("****** END OF REPORT ******");
+
+        return report;
     }
 
     private StatFs getStatFs() {
@@ -93,100 +156,5 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
 
         message.append("SDK: ").append(Build.VERSION.SDK_INT).append(NL);
         message.append("Incremental: ").append(Build.VERSION.INCREMENTAL).append(NL);
-    }
-
-    @Override
-    public final void uncaughtException(Thread t, Throwable e) {
-        try {
-            StringBuilder report = new StringBuilder();
-            Date curDate = new Date();
-            report.append("Error Report collected on : ").append(curDate.toString()).append(NL).append(NL);
-            report.append("****** ADDITIONAL INFORMATION ******").append(NL);
-            report.append("To be filled in by user....").append(NL).append(NL).append(NL);
-
-            report.append("****** DEVICE INFORMATION ******").append(NL);
-            addHWInformation(report);
-            report.append(NL).append(NL);
-
-            report.append("****** FIRMWARE ******").append(NL);
-            addSWInformation(report);
-            report.append(NL).append(NL);
-
-            report.append("****** CAUSE OF ERROR ******").append(NL);
-            report.append("Is user a monkey? ").append(ActivityManager.isUserAMonkey() ? "Yes" : "No")
-                    .append(NL).append(NL);
-
-            final Writer result = new StringWriter();
-            final PrintWriter printWriter = new PrintWriter(result);
-            e.printStackTrace(printWriter);
-            report.append(result.toString());
-            printWriter.close();
-            report.append(NL).append(NL);
-
-            // report.append("****** EXTENDED STACKTRACE ******").append(NL).append(NL);
-            // TO BE ADDED
-            //report.append(NL);
-
-            report.append("****** END OF REPORT ******");
-
-            Log.e(MyExceptionHandler.class.getName(), "ErrorHandler will try to send mail with " +
-                    "error-report:");
-            for( String line : report.toString().split("\n") ) {
-                Log.e(MyExceptionHandler.class.getName(), line);
-            }
-            sendErrorMail(report);
-        } catch (Throwable ignore) {
-            Log.e(MyExceptionHandler.class.getName(), "Error while sending error e-mail", ignore);
-        }
-    }
-
-    public void sendErrorMail(final StringBuilder errorContent) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        new Thread(){
-            @Override
-            public void run() {
-                Looper.prepare();
-                builder.setTitle("Taskigt läge!");
-                builder.create();
-                builder.setMessage("Grabbarna har kodat fel och du har upptäckt en bugg...");
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        System.exit(1);
-                    }
-                });
-                builder.setPositiveButton("Rapportera", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-
-                        Date curDate = new Date();
-                        String subject = "CLappen krashade " + curDate.toString();
-
-                        sendIntent.setType("plain/text");
-                        sendIntent.putExtra(Intent.EXTRA_EMAIL, RECIPIENTS);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, NL + NL + errorContent + NL + NL);
-                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-
-                        context1.startActivity(Intent.createChooser(sendIntent, "Error Report"));
-                        System.exit(0);
-                    }
-                });
-                // XXX_TODO:
-                // Vi har fått en felrapport på builder.show():
-                // android.view.WindowManager$BadTokenException:
-                // Unable to add window -- token android.os.BinderProxy@3dd7bd7d is not valid;
-                // is your activity running?
-                // Detta beror på att vi försöker visa ett dialog meddelande i en asynkron tråd.
-                // Flödet är följande:
-                // 1. Tråd två kör igång och försöker göra arbete
-                // 2. Tråd ett med aktiviteten dör
-                // 3. Tråd två vill visa en dialog i aktiviteten.
-                // Poff!
-                builder.show();
-                Looper.loop();
-            }
-        }.start();
     }
 }

@@ -34,18 +34,15 @@ public class MapsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        if ( null != actionBar ) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        LatLng gbg = new LatLng(57.7072326, 11.9670171);
 
         Bundle extras = getIntent().getExtras();
         float[] lats = {},
@@ -60,16 +57,27 @@ public class MapsActivity extends AppCompatActivity
             snippets = extras.getStringArray("Snippets");
         }
 
+        LatLng ll = null;
         for( int i = 0; i < titles.length; i++ ) {
-            LatLng ll = new LatLng(lats[i], lngs[i]);
-            MarkerOptions mark = new MarkerOptions().position(ll).title(titles[i]).snippet(snippets[i]);
+            ll = new LatLng(lats[i], lngs[i]);
+
+            MarkerOptions mark = new MarkerOptions()
+                    .position(ll)
+                    .title(titles[i])
+                    .snippet(snippets[i]);
 
             // Add a marker
             mMap.addMarker(mark);
         }
 
-        // Zoom from far 2.0 (zoomed out) to close 21.0 (zoomed in)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gbg, 12.2f));
+        if ( null == ll || 1 < titles.length ) {
+            LatLng gbg = new LatLng(57.7072326, 11.9670171);
+
+            // Zoom from far 2.0 (zoomed out) to close 21.0 (zoomed in)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(gbg, 12.2f));
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 12.2f));
+        }
     }
 
     @Override

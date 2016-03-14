@@ -50,6 +50,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cl.sidan.clac.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".SendLogActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="cl.sidan.clac.SEND_LOG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

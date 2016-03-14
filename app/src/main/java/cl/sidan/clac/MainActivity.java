@@ -37,6 +37,7 @@ import cl.sidan.clac.fragments.FragmentStats;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.listeners.ListenerLocation;
 import cl.sidan.clac.listeners.ListenerScroller;
+import cl.sidan.clac.other.MyExceptionHandler;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity
             LazyHolder.INSTANCE = new JSONParserSidanAccess(number, password);
 
             // Report exceptions via mail
-            //Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
+            Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
             // Standard view consist of a FragmentReadEntries, together with a Actionbar menu,
             // and a FloatingActionButton

@@ -13,7 +13,7 @@ import java.util.Date;
 public class SendLogActivity extends Activity
 {
     private static final String[] RECIPIENTS = new String[]{
-            "sebastiw@student.chalmers.se", "max.gabrielsson@gmail.com", "johan.onsjo@gmail.com "};
+            "visnae@gmail.com", "max.gabrielsson@gmail.com", "johan.onsjo@gmail.com "};
     private String errorContent;
 
     @Override
@@ -22,7 +22,7 @@ public class SendLogActivity extends Activity
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE); // make a dialog without a titlebar
         setFinishOnTouchOutside(false); // prevent users from dismissing the dialog by tapping outside
-        setContentView(R.layout.send_log);
+        setContentView(R.layout.activity_send_log);
 
         Bundle extras = getIntent().getExtras();
         errorContent = extras.getString("ErrorContent");
@@ -50,7 +50,7 @@ public class SendLogActivity extends Activity
 
     private void sendLogMail ()
     {
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        Intent sendIntent = new Intent(Intent.ACTION_SEND); // Mail
 
         sendIntent.setType("plain/text");
         sendIntent.putExtra(Intent.EXTRA_EMAIL, RECIPIENTS);

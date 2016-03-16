@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -15,9 +16,9 @@
             android:src="@drawable/proppeller" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Taskigt läge!"
+            android:text="Bättre version!"
             android:textSize="25sp"
             />
     </LinearLayout>
@@ -28,10 +29,10 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/error_view_log"
+            android:id="@+id/update_news"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Error" />
+            android:text="News:\n* Mer nullpointers,\n* mer karta,\n* snyggare." />
     </ScrollView>
 
     <LinearLayout
@@ -40,19 +41,19 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/error_mail_cancel"
+            android:id="@+id/update_cancel"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Exit"
+            android:text="Påminn senare"
             />
 
         <Button
-            android:id="@+id/error_mail_button"
+            android:id="@+id/update_button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Skicka!"
-        />
+            android:text="Uppgradera!"
+            />
     </LinearLayout>
 </LinearLayout>

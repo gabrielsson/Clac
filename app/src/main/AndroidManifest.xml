@@ -44,20 +44,31 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cl.sidan.clac.MainActivity" />
         </activity>
-
         <activity
             android:name=".SendLogActivity"
-            android:theme="@android:style/Theme.Dialog"
             android:textAppearance="@android:style/TextAppearance.Large"
+            android:theme="@android:style/Theme.Dialog"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="cl.sidan.clac.SEND_LOG" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".VersionUpdateActivity"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:theme="@android:style/Theme.Dialog"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="cl.sidan.clac.UPDATE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

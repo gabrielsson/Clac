@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.SidanAccess;
+import cl.sidan.clac.access.interfaces.UpdateInfo;
 import cl.sidan.clac.fragments.FragmentChangePassword;
 import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
@@ -42,6 +45,7 @@ import cl.sidan.clac.other.MyExceptionHandler;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String APP_SHARED_PREFS = "cl.sidan";
+    private long SECONDS_BETWEEN_UPDATE_CHECKS = 60*60*24*5; // 5 days
 
     private SharedPreferences preferences = null;
     private boolean isUserLoggedIn;
@@ -54,35 +58,6 @@ public class MainActivity extends AppCompatActivity
 
     private HashMap<String, Fragment> fragments = new HashMap<>();
     private FragmentReadEntries fragmentReadEntries;
-
-    @Override
-    protected void onResume() {
-        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
-        isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
-        if (!isUserLoggedIn) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }
-        super.onResume();
-    }
-
-
-
-    @Override
-    protected void onRestart() {
-        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
-        isUserLoggedIn = preferences.getBoolean("userLoggedInState", false);
-        if (!isUserLoggedIn) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }
-        super.onRestart();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +108,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-
             final ListenerScroller scrl = new ListenerScroller
                     .Builder()
                     .footer(fab)
@@ -148,16 +122,62 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * See https://developer.android.com/training/basics/activity-lifecycle/stopping.html
+     * for transitions between the states;
+     * created -> started -> resumed -> paused -> stopped -> destroyed
+     *               ^                              |
+     *               |______________________________|
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.d("XXX_SWO", "RestartedActivity");
+        checkForUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
+
+        if (!isUserLoggedIn) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+        isUserLoggedIn = preferences.getBoolean("userLoggedInState", false);
+
+        if (!isUserLoggedIn) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+
+        super.onRestart();
+    }
 
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            /*
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+            */
             super.onBackPressed();
         }
     }
@@ -327,6 +347,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void checkForUpdates() {
+        Long unixTime = System.currentTimeMillis() / 1000L, // Unix Epoch Seconds
+                lastUpdateCheck = preferences.getLong("LastUpdateCheck", 0),
+                nextTimeToPerformCheck = unixTime -  SECONDS_BETWEEN_UPDATE_CHECKS;
+        if ( lastUpdateCheck < nextTimeToPerformCheck ) {
+            // Asynctask
+            Log.d("XXX_SWO", "Time to check for updates, last check was " + lastUpdateCheck);
+            preferences.edit().putLong("LastUpdateCheck", unixTime).apply();
+            new CheckForNewVersionAsync().execute();
+        }
+    }
+
     /**************************************************************************
      * Getters/is-functions
      *************************************************************************/
@@ -357,5 +389,30 @@ public class MainActivity extends AppCompatActivity
 
     private static class LazyHolder {
         private static SidanAccess INSTANCE;//= new JSONParserSidanAccess(number, password);
+    }
+
+
+    private final class CheckForNewVersionAsync extends AsyncTask<Void, Void, UpdateInfo> {
+        @Override
+        protected UpdateInfo doInBackground(Void... voids) {
+            return sidanAccess().checkForUpdates();
+        }
+
+        @Override
+        protected void onPostExecute(UpdateInfo info) {
+            String currentVersion = BuildConfig.VERSION_NAME;
+            Log.d("XXX_SWO", "The current version is " + currentVersion + " and latest is " + info.getLatestVersion());
+            if ( null != info || !currentVersion.equals(info.getLatestVersion())) {
+                Log.d("XXX_SWO", "Found new version, starting activity!");
+
+                Intent newVersionIntent = new Intent("cl.sidan.clac.UPDATE");
+                // newVersionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // required when starting from Application
+                newVersionIntent.putExtra("UpgradeUrl", info.getURL());
+                newVersionIntent.putExtra("UpgradeNews", info.getNews());
+                startActivity(newVersionIntent);
+            } else {
+                Log.d("XXX_SWO", "No need for an Version Activity.");
+            }
+        }
     }
 }

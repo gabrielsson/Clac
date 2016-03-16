@@ -170,6 +170,8 @@ public interface SidanAccess {
 
     boolean updatePassword(String forSignature, String password, String admin);
 
+    UpdateInfo checkForUpdates();
+
     /**
      * Read the current top lists of a given type
      * @param type

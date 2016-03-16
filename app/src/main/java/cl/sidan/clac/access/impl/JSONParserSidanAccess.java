@@ -21,6 +21,7 @@ import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.Poll;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.access.interfaces.Stats;
+import cl.sidan.clac.access.interfaces.UpdateInfo;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.access.util.JsbJSONInvoker;
 
@@ -388,6 +389,17 @@ public class JSONParserSidanAccess implements SidanAccess {
     public boolean updatePassword(String forSignature, String password, String admin) {
         JSONObject jsonObject = invoke("ChangePassword", "User=" + forSignature + "&Password=" + password + "&Admin=" + admin);
         return true;
+    }
+
+    @Override
+    public UpdateInfo checkForUpdates() {
+        JSONObject obj = invoke("CheckForUpdate", "Type=ANDROID");
+
+        if(obj != null) {
+            return new JSONObjectUpdateInfo(obj);
+        }
+
+        return null;
     }
 
     private JSONObject invoke(String function, String requestString) {

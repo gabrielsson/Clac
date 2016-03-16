@@ -92,11 +92,13 @@ public class JSONObjectEntry implements Entry, Parcelable {
     public Date getDateTime() {
         try {
             DateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+            format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
             Long date = format.parse(obj.optString("Date")).getTime();
+
             format = new SimpleDateFormat(TIME_FORMAT, Locale.getDefault());
-            format.setTimeZone(TimeZone.getTimeZone("CEST"));
+            format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
             Long time = format.parse(obj.optString("Time")).getTime();
-            format.setTimeZone(TimeZone.getTimeZone("CEST"));
+
             return new Date(date + time);
         } catch (ParseException e) {
             Log.e("Error", "Cannot parse date: " + e.getMessage());

@@ -147,8 +147,9 @@ public class FragmentReadEntries extends Fragment {
                 e = entriesAdapter.getItem(info.position);
 
                 String title = "",
-                        snippet = "";
-                title = e.getSignature() + " kl. " + e.getTime();
+                        snippet = "",
+                        timeSincePost = ((MainActivity) getActivity()).timeSinceEventText(e.getDateTime());
+                title = e.getSignature() + " kl. " + e.getTime() + timeSincePost;
 
                 if ( !e.getMessage().isEmpty() ) {
                     snippet += e.getMessage() + "  /" + e.getSignature();

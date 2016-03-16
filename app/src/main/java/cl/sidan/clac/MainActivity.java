@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
@@ -24,8 +23,13 @@ import android.view.View;
 import android.widget.ListView;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.Entry;
@@ -231,9 +235,17 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Entry> entries = fragmentReadEntries.returnEntries();
                 HashMap<String, Entry> hm = new HashMap<>();
 
+                long TWENTYFOUR_HOURS = 60*60*24*1000,
+                        ten_minutes = 60*10*1000, // Because the server time is incorrect with
+                                                  // about ~7 minutes, we also add 10 minutes
+                        unixYesterday = System.currentTimeMillis() - TWENTYFOUR_HOURS + ten_minutes;
+                Date yesterday = new Date(unixYesterday);
+
                 for ( Entry e : entries ) {
-                    if ( // !hm.containsKey(e.getSignature()) && // not registered yet
-                            !e.getLongitude().equals(BigDecimal.ZERO) ) { // has a position
+                    if ( // !hm.containsKey(e.getSignature()) && // Not registered yet
+                            !e.getLongitude().equals(BigDecimal.ZERO) && // Have a position
+                            e.getDateTime().after(yesterday) // Happened in the last day
+                            ) {
                         hm.put(e.getSignature(), e);
                     }
                 }
@@ -249,13 +261,27 @@ public class MainActivity extends AppCompatActivity
                 for (Entry e : hm.values()) {
                     lats[i] = e.getLatitude().floatValue();
                     lngs[i] = e.getLongitude().floatValue();
-                    titles[i] = e.getSignature() + " kl. " + e.getTime();
+
+                    // if the post was before midnight, post "yesterday"
+                    String wasYesterday = "";
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                        Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
+                        wasYesterday = (e.getDateTime().before(dateWithoutTime) ? " yesterday" : "");
+                    } catch (ParseException err) {
+                        Log.e("MapIntent", "Cannot parse date for 'yesterday': " + err.getMessage());
+                    }
+
+                    titles[i] = e.getSignature() + " kl. " + e.getTime() + wasYesterday + timeSinceEventText(e.getDateTime());
                     snippets[i] = "";
 
                     if ( !e.getMessage().isEmpty() ) {
                         snippets[i] += e.getMessage() + "  /" + e.getSignature();
                     }
-                    if (0 < e.getEnheter()) {
+                    if ( !e.getMessage().isEmpty() && 0 < e.getEnheter() ) {
+                        snippets[i] += "\n";
+                    }
+                    if ( 0 < e.getEnheter() ) {
                         snippets[i] += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
                     }
                     i++;
@@ -350,7 +376,7 @@ public class MainActivity extends AppCompatActivity
     public void checkForUpdates() {
         Long unixTime = System.currentTimeMillis() / 1000L, // Unix Epoch Seconds
                 lastUpdateCheck = preferences.getLong("LastUpdateCheck", 0),
-                nextTimeToPerformCheck = unixTime -  SECONDS_BETWEEN_UPDATE_CHECKS;
+                nextTimeToPerformCheck = unixTime - SECONDS_BETWEEN_UPDATE_CHECKS;
         if ( lastUpdateCheck < nextTimeToPerformCheck ) {
             // Asynctask
             Log.d("XXX_SWO", "Time to check for updates, last check was " + lastUpdateCheck);
@@ -383,6 +409,22 @@ public class MainActivity extends AppCompatActivity
         return null;
     }
 
+    public String timeSinceEventText(Date event) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(event);
+        long millis = c.getTimeInMillis(),
+                secondsSincePost = (System.currentTimeMillis() - millis) / 1000;
+        String timeSincePost = "";
+        if ( secondsSincePost < 60 ) {
+            timeSincePost = " (less than one minute ago)";
+        } else if ( secondsSincePost < 60*60 ) {
+            timeSincePost = " (" + Math.round(secondsSincePost/60) + " minutes ago)";
+        } else {
+            timeSincePost = " (" + Math.round(secondsSincePost/(60*60)) + " hours ago)";
+        }
+        return timeSincePost;
+    }
+
     /**************************************************************************
      * CLASSES
      *************************************************************************/
@@ -390,7 +432,6 @@ public class MainActivity extends AppCompatActivity
     private static class LazyHolder {
         private static SidanAccess INSTANCE;//= new JSONParserSidanAccess(number, password);
     }
-
 
     private final class CheckForNewVersionAsync extends AsyncTask<Void, Void, UpdateInfo> {
         @Override
@@ -402,7 +443,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(UpdateInfo info) {
             String currentVersion = BuildConfig.VERSION_NAME;
             Log.d("XXX_SWO", "The current version is " + currentVersion + " and latest is " + info.getLatestVersion());
-            if ( null != info || !currentVersion.equals(info.getLatestVersion())) {
+            if ( !currentVersion.equals(info.getLatestVersion()) ) {
                 Log.d("XXX_SWO", "Found new version, starting activity!");
 
                 Intent newVersionIntent = new Intent("cl.sidan.clac.UPDATE");

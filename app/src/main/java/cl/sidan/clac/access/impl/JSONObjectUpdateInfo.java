@@ -13,16 +13,28 @@ public class JSONObjectUpdateInfo implements UpdateInfo {
 
     @Override
     public String getLatestVersion() {
-        return obj.optString("LatestVersion", "0");
+        String DEFAULT = "0";
+        if (null == obj) {
+            return DEFAULT;
+        }
+        return obj.optString("LatestVersion", DEFAULT);
     }
 
     @Override
     public String getURL() {
-        return obj.optString("URL", "http://sidan.cl/clacen/clac-release.apk");
+        String DEFAULT = "http://sidan.cl/clacen/clac-release.apk";
+        if (null == obj) {
+            return DEFAULT;
+        }
+        return obj.optString("URL", DEFAULT);
     }
 
     @Override
     public String getNews() {
-        return obj.optString("News", "Something wrong.. I could try to download from the standard place.. But I'm not sure it will work. Maybe try later?");
+        String DEFAULT = "Something wrong.. I could try to download from the standard place.. But I'm not sure it will work. Maybe try later?";
+        if (null == obj) {
+            return DEFAULT;
+        }
+        return obj.optString("News", DEFAULT);
     }
 }

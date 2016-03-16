@@ -395,11 +395,7 @@ public class JSONParserSidanAccess implements SidanAccess {
     public UpdateInfo checkForUpdates() {
         JSONObject obj = invoke("CheckForUpdate", "Type=ANDROID");
 
-        if(obj != null) {
-            return new JSONObjectUpdateInfo(obj);
-        }
-
-        return null;
+        return new JSONObjectUpdateInfo(obj);
     }
 
     private JSONObject invoke(String function, String requestString) {

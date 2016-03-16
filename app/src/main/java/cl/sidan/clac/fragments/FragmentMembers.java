@@ -103,15 +103,14 @@ public class FragmentMembers extends Fragment {
                 // Ignorera mera.
                 SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
                 HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
-                if ( ignoredMembers.contains(user.getSignature()) ) {
+                if ( ignoredMembers.remove(user.getSignature()) ) {
                     // unignore
                     Log.d("XXX_SWO", "The user is already ignored. Unignoring!");
-                    ignoredMembers.remove(user.getSignature());
-                } else {
+                } else if ( ignoredMembers.add(user.getSignature()) ) {
                     // ignore
                     Log.d("XXX_SWO", "The user is not yet ignored. Ignoring " + user.getSignature() + "!");
-                    ignoredMembers.add(user.getSignature());
                 }
+
                 preferences.edit().putStringSet("ignoredMembers", ignoredMembers).apply();
                 memberAdapter.setIgnoredMembers(ignoredMembers);
                 memberAdapter.notifyDataSetInvalidated();

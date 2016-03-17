@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         // Start login activity if needed
         if (!isUserLoggedIn) {
-            Log.d("XXX_SWO","User not logged in. Starting LoginActivity.");
+            Log.d("MainActivity", "User not logged in. Starting LoginActivity.");
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -121,8 +121,10 @@ public class MainActivity extends AppCompatActivity
                     .build();
             listView.setOnScrollListener(scrl);
 
-            getReusedFragment(new FragmentWrite());
-            drawer.closeDrawer(GravityCompat.END);
+            if ( null == savedInstanceState ) { // only on first create!
+                getReusedFragment(new FragmentWrite());
+                drawer.closeDrawer(GravityCompat.END);
+            }
         }
     }
 
@@ -135,14 +137,8 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     protected void onStart() {
-        super.onStart();
-
-        Log.d("XXX_SWO", "RestartedActivity");
         checkForUpdates();
-    }
 
-    @Override
-    protected void onResume() {
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
         isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
 
@@ -152,23 +148,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-
-        super.onResume();
-    }
-
-    @Override
-    protected void onRestart() {
-        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
-        isUserLoggedIn = preferences.getBoolean("userLoggedInState", false);
-
-        if (!isUserLoggedIn) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }
-
-        super.onRestart();
+        super.onStart();
     }
 
     @Override

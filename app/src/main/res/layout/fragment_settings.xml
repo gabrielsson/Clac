@@ -6,14 +6,10 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_gravity="center_horizontal" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:id="@+id/change_password_link"
         android:textColor="@color/text_link"
         android:gravity="center"
@@ -43,15 +39,11 @@
         android:id="@+id/position_setting"
         android:layout_gravity="center_horizontal" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_gravity="center_horizontal" />
-
     <SeekBar
         android:id="@+id/fontsize"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:progress="150"
         android:max="450" />
 

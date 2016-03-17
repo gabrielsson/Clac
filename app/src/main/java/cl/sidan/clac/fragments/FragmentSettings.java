@@ -54,6 +54,14 @@ public class FragmentSettings extends Fragment implements cl.sidan.clac.interfac
         });
 
 
+        TextView changePassword = (TextView) rootView.findViewById(R.id.change_password_link);
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).getReusedFragment(new FragmentChangePassword());
+            }
+        });
+
         cbPosition = (CheckBox) rootView.findViewById(R.id.position_setting);
         boolean positionSetting = preferences.getBoolean("positionSetting", true);
         Log.d("Location", "Location setting is " + positionSetting);

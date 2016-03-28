@@ -34,7 +34,6 @@ public class FragmentSettings extends Fragment implements cl.sidan.clac.interfac
         int default_size = (int) preferences.getFloat("font_size", DEFAULT_FONTSIZE);
         fontsize_text.setTextSize(default_size);
         volumeControl.setProgress((int) (default_size * MULTIPLIER));
-
         volumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             float progressChanged = 0;
 

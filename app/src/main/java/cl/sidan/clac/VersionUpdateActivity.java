@@ -1,7 +1,9 @@
 package cl.sidan.clac;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,11 +21,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class VersionUpdateActivity extends Activity {
+    private static final String APP_SHARED_PREFS = "cl.sidan";
+    private SharedPreferences preferences = null;
 
     private static final String externalUrl = "http://sidan.cl/appen/";
     private static final String apkFileName = "app-release.apk";
 
     private String upgradeUrl;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +45,10 @@ public class VersionUpdateActivity extends Activity {
 
         Bundle extras = getIntent().getExtras();
         upgradeUrl = extras.getString("UpgradeUrl", externalUrl + apkFileName);
-        String upgradeNews = extras.getString("UpgradeNews", "");
-        String report = "News:" + upgradeNews;
+        String upgradeNews = extras.getString("UpgradeNews", "").replace("\\n", "\n");
 
         TextView viewLog = (TextView) findViewById(R.id.update_news);
-        viewLog.setText(report);
+        viewLog.setText(upgradeNews);
 
         Button cancelButton = (Button) findViewById(R.id.update_cancel);
         Button updateButton = (Button) findViewById(R.id.update_button);
@@ -52,28 +62,28 @@ public class VersionUpdateActivity extends Activity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadVersionUpdate(upgradeUrl);
+                Toast.makeText(VersionUpdateActivity.this, "Tankar hem uppdatering i bakgrunden.", Toast.LENGTH_LONG).show();
+                new UpdateApp().execute(upgradeUrl);
+                finish();
             }
         });
     }
 
-    private void downloadVersionUpdate(String url) {
-        new UpdateApp().execute(url);
-    }
-
-    public class UpdateApp extends AsyncTask<String,Void,Void> {
+    public class UpdateApp extends AsyncTask<String,Void,Boolean> {
         @Override
-        protected Void doInBackground(String... arg0) {
+        protected Boolean doInBackground(String... arg0) {
             try {
                 URL url = new URL(arg0[0]);
                 HttpURLConnection c = (HttpURLConnection) url.openConnection();
                 c.setRequestMethod("GET");
                 c.setDoOutput(true);
                 c.connect();
+                Log.d("XXX_SWO", "Connecting to " + arg0[0]);
 
                 // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 // getExternalCacheDir().getAbsolutePath();
-                File outputFile = new File(getFilesDir().getPath() + "/" + apkFileName);
+                String outputFilename = getFilesDir().getPath() + "/" + apkFileName;
+                File outputFile = new File(outputFilename);
 
                 if(outputFile.exists() && !outputFile.delete()){
                     Log.e("UpdateAPP", "outputFile exists but was unable to delete file.");
@@ -90,16 +100,16 @@ public class VersionUpdateActivity extends Activity {
                 fos.close();
                 is.close();
 
-                /*
+                /* Need to be readable from outside of application */
                 if (outputFile.setReadable(true, false)) {
                     Log.e("UpdateAPP", "Could not make outputFile readable.");
                 }
-                */
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(outputFile), "application/vnd.android.package-archive");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
                 startActivity(intent);
+                return true;
             } catch (Exception e) {
                 Log.e("UpdateAPP", "Update error! " + e.getMessage());
                 // Toasts must be run on UI thread
@@ -109,9 +119,18 @@ public class VersionUpdateActivity extends Activity {
                         Toast.makeText(VersionUpdateActivity.this, "Kunde inte hitta uppdateringsfilen, kontakta någon!", Toast.LENGTH_LONG).show();
                     }
                 });
-                finish();
             }
-            return null;
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                Long unixTime = System.currentTimeMillis() / 1000; // Unix Epoch Seconds
+                preferences.edit().putLong("LastUpdateCheck", unixTime).apply();
+            } else {
+                Log.d("XXX_SWO", "FAILED!");
+            }
         }
     }
 }

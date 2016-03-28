@@ -1,12 +1,13 @@
 package cl.sidan.clac.fragments;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,35 +22,18 @@ import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.User;
 
 public class FragmentChangePassword extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
 
     private List<User> userList;
-
-    private OnFragmentInteractionListener mListener;
+    private ArrayList<String> userNameList = new ArrayList<>();
+    private ArrayAdapter<String> spinnerAdapter = null;
 
     public FragmentChangePassword() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentChangePassword.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentChangePassword newInstance(String param1, String param2) {
-        FragmentChangePassword fragment = new FragmentChangePassword();
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         new ReadMembersAsync().execute();
 
     }
@@ -61,44 +45,35 @@ public class FragmentChangePassword extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_change_password, container, false);
 
-    }
-
-    private void populateUserNames() {
-        //run in background
-        userList = ((MainActivity) getActivity()).sidanAccess().readMembers(true);
-
-        //run on ui thread
-          /* Möjlig Nullpekare här. Om både denna kör och versionsasync eller något. */
-        if( getActivity() != null ) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Spinner spinner = (Spinner) getActivity().findViewById(R.id.change_username);
-
-                    List<String> userNameList = new ArrayList<String>();
-                    for (User u: userList) {
-                        userNameList.add(u.getSignature());
-                    }
-                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, userNameList);
-
-                    spinner.setAdapter(spinnerAdapter);
-                    spinner.setSelection(spinnerAdapter.getPosition(((MainActivity)getActivity()).number));
+        final Spinner numberSpinner = (Spinner) view.findViewById(R.id.change_username);
+        final EditText adminPassword = (EditText) view.findViewById(R.id.admin_password);
+        numberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String userName = (String) numberSpinner.getSelectedItem();
+                if ( userName.equals( ((MainActivity) getActivity()).whoAmI() ) ) {
+                    adminPassword.setVisibility(View.GONE);
+                } else {
+                    adminPassword.setVisibility(View.VISIBLE);
                 }
-            });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        if (spinnerAdapter == null) {
+            userNameList.clear();
+            userNameList.add( ((MainActivity) getActivity()).whoAmI() );
+            spinnerAdapter = new ArrayAdapter<>(
+                    getActivity(), android.R.layout.simple_spinner_item, userNameList);
+            numberSpinner.setAdapter(spinnerAdapter);
         }
 
-
-
-
-    }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_change_password, container, false);
-        // Inflate the layout for this fragment
         Button changePasswordButton = (Button) view.findViewById(R.id.change_password_button);
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +84,32 @@ public class FragmentChangePassword extends Fragment {
         return view;
     }
 
+    private void populateUserNames() {
+        // run in background
+        userList = ((MainActivity) getActivity()).sidanAccess().readMembers(true);
+
+        userNameList.clear();
+        for (User u : userList) {
+            userNameList.add(u.getSignature());
+        }
+
+        // run on ui thread
+
+        /* Möjlig Nullpekare här. Om både denna kör och någon annan async-task körs
+         * eller något. Lite oklart varför. */
+        if ( getActivity() != null ) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    spinnerAdapter.notifyDataSetChanged();
+
+                    Log.d("XXX_SWO", "WhoAmI Position " +  spinnerAdapter.getPosition(((MainActivity) getActivity()).whoAmI()));
+                    Spinner numberSpinner = (Spinner) getActivity().findViewById(R.id.change_username);
+                    numberSpinner.setSelection(spinnerAdapter.getPosition(((MainActivity) getActivity()).whoAmI()));
+                }
+            });
+        }
+    }
 
     public void onChangePassword() {
         Spinner spinner = (Spinner) getActivity().findViewById(R.id.change_username);
@@ -118,39 +119,16 @@ public class FragmentChangePassword extends Fragment {
         String adminPassword = adminEditText.getText().toString();
         String password = passWordEditText.getText().toString();
 
-        ((MainActivity)getActivity()).sidanAccess().updatePassword(userName, password, adminPassword);
+        ((MainActivity) getActivity()).sidanAccess().updatePassword(userName, password, adminPassword);
 
-        if(userName.equals(((MainActivity)getActivity()).number)) {
+        if ( userName.equals( ((MainActivity) getActivity()).whoAmI() ) ) {
             ((MainActivity) getActivity()).logOut();
         }
 
         passWordEditText.setText("");
         adminEditText.setText("");
 
-        Toast.makeText(getContext(),
-                "Lösenord uppdaterat!",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        Toast.makeText(getContext(), "Lösenord uppdaterat!", Toast.LENGTH_SHORT).show();
     }
 
     public final class ReadMembersAsync extends AsyncTask<String, Void, Void> {

@@ -155,7 +155,7 @@ public class FragmentWrite extends Fragment {
                 entry.setMessage(text);
                 entry.setSecret(hemlis);
 
-                boolean reportPosition = ((MainActivity) getActivity()).getPrefs().getBoolean("positionSetting", false);
+                boolean reportPosition = ((MainActivity) getActivity()).getPrefs().getBoolean("positionSetting", true);
                 Location myLocation = ((MainActivity) getActivity()).getLocation();
                 if (reportPosition && myLocation != null) {
                     entry.setLatitude(BigDecimal.valueOf(myLocation.getLatitude()));

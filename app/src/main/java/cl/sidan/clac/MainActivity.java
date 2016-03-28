@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
 import java.math.BigDecimal;
@@ -109,6 +110,10 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     getReusedFragment(new FragmentWrite());
+
+                    // Show the soft-keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 }
             });
 
@@ -124,6 +129,14 @@ public class MainActivity extends AppCompatActivity
             if ( null == savedInstanceState ) { // only on first create!
                 getReusedFragment(new FragmentWrite());
                 drawer.closeDrawer(GravityCompat.END);
+
+                // Check if no view has focus:
+                View view = this.getCurrentFocus();
+                if (view != null) {
+                    // Hide the soft-keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
             }
         }
     }
@@ -148,6 +161,15 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
+
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            // Hide the soft-keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         super.onStart();
     }
 
@@ -201,6 +223,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_write_entry:
                 getReusedFragment(new FragmentWrite());
+
+                // Show the soft-keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 break;
             case R.id.nav_arr:
                 getReusedFragment(new FragmentArr());
@@ -338,7 +364,7 @@ public class MainActivity extends AppCompatActivity
         if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
             locationListener = new ListenerLocation(this, lastKnownLocation);
             Log.d("Location", "New Location listener created.");
-        } else if(locationListener != null) {
+        } else if( !preferences.getBoolean("positionSetting", false) && locationListener != null) {
             locationListener.stopLocationUpdates();
             locationListener = null;
             Log.d("Location", "Stopped and removed location listener.");
@@ -354,7 +380,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void checkForUpdates() {
-        Long unixTime = System.currentTimeMillis() / 1000L, // Unix Epoch Seconds
+        Long unixTime = System.currentTimeMillis() / 1000, // Unix Epoch Seconds
                 lastUpdateCheck = preferences.getLong("LastUpdateCheck", 0),
                 nextTimeToPerformCheck = unixTime - SECONDS_BETWEEN_UPDATE_CHECKS;
         if ( lastUpdateCheck < nextTimeToPerformCheck ) {
@@ -371,6 +397,10 @@ public class MainActivity extends AppCompatActivity
 
     public static SidanAccess sidanAccess() {
         return LazyHolder.INSTANCE;
+    }
+
+    public String whoAmI() {
+        return number;
     }
 
     public final SharedPreferences getPrefs() {
@@ -394,10 +424,8 @@ public class MainActivity extends AppCompatActivity
         c.setTime(event);
         long millis = c.getTimeInMillis(),
                 secondsSincePost = (System.currentTimeMillis() - millis) / 1000;
-        String timeSincePost = "";
-        if ( secondsSincePost < 60 ) {
-            timeSincePost = " (less than one minute ago)";
-        } else if ( secondsSincePost < 60*60 ) {
+        String timeSincePost;
+        if ( secondsSincePost < 60*60 ) {
             timeSincePost = " (" + Math.round(secondsSincePost/60) + " minutes ago)";
         } else {
             timeSincePost = " (" + Math.round(secondsSincePost/(60*60)) + " hours ago)";

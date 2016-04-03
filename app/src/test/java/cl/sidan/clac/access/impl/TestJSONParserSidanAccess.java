@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class TestJSONParserSidanAccess {
 
-    private static JSONParserSidanAccess sidanAccess = new JSONParserSidanAccess("#38", "000");
+    private static JSONParserSidanAccess sidanAccess = new JSONParserSidanAccess("user", "password");
     private static String MESSAGE_1 = "A message with #38, #68 and #62 as well as #3 and #6 as well as #8";
     private static int SIGNATURES_IN_MESSAGE_1 = 6;
 

@@ -267,17 +267,20 @@ public class FragmentReadEntries extends Fragment {
     public final void populateEntries() {
         Log.d(TAG, "Entered populateEntries()");
         List<Entry> response = ((MainActivity) getActivity()).sidanAccess().readEntries(0, 50);
+        Activity main = getActivity();
 
         if( response.isEmpty() ) {
             Log.d(TAG, "Response was empty from server, will not clear entries.");
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(rootView.getContext(),
-                            "Kunde inte hämta inlägg från servern.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            } );
+            if (main != null) {
+                main.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(rootView.getContext(),
+                                "Kunde inte hämta inlägg från servern.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         } else {
             Log.d(TAG, "Entries from server: " + response.size());
             SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
@@ -294,17 +297,15 @@ public class FragmentReadEntries extends Fragment {
             entries.addAll(response);
         }
 
-        Activity main = getActivity();
         if ( main != null ) {
             main.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    entriesAdapter.notifyDataSetInvalidated();
+                    entriesAdapter.notifyDataSetChanged();
                     entriesContainer.setRefreshing(false);
                 }
             });
         }
-        Log.d(TAG, "Entries size " + entries.size());
     }
 
     private void onCreateLike(Integer i) {

@@ -113,7 +113,12 @@ public class FragmentMembers extends Fragment {
 
                 preferences.edit().putStringSet("ignoredMembers", ignoredMembers).apply();
                 memberAdapter.setIgnoredMembers(ignoredMembers);
-                memberAdapter.notifyDataSetInvalidated();
+                getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            memberAdapter.notifyDataSetChanged();
+                        }
+                    } );
 
                 return true;
 
@@ -174,7 +179,7 @@ public class FragmentMembers extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        memberAdapter.notifyDataSetInvalidated();
+                        memberAdapter.notifyDataSetChanged();
                     }
                 });
             }

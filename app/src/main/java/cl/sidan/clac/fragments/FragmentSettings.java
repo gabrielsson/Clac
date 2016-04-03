@@ -10,18 +10,15 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
-// import cl.sidan.util.GCMUtil;
 
-public class FragmentSettings extends Fragment implements cl.sidan.clac.interfaces.GCMChangeListener {
+public class FragmentSettings extends Fragment {
     private static final float MULTIPLIER = 10;
     private static final float DEFAULT_FONTSIZE = 15;
 
     private TextView fontsize_text = null;
-    private CheckBox cbNotifications = null;
     private CheckBox cbPosition = null;
 
     @Override
@@ -75,36 +72,6 @@ public class FragmentSettings extends Fragment implements cl.sidan.clac.interfac
             }
         });
 
-        cbNotifications = (CheckBox) rootView.findViewById(R.id.notifications);
-        boolean notifications = preferences.getBoolean("notifications", false);
-        cbNotifications.setChecked(notifications);
-        cbNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean checked = !cbNotifications.isChecked();
-                preferences.edit().putBoolean("notifications", checked).apply();
-                ((MainActivity) getActivity()).notifyGCMChange();
-
-                updateNotifications();
-            }
-        });
-        updateNotifications();
-
         return rootView;
-    }
-
-    public final void updateNotifications() {
-        SharedPreferences sp = ((MainActivity) getActivity()).getPrefs();
-        if( true ) { // GCMUtil.isRegistered(getActivity()) ) {
-            sp.edit().putBoolean("notifications", true).apply();
-        } else {
-            sp.edit().putBoolean("notifications", false).apply();
-        }
-    }
-
-    @Override
-    public final void onGCMChange(boolean success, String msg) {
-        updateNotifications();
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 }

@@ -3,7 +3,10 @@ package cl.sidan.clac.access.impl;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
+import android.util.Patterns;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -196,7 +199,27 @@ public class JSONParserSidanAccess implements SidanAccess {
     protected void sendNotification(String message) {
         List<String> allMatches = getAllSignaturesInMessage(message);
 
+        String csvSignatures = listToCsv(allMatches);
 
+        Map<String, String> map = getGCMRecipients(csvSignatures);
+
+        for(Map.Entry<String, String> e: map.entrySet()) {
+            StringBuilder sb = new StringBuilder(300 + message.length());
+            try {
+                sb.append("Message=").append(URLEncoder.encode(message, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+            sb.append("&RegId=").append(e.getKey());
+
+
+
+            invoke("Notify", sb.toString());
+        }
+    }
+
+    private String listToCsv(List<String> allMatches) {
+        return StringUtils.join(allMatches);
     }
 
 

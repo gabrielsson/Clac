@@ -356,7 +356,7 @@ public class FragmentArr extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        arrAdapter.notifyDataSetInvalidated();
+                        arrAdapter.notifyDataSetChanged();
                         arrContainer.setRefreshing(false);
                     }
                 });

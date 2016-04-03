@@ -35,7 +35,6 @@ public class FragmentChangePassword extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new ReadMembersAsync().execute();
-
     }
 
     @Override
@@ -78,7 +77,14 @@ public class FragmentChangePassword extends Fragment {
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ChangePasswordAsync().execute();
+                Spinner spinner = (Spinner) getActivity().findViewById(R.id.change_username);
+                String userName = (String) spinner.getSelectedItem();
+                EditText passWordEditText = (EditText) getActivity().findViewById(R.id.change_password);
+                EditText adminEditText = (EditText) getActivity().findViewById(R.id.admin_password);
+                String adminPassword = adminEditText.getText().toString();
+                String password = passWordEditText.getText().toString();
+
+                new ChangePasswordAsync().execute(new UserPassword(userName, password, adminPassword));
             }
         });
         return view;
@@ -111,26 +117,6 @@ public class FragmentChangePassword extends Fragment {
         }
     }
 
-    public void onChangePassword() {
-        Spinner spinner = (Spinner) getActivity().findViewById(R.id.change_username);
-        String userName = (String) spinner.getSelectedItem();
-        EditText passWordEditText = (EditText) getActivity().findViewById(R.id.change_password);
-        EditText adminEditText = (EditText) getActivity().findViewById(R.id.admin_password);
-        String adminPassword = adminEditText.getText().toString();
-        String password = passWordEditText.getText().toString();
-
-        ((MainActivity) getActivity()).sidanAccess().updatePassword(userName, password, adminPassword);
-
-        if ( userName.equals( ((MainActivity) getActivity()).whoAmI() ) ) {
-            ((MainActivity) getActivity()).logOut();
-        }
-
-        passWordEditText.setText("");
-        adminEditText.setText("");
-
-        Toast.makeText(getContext(), "Lösenord uppdaterat!", Toast.LENGTH_SHORT).show();
-    }
-
     public final class ReadMembersAsync extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... strings) {
@@ -139,11 +125,39 @@ public class FragmentChangePassword extends Fragment {
         }
     }
 
-    public final class ChangePasswordAsync extends AsyncTask<String, Void, Boolean> {
+    public final class ChangePasswordAsync extends AsyncTask<UserPassword, Void, Boolean> {
         @Override
-        protected Boolean doInBackground(String... params) {
-            onChangePassword();
-            return true;
+        protected Boolean doInBackground(UserPassword... params) {
+            Boolean b = ((MainActivity) getActivity()).sidanAccess().updatePassword(
+                    params[0].username, params[0].password, params[0].adminPassword);
+
+            if ( params[0].username.equals( ((MainActivity) getActivity()).whoAmI() ) ) {
+                ((MainActivity) getActivity()).logOut();
+            }
+
+            return b;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if (b) {
+                EditText passWordEditText = (EditText) getActivity().findViewById(R.id.change_password);
+                EditText adminEditText = (EditText) getActivity().findViewById(R.id.admin_password);
+
+                passWordEditText.setText("");
+                adminEditText.setText("");
+
+                Toast.makeText(getContext(), "Lösenord uppdaterat!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class UserPassword {
+        String username, password, adminPassword;
+        UserPassword(String username, String password, String adminPassword) {
+            this.username = username;
+            this.password = password;
+            this.adminPassword = adminPassword;
         }
     }
 }

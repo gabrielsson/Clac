@@ -3,6 +3,7 @@ package cl.sidan.clac;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.SidanAccess;
+import cl.sidan.clac.other.GCMUtil;
 
 /**
  * A login screen that offers login via email/password.
@@ -43,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
 
     private Context context;
-    private SharedPreferences preferences;;
+    private SharedPreferences preferences;
     private static final String APP_SHARED_PREFS = "cl.sidan";
 
     @Override
@@ -139,8 +141,8 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask = new UserLoginTask(this, username, password);
+            mAuthTask.execute();
         }
     }
 
@@ -203,8 +205,10 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUsername;
         private final String mPassword;
+        private final Context mContext;
 
-        UserLoginTask(String username, String password) {
+        UserLoginTask(Context context, String username, String password) {
+            mContext = context;
             mUsername = username;
             mPassword = password;
         }
@@ -216,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
             SidanAccess loginAccess = new JSONParserSidanAccess(mUsername, mPassword);
 
             return loginAccess.authenticateUser();
-
         }
 
         @Override
@@ -235,6 +238,9 @@ public class LoginActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(intent);
+
+                GCMUtil.register(mContext);
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

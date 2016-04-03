@@ -249,7 +249,12 @@ public class FragmentWrite extends Fragment {
                     v.setSelected(false);
                     selectedKumpaner.remove(memberAdapter.getItem(position));
                 }
-                memberAdapter.notifyDataSetChanged();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        memberAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -286,7 +291,12 @@ public class FragmentWrite extends Fragment {
             if ( !tempKumpaner.isEmpty() ) {
                 kumpaner.clear();
                 kumpaner.addAll(tempKumpaner);
-                memberAdapter.notifyDataSetInvalidated();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        memberAdapter.notifyDataSetChanged();
+                    }
+                });
                 Log.d("Kumpaner", "New Kumpaner! Yay!");
             } else {
                 Log.e("Kumpaner", "Could not get new kumpaner");

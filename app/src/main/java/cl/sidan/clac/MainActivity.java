@@ -371,14 +371,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public final void notifyGCMChange() {
-        if( preferences.getBoolean("notifications", true) ) {
-            // GCMUtil.unregister(this);
-        } else {
-            // GCMUtil.register(this);
-        }
-    }
-
     public void checkForUpdates() {
         Long unixTime = System.currentTimeMillis() / 1000, // Unix Epoch Seconds
                 lastUpdateCheck = preferences.getLong("LastUpdateCheck", 0),

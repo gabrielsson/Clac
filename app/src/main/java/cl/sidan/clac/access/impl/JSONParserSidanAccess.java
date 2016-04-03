@@ -2,11 +2,10 @@ package cl.sidan.clac.access.impl;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -219,7 +218,7 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     private String listToCsv(List<String> allMatches) {
-        return StringUtils.join(allMatches);
+        return TextUtils.join(",", allMatches);
     }
 
 

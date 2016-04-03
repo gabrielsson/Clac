@@ -1,5 +1,7 @@
 package cl.sidan.clac.access.impl;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,9 +13,13 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cl.sidan.clac.access.interfaces.Arr;
 import cl.sidan.clac.access.interfaces.Article;
@@ -181,7 +187,27 @@ public class JSONParserSidanAccess implements SidanAccess {
             e.printStackTrace();
         }
 
+        //notify invoke("Notify....");
+        sendNotification(message);
+
         return invoke("CreateEntry", sb.toString()) != null;
+    }
+
+    protected void sendNotification(String message) {
+        List<String> allMatches = getAllSignaturesInMessage(message);
+
+
+    }
+
+
+    protected List<String> getAllSignaturesInMessage(String message) {
+        List<String> allMatches = new ArrayList<String>();
+        Matcher m = Pattern.compile("#\\d\\d?")
+                .matcher(message);
+        while (m.find()) {
+            allMatches.add(m.group());
+        }
+        return allMatches;
     }
 
     @Override

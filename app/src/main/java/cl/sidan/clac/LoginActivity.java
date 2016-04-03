@@ -144,17 +144,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isNumberValid(String number) {
+    protected boolean isNumberValid(String number) {
         //TODO: Replace this with your own logic
         return number.contains("#") && Integer.parseInt(number.substring(1)) < 100;
     }
 
-    private boolean isEmailValid(String email) {
+    protected boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
-    private boolean isPasswordValid(String password) {
+    protected boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 2;
     }

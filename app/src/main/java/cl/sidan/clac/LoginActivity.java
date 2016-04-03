@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,9 +25,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.EmailSignInOptions;
+
+import java.util.regex.Pattern;
+
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.other.GCMUtil;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -152,8 +158,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     protected boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+
+        if (email == null) {
+            return false;
+        } else {
+            Pattern p = Pattern.compile(
+                    "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                            "\\@" +
+                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                            "(" +
+                            "\\." +
+                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                            ")+"
+            );
+            return p.matcher(email).matches();
+        }
     }
 
     protected boolean isPasswordValid(String password) {

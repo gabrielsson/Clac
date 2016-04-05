@@ -8,15 +8,21 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.google.android.gms.iid.InstanceIDListenerService;
 
+import cl.sidan.clac.R;
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.SidanAccess;
 import cl.sidan.clac.interfaces.GCMChangeListener;
 
-public class GCMUtil {
+public class GCMRegistrationService extends InstanceIDListenerService {
     public static final String PREFS_REG_ID_KEY = "gcm_reg_id";
 
-    @SuppressWarnings("unchecked")
+    @Override
+    public void onTokenRefresh() {
+        register(this);
+    }
+
     public static void register( final Context context ) {
         new RegisterAsyncTask(context).execute();
     }
@@ -25,8 +31,6 @@ public class GCMUtil {
         String msg = "";
         boolean success = false;
 
-        String GOOGLE_PROJECT_ID = "clappen-clac";
-        String TAG = "GCMService";
         private Context mContext;
 
         public RegisterAsyncTask(Context context) {
@@ -44,35 +48,24 @@ public class GCMUtil {
                     throw new Exception("Number or password missing.");
                 }
 
-                // [START register_for_gcm]
-                // Initially this call goes out to the network to retrieve the token, subsequent calls
-                // are local.
-                // [START get_token]
                 InstanceID instanceID = InstanceID.getInstance(mContext);
+                String token = instanceID.getToken(
+                        mContext.getString(R.string.gcm_defaultSenderId),
+                        GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+                Log.i(getClass().getCanonicalName(), "GCM Registration Token: " + token);
 
-//                String iid = instanceID.getId();
-                String token = instanceID.getToken(GOOGLE_PROJECT_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-//                String regId = gcm.register(GOOGLE_PROJECT_NUMBER);
-                // [END get_token]
-                Log.i(TAG, "GCM Registration Token: " + token);
-
-                // Send token to the app server
+                // Send token to the server
                 SidanAccess sidanAccess = new JSONParserSidanAccess(nummer, password);
-                String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String androidId = Settings.Secure.getString(
+                        mContext.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
                 sidanAccess.registerGCM(token, androidId);
 
-                // Persist the registration - no need to register again.
                 prefs.edit().putBoolean("SENT_TOKEN_TO_SERVER", true).apply();
-                prefs.edit().putString(PREFS_REG_ID_KEY, token);
-
-                // [END register_for_gcm]
             } catch (Exception e) {
-                Log.d(TAG, "Failed to complete token refresh", e);
-                // If an exception happens while fetching the new token or updating our registration data
-                // on a third-party server, this ensures that we'll attempt the update at a later time.
+                Log.d(getClass().getCanonicalName(), "Failed to complete token refresh", e);
                 prefs.edit().putBoolean("SENT_TOKEN_TO_SERVER", false).apply();
             }
-            // Notify UI that registration has completed, so the progress indicator can be hidden.
 
             return mContext;
         }

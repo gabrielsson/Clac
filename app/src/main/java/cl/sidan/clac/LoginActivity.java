@@ -3,7 +3,6 @@ package cl.sidan.clac;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,14 +23,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.EmailSignInOptions;
-
 import java.util.regex.Pattern;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.SidanAccess;
-import cl.sidan.clac.other.GCMUtil;
-
+import cl.sidan.clac.other.GCMRegistrationService;
 
 /**
  * A login screen that offers login via email/password.
@@ -163,12 +158,11 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         } else {
             Pattern p = Pattern.compile(
-                    "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-                            "\\@" +
-                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "[a-zA-Z0-9\\+\\._%\\-]{1,256}" + // prefix
+                            "@" + // @
+                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + // hostname
                             "(" +
-                            "\\." +
-                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                            "\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + // .co.uk or similar
                             ")+"
             );
             return p.matcher(email).matches();
@@ -258,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 startActivity(intent);
 
-                GCMUtil.register(mContext);
+                GCMRegistrationService.register(mContext);
 
                 finish();
             } else {

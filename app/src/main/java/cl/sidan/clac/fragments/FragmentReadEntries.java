@@ -42,17 +42,22 @@ public class FragmentReadEntries extends Fragment {
     private AdapterEntries entriesAdapter = null;
     private SwipeRefreshLayout entriesContainer = null;
     private View rootView;
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+    private int scrollPosition = 0, top = 0;
+    private SharedPreferences preferences;
+    private ListView listView;
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setMenuVisibility(true);
+
+        preferences = ((MainActivity) getActivity()).getPrefs();
+
+        if( null != savedInstanceState ) {
+            scrollPosition = savedInstanceState.getInt("scrollPosition", 0);
+            top = savedInstanceState.getInt("top", 0);
+        }
     }
 
     @Override
@@ -60,12 +65,10 @@ public class FragmentReadEntries extends Fragment {
                                    Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_readentries, container, false);
 
-        if(entriesAdapter == null) {
-            float fontsize = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
+        float fontsize = preferences.getFloat("font_size", 15);
 
-            entriesAdapter = new AdapterEntries(inflater.getContext(), R.layout.entry, entries, fontsize);
-            entriesAdapter.setNotifyOnChange(true);
-        }
+        entriesAdapter = new AdapterEntries(inflater.getContext(), R.layout.entry, entries, fontsize);
+        entriesAdapter.setNotifyOnChange(true);
 
         entriesContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.entriesContainer);
         entriesContainer.setOnRefreshListener(
@@ -79,7 +82,7 @@ public class FragmentReadEntries extends Fragment {
         entriesContainer.setRefreshing(true);
         new ReadEntriesAsync().execute();
 
-        ListView listView = (ListView) rootView.findViewById(R.id.entries);
+        listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
         registerForContextMenu(listView);
 
@@ -89,22 +92,17 @@ public class FragmentReadEntries extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
-        if (entriesAdapter == null) {
-            entriesAdapter = new AdapterEntries(rootView.getContext(), R.layout.entry, entries, font_size);
-            entriesAdapter.setNotifyOnChange(true);
-        }
-
+    public void onSaveInstanceState(Bundle state) {
+        // Save scroll position
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
-        listView.setAdapter(entriesAdapter);
-    }
+        scrollPosition = listView.getFirstVisiblePosition();
+        View v = listView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
 
-    @Override
-    public final void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        state.putInt("scrollPosition", scrollPosition);
+        state.putInt("top", top);
+
+        super.onSaveInstanceState(state);
     }
 
     @Override
@@ -227,7 +225,7 @@ public class FragmentReadEntries extends Fragment {
 
                 intent = new Intent("android.intent.action.VIEW");
                 /* LÄGG TILL NUMMER NEDAN */
-                data = Uri.parse("sms:0737351374");
+                data = Uri.parse("sms:1");
                 intent.setData(data);
                 startActivity(intent);
                 return true;
@@ -264,77 +262,61 @@ public class FragmentReadEntries extends Fragment {
         }
     }
 
-    public final void populateEntries() {
-        Log.d(TAG, "Entered populateEntries()");
-        List<Entry> response = ((MainActivity) getActivity()).sidanAccess().readEntries(0, 50);
-        Activity main = getActivity();
-
-        if( response.isEmpty() ) {
-            Log.d(TAG, "Response was empty from server, will not clear entries.");
-            if (main != null) {
-                main.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(rootView.getContext(),
-                                "Kunde inte hämta inlägg från servern.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        } else {
-            Log.d(TAG, "Entries from server: " + response.size());
-            SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
-            HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
-            for( int i = response.size() - 1; i >= 0; i-- ) {
-                Entry e = response.get(i);
-                if ( ignoredMembers.contains(e.getSignature()) ) {
-                    response.remove(e);
-                    Log.d(TAG, "Removed entry " + e.getMessage() + " from " + e.getSignature());
-                }
-            }
-
-            entries.clear();
-            entries.addAll(response);
-        }
-
-        if ( main != null ) {
-            main.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    entriesAdapter.notifyDataSetChanged();
-                    entriesContainer.setRefreshing(false);
-                }
-            });
-        }
-    }
-
-    private void onCreateLike(Integer i) {
-        String host = null;
-        try {
-            host = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
-        ((MainActivity) getActivity()).sidanAccess().createLike(i, nummer, host);
-        Log.d("Debug", "Liked " + i);
-    }
-
     public final class CreateLikeAsync extends AsyncTask<Integer, Entry, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {
-            for(Integer i : integers) {
-                onCreateLike(i);
+            String host = null;
+            try {
+                host = InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
+            String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
+
+            for(Integer i : integers) {
+                ((MainActivity) getActivity()).sidanAccess().createLike(i, nummer, host);
+                Log.d("Debug", "Liked " + i);
+            }
+
             return null;
         }
     }
 
-    public final class ReadEntriesAsync extends AsyncTask<String, Void, Void> {
+    public final class ReadEntriesAsync extends AsyncTask<String, Void, List<Entry>> {
         @Override
-        protected Void doInBackground(String... strings) {
-            populateEntries();
-            return null;
+        protected List<Entry> doInBackground(String... strings) {
+            Log.d(TAG, "Entered populateEntries()");
+            return ((MainActivity) getActivity()).sidanAccess().readEntries(0, 50);
+        }
+
+        @Override
+        protected void onPostExecute(List<Entry> response) {
+            if( response.isEmpty() ) {
+                Log.d(TAG, "Response was empty from server, will not clear entries.");
+                Toast.makeText(rootView.getContext(),
+                        "Kunde inte hämta inlägg från servern.",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d(TAG, "Entries from server: " + response.size());
+
+                // Remove posts from ignored members
+                HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
+                for( int i = response.size() - 1; i >= 0; i-- ) {
+                    Entry e = response.get(i);
+                    if ( ignoredMembers.contains(e.getSignature()) ) {
+                        response.remove(e);
+                        Log.d(TAG, "Removed entry " + e.getMessage() + " from " + e.getSignature());
+                    }
+                }
+
+                entries.clear();
+                entries.addAll(response);
+                entriesAdapter.notifyDataSetChanged();
+                entriesContainer.setRefreshing(false);
+
+                // Scroll to position
+                listView.setSelectionFromTop(scrollPosition, top);
+            }
         }
     }
 }

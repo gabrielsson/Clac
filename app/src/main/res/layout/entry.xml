@@ -35,7 +35,8 @@
         android:layout_toEndOf="@+id/signature_line"
         android:layout_toRightOf="@+id/signature_line"
         android:rowCount="1"
-        android:columnCount="5" android:id="@+id/enhetGrid">
+        android:columnCount="5"
+        android:id="@+id/enhetGrid">
     </GridLayout>
 
     <View

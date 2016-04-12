@@ -284,24 +284,22 @@ public class FragmentWrite extends Fragment {
         dialog.show();
     }
 
-    private final class GetKumpanerAsync extends AsyncTask<Void, Void, Void> {
+    private final class GetKumpanerAsync extends AsyncTask<Void, Void, List<User>> {
         @Override
-        protected Void doInBackground(Void... voids) {
-            List<User> tempKumpaner = ((MainActivity) getActivity()).sidanAccess().readMembers(true);
+        protected List<User> doInBackground(Void... voids) {
+            return ((MainActivity) getActivity()).sidanAccess().readMembers(true);
+        }
+
+        @Override
+        protected void onPostExecute(List<User> tempKumpaner) {
             if ( !tempKumpaner.isEmpty() ) {
                 kumpaner.clear();
                 kumpaner.addAll(tempKumpaner);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        memberAdapter.notifyDataSetChanged();
-                    }
-                });
+                memberAdapter.notifyDataSetChanged();
                 Log.d("Kumpaner", "New Kumpaner! Yay!");
             } else {
                 Log.e("Kumpaner", "Could not get new kumpaner");
             }
-            return null;
         }
     }
 
@@ -358,7 +356,9 @@ public class FragmentWrite extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean retur) {
-            Log.e("WriteEntry", "Could not create some Entries.");
+            if (!retur) {
+                Log.e("WriteEntry", "Could not create some Entries.");
+            }
         }
     }
 }

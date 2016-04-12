@@ -6,17 +6,17 @@
     android:layout_width="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:orientation="vertical"
         android:id="@+id/entriesContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ListView
+            android:id="@+id/entries"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/entries"
             android:layout_gravity="center_horizontal"
-            android:scrollbarAlwaysDrawHorizontalTrack="true"/>
+            />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

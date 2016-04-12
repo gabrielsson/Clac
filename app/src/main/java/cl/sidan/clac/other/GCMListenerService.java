@@ -8,9 +8,12 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+
+import java.io.UnsupportedEncodingException;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
@@ -26,29 +29,26 @@ public class GCMListenerService extends GcmListenerService {
      */
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-        Log.d(getClass().getCanonicalName(), "From: " + from);
-        Log.d(getClass().getCanonicalName(), "Message: " + message);
+        String base64message = data.getString("message");
+        String title = data.getString("title");
 
-        if (from.startsWith("/topics/")) {
-            // message received from some topic.
-        } else {
-            // normal downstream message.
+        Log.d(getClass().getCanonicalName(), "Notification with title \"" + title + "\" received from " + from + ": " + base64message);
+
+        String user = "Clac",
+                message = "";
+        try {
+            byte[] decodedMessage = Base64.decode(base64message, Base64.DEFAULT);
+            message = new String(decodedMessage, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.d(getClass().getCanonicalName(), "UnsupportedEncoding");
+            e.printStackTrace();
         }
 
-        /**
-         * Production applications would usually process the message here.
-         * Eg: - Syncing with server.
-         *     - Store message in local database.
-         *     - Update UI.
-         */
-        String user = "Clac";
+        if (null == title || title.equals("")) {
+            title = user;
+        }
 
-        /**
-         * In some cases it may be useful to show a notification indicating to the user
-         * that a message was received.
-         */
-        sendNotification(user, message);
+        sendNotification(title, message);
     }
 
     /**

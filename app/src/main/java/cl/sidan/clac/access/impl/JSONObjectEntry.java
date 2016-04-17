@@ -194,4 +194,14 @@ public class JSONObjectEntry implements Entry, Parcelable {
             Log.e("Error...", "Cannot serialize Entry");
         }
     }
+
+    @Override
+    public int compareTo(Entry another) {
+        if (null == another || another.getId() < getId()) {
+            return -1;
+        } else if (another.getId() > getId()) {
+            return 1;
+        }
+        return 0;
+    }
 }

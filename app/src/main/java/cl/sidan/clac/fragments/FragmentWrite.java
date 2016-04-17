@@ -117,8 +117,8 @@ public class FragmentWrite extends Fragment {
             public void onClick(View view) {
                 Log.d(getClass().getCanonicalName(), "writeEntrySend.onClick()");
 
-                EditText entryText = (EditText) getActivity().findViewById(R.id.write_entry_text);
-                Spinner entryBeers = (Spinner) getActivity().findViewById(R.id.number_of_beers);
+                EditText entryText = (EditText) rootView.findViewById(R.id.write_entry_text);
+                Spinner entryBeers = (Spinner) rootView.findViewById(R.id.number_of_beers);
                 String text = entryText.getText().toString();
                 RequestEntry entry = new RequestEntry();
 
@@ -129,7 +129,7 @@ public class FragmentWrite extends Fragment {
                 entry.setKumpaner(selectedKumpaner);
 
                 /* Ladda upp bild */
-                ImageView imageView = (ImageView) getActivity().findViewById(R.id.write_entry_imagechoosen);
+                ImageView imageView = (ImageView) rootView.findViewById(R.id.write_entry_imagechoosen);
                 String base64Image = null;
                 if (imageView.getDrawable() != null) {
                     String path = (String) imageView.getTag();
@@ -146,11 +146,6 @@ public class FragmentWrite extends Fragment {
                     Log.d("IMAGEDRAWER", "Base64Image length: " + base64Image.length());
                 }
 
-                if (text.trim().isEmpty() && base64Image == null && numBeers == 0) {
-                    Toast.makeText(view.getContext(), getString(R.string.write_entry_not_empty), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 entry.setMessage(text);
                 entry.setSecret(hemlis);
 
@@ -161,17 +156,21 @@ public class FragmentWrite extends Fragment {
                     entry.setLongitude(BigDecimal.valueOf(myLocation.getLongitude()));
                 }
 
-                new CreateEntryAsync().execute(entry);
+                if (text.trim().isEmpty() && base64Image == null && numBeers == 0) {
+                    Toast.makeText(view.getContext(), getString(R.string.write_entry_not_empty), Toast.LENGTH_SHORT).show();
+                } else {
+                    new CreateEntryAsync().execute(entry);
 
-                // en Entry är skapat, resetta allt.
-                entryText.setText("");
-                imageView.setTag("");
-                imageView.setImageDrawable(null);
-                entryBeers.setSelection(0);
+                    // en Entry är skapat, resetta allt.
+                    entryText.setText("");
+                    imageView.setTag("");
+                    imageView.setImageDrawable(null);
+                    entryBeers.setSelection(0);
 
-                // Stäng meny
-                DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.END);
+                    // Stäng meny
+                    DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.END);
+                }
             }
         });
 
@@ -203,7 +202,7 @@ public class FragmentWrite extends Fragment {
         if (requestCode == FILE_SELECT_CODE && resultCode == MainActivity.RESULT_OK && data != null) {
             Uri uri = data.getData();
 
-            ImageView imageView = (ImageView) getActivity().findViewById(R.id.write_entry_imagechoosen);
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.write_entry_imagechoosen);
 
             try {
                 String path = getPath(uri);
@@ -318,7 +317,10 @@ public class FragmentWrite extends Fragment {
             Entry e;
             for(int i = 0; i < notSentList.size(); i++) {
                 e = notSentList.get(i);
-                if( onCreateEntry(e) ) {
+
+                if (e.getMessage().trim().isEmpty() && e.getImage() == null && e.getEnheter() == 0) {
+                    notSentList.remove(i);
+                } else if (onCreateEntry(e)) {
                     notSentList.remove(i);
                 }
             }

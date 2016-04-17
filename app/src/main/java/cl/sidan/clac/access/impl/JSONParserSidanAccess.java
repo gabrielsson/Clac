@@ -346,7 +346,7 @@ public class JSONParserSidanAccess implements SidanAccess {
             return Collections.EMPTY_MAP;
         }
 
-        Map<String,String> retMap = new TreeMap<String,String>();
+        Map<String,String> retMap = new TreeMap<>();
         for (int i = 0; i < entriesArray.length(); i++) {
             JSONObject temp = entriesArray.optJSONObject(i);
             try {

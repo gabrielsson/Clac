@@ -25,10 +25,10 @@ import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.TreeMap;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.MapsActivity;
@@ -317,29 +317,20 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                     }
                 }
 
-                // Add both old and new entries, sort on Id
-                TreeMap<Integer, Entry> newEntries = new TreeMap<>(new Comparator<Integer>() {
-                    @Override
-                    public int compare(Integer lhs, Integer rhs) {
-                        if (lhs < rhs) {
-                            return 1;
-                        } else if (rhs > lhs) {
-                            return -1;
-                        }
-                        return 0;
-                    }
-                });
-
+                HashMap<Integer, Entry> allEntries = new HashMap<>();
                 for (Entry e : entries) {
-                    newEntries.put(e.getId(), e);
+                    allEntries.put(e.getId(), e);
                 }
                 for (Entry e : response) {
-                    newEntries.put(e.getId(), e);
+                    allEntries.put(e.getId(), e);
                 }
-                Log.d(TAG, "Entries from server: " + response.size() + ", total entries: " + newEntries.size());
+                ArrayList<Entry> tempEntries = new ArrayList<>(allEntries.values());
+                Collections.sort(tempEntries);
+
+                Log.d(TAG, "Entries from server: " + response.size() + ", total entries: " + tempEntries.size());
 
                 entries.clear();
-                entries.addAll(newEntries.values());
+                entries.addAll(tempEntries);
                 entriesAdapter.notifyDataSetChanged();
                 entriesContainer.setRefreshing(false);
                 isLoading = false;

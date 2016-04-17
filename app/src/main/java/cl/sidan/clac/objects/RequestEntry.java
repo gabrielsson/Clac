@@ -8,7 +8,7 @@ import java.util.List;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.User;
 
-public class RequestEntry implements Entry {
+public class RequestEntry implements Entry, Comparable<Entry> {
     String signature = "";
     ArrayList<User> kumpaner = new ArrayList<>();
     BigDecimal latitude = null;
@@ -152,5 +152,15 @@ public class RequestEntry implements Entry {
 
     public String getFileName() {
         return fileName;
+    }
+
+    @Override
+    public int compareTo(Entry another) {
+        if (null == another || another.getId() < getId()) {
+            return -1;
+        } else if (another.getId() > getId()) {
+            return 1;
+        }
+        return 0;
     }
 }

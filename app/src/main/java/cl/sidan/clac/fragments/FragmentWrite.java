@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -44,7 +45,6 @@ import cl.sidan.clac.adapters.AdapterMembers;
 import cl.sidan.clac.objects.RequestEntry;
 
 public class FragmentWrite extends Fragment {
-    boolean hemlis = false;
     private static final int FILE_SELECT_CODE = 0;
 
     private View rootView = null;
@@ -119,13 +119,14 @@ public class FragmentWrite extends Fragment {
 
                 EditText entryText = (EditText) rootView.findViewById(R.id.write_entry_text);
                 Spinner entryBeers = (Spinner) rootView.findViewById(R.id.number_of_beers);
+                CheckBox entrySecret = (CheckBox) rootView.findViewById(R.id.write_entry_secret);
                 String text = entryText.getText().toString();
                 RequestEntry entry = new RequestEntry();
 
                 int numBeers = entryBeers.getSelectedItemPosition();
                 Log.d(getClass().getCanonicalName(), "Reporting " + numBeers + " beers");
                 entry.setEnheter(numBeers);
-
+                boolean hemlis = entrySecret.isChecked();
                 entry.setKumpaner(selectedKumpaner);
 
                 /* Ladda upp bild */

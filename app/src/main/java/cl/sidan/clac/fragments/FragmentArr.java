@@ -355,8 +355,9 @@ public class FragmentArr extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Poll currentPoll) {
-            if(currentPoll != null && getActivity() != null) {
+        protected void onPostExecute(Poll receivedPoll) {
+            currentPoll = receivedPoll;
+            if(currentPoll != null) {
                 Log.d(getClass().getCanonicalName(), "Current poll: " + currentPoll.getQuestion());
                 lastPollId = currentPoll.getId() > lastPollId ? currentPoll.getId() : lastPollId;
 

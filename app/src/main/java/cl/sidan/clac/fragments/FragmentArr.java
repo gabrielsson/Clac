@@ -52,6 +52,7 @@ public class FragmentArr extends Fragment {
     private Poll currentPoll = null;
 
     private View rootView;
+    private SharedPreferences preferences;
 
     private static class ViewHolder {
         TextView txtQuestion = null;
@@ -71,7 +72,7 @@ public class FragmentArr extends Fragment {
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_arr, container, false);
 
-        final SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
+        preferences = ((MainActivity) getActivity()).getPrefs();
         float font_size = preferences.getFloat("font_size", 15);
 
         Button new_arr = (Button) rootView.findViewById(R.id.add_arr);
@@ -82,10 +83,8 @@ public class FragmentArr extends Fragment {
             }
         });
 
-        if(arrAdapter == null) {
-            arrAdapter = new AdapterArr(inflater.getContext(), R.layout.arr, arrlista, font_size);
-            arrAdapter.setNotifyOnChange(true);
-        }
+        arrAdapter = new AdapterArr(inflater.getContext(), R.layout.arr, arrlista, font_size);
+        arrAdapter.setNotifyOnChange(true);
 
         arrContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.arrContainer);
         arrContainer.setRefreshing(true);
@@ -130,21 +129,6 @@ public class FragmentArr extends Fragment {
         new ReadPollAsync().execute();
 
         return rootView;
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
-        float font_size = preferences.getFloat("font_size", 15);
-
-        arrAdapter = new AdapterArr(rootView.getContext(), R.layout.arr, arrlista, font_size);
-        arrAdapter.setNotifyOnChange(true);
-
-        ListView listView = (ListView) rootView.findViewById(R.id.arr_lista);
-        listView.setAdapter(arrAdapter);
     }
 
     @Override
@@ -286,46 +270,20 @@ public class FragmentArr extends Fragment {
         helpDialog.show();
     }
 
-    private void deltaArr(Integer id, boolean delta) {
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
-        if( delta ) {
-            ((MainActivity) getActivity()).sidanAccess().registerArr(id, nummer);
-        } else {
-            ((MainActivity) getActivity()).sidanAccess().unregisterArr(id, nummer);
-        }
-        Log.d("Arr", nummer + (delta ? " skall delta på arr: " : " bangar arr: ") + id);
-    }
-
-    private void lurpassaArr(Integer id) {
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
-        ((MainActivity) getActivity()).sidanAccess().lurpassaArr(id, nummer);
-        Log.d("Arr", nummer + " lurpassar på arr: " + id);
-    }
-
-    public void pollVote(Integer id, Integer votedOnYay) {
-        ((MainActivity) getActivity()).sidanAccess().votePoll(id, votedOnYay);
-
-        Log.d("Poll", "Röstat " + votedOnYay + " på pollen: " + id);
-    }
-
-    private void onCreateOrUpdateArr(Arr arr) {
-        ((MainActivity) getActivity()).sidanAccess().createOrUpdateArr(arr.getId(), arr.getNamn(),
-                arr.getPlats(), arr.getDatum());
-    }
-
     public final class CreateOrUpdateArrAsync extends AsyncTask<Arr, Arr, Void> {
         @Override
         protected Void doInBackground(Arr... arrs) {
-            for( Arr a : arrs ) {
-                onCreateOrUpdateArr(a);
+            for( Arr arr : arrs ) {
+                ((MainActivity) getActivity()).sidanAccess().createOrUpdateArr(
+                        arr.getId(), arr.getNamn(), arr.getPlats(), arr.getDatum());
             }
             return null;
         }
     }
 
-    public final class ReadArrAsync extends AsyncTask<String, Void, Void> {
+    public final class ReadArrAsync extends AsyncTask<String, Void, List<Arr>> {
         @Override
-        protected Void doInBackground(String... strings) {
+        protected List<Arr> doInBackground(String... strings) {
             // Ta inte bort arret innan det har gått några timmar efter starttiden.
             GregorianCalendar cal = new GregorianCalendar();
             cal.add(GregorianCalendar.HOUR_OF_DAY, -12);
@@ -333,141 +291,131 @@ public class FragmentArr extends Fragment {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             String dateNow = formatter.format(cal.getTime());
 
-            List<Arr> response = ((MainActivity) getActivity()).sidanAccess().readArr(dateNow);
+            return ((MainActivity) getActivity()).sidanAccess().readArr(dateNow);
+        }
 
+        @Override
+        protected void onPostExecute(List<Arr> response) {
             if( response.isEmpty() ) {
                 Log.d(getClass().getCanonicalName(), "Response was empty from server, will not clear arr.");
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(rootView.getContext(),
-                                "Kunde inte hämta arr från servern.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                } );
+                Toast.makeText(rootView.getContext(),
+                        "Kunde inte hämta arr från servern.",
+                        Toast.LENGTH_SHORT).show();
             } else {
                 Log.d(getClass().getCanonicalName(), "Arr from server: " + response.size());
                 arrlista.clear();
                 arrlista.addAll(response);
+                arrAdapter.notifyDataSetChanged();
+                arrContainer.setRefreshing(false);
             }
-
-            /* Möjlig Nullpekare här. Om både denna kör och versionsasync eller något. */
-            if(getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        arrAdapter.notifyDataSetChanged();
-                        arrContainer.setRefreshing(false);
-                    }
-                });
-            }
-            return null;
         }
     }
 
-    public final class VotePollAsync extends AsyncTask<Integer, Void, Void> {
+    public final class VotePollAsync extends AsyncTask<Integer, Void, Boolean> {
         @Override
-        protected Void doInBackground(Integer... yayList) {
-            if( currentPoll != null ) {
+        protected Boolean doInBackground(Integer... yayList) {
+            if (currentPoll != null) {
                 for (Integer votedOnYay : yayList) {
                     final int id = currentPoll.getId();
                     ((MainActivity) getActivity()).getPrefs().edit()
                             .putInt("lastPollIdAnswered", id).apply();
-                    pollVote(id, votedOnYay);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String text =
-                                    holder.radioAnswer1.isChecked() ? holder.radioAnswer1.getText().toString() :
-                                            holder.radioAnswer2.isChecked() ? holder.radioAnswer2.getText().toString() :
-                                                    "inget!";
-                            Log.d("Vote", "Röstade på " + text);
+                    Log.d("Poll", "Röstat " + votedOnYay + " på pollen: " + id);
+                    ((MainActivity) getActivity()).sidanAccess().votePoll(id, votedOnYay);
 
-                            if (holder.radioAnswer1.isChecked() || holder.radioAnswer2.isChecked()) {
-                                holder.progressHolder1.setVisibility(View.VISIBLE);
-                                holder.progressHolder2.setVisibility(View.VISIBLE);
-                                holder.radioAnswer1.setVisibility(View.INVISIBLE);
-                                holder.radioAnswer2.setVisibility(View.INVISIBLE);
-                                holder.buttonVote.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    });
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean voted) {
+            if (voted) {
+                String text =
+                        holder.radioAnswer1.isChecked() ? holder.radioAnswer1.getText().toString() :
+                                holder.radioAnswer2.isChecked() ? holder.radioAnswer2.getText().toString() :
+                                        "inget!";
+                Log.d("Vote", "Röstade på " + text);
+
+                if (holder.radioAnswer1.isChecked() || holder.radioAnswer2.isChecked()) {
+                    holder.progressHolder1.setVisibility(View.VISIBLE);
+                    holder.progressHolder2.setVisibility(View.VISIBLE);
+                    holder.radioAnswer1.setVisibility(View.INVISIBLE);
+                    holder.radioAnswer2.setVisibility(View.INVISIBLE);
+                    holder.buttonVote.setVisibility(View.INVISIBLE);
                 }
             }
-
-            return null;
         }
     }
 
-     public final class ReadPollAsync extends AsyncTask<String, Void, Void> {
+    public final class ReadPollAsync extends AsyncTask<String, Void, Poll> {
         @Override
-        protected Void doInBackground(String... strings) {
-            currentPoll = ((MainActivity) getActivity()).sidanAccess().readPoll();
+        protected Poll doInBackground(String... strings) {
+            return ((MainActivity) getActivity()).sidanAccess().readPoll();
+        }
 
+        @Override
+        protected void onPostExecute(Poll currentPoll) {
             if(currentPoll != null && getActivity() != null) {
                 Log.d(getClass().getCanonicalName(), "Current poll: " + currentPoll.getQuestion());
                 lastPollId = currentPoll.getId() > lastPollId ? currentPoll.getId() : lastPollId;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int lastKnownPollId = currentPoll.getId();
-                        ((MainActivity) getActivity()).getPrefs().edit().putInt("lastKnownPollId", lastKnownPollId).apply();
-                        String pollQuestion = currentPoll.getQuestion();
-                        String pollYae = currentPoll.getYae();
-                        String pollNay = currentPoll.getNay();
-                        int ansNrYae = currentPoll.getNrYay();
-                        int ansNrNay = currentPoll.getNrNay();
-                        int ansTotal = ansNrYae + ansNrNay;
 
-                        String fullTextYay = pollYae + " (" + ansNrYae + ")";
-                        String fullTextNay = pollNay + " (" + ansNrNay + ")";
+                int lastKnownPollId = currentPoll.getId();
+                preferences.edit().putInt("lastKnownPollId", lastKnownPollId).apply();
+                String pollQuestion = currentPoll.getQuestion();
+                String pollYae = currentPoll.getYae();
+                String pollNay = currentPoll.getNay();
+                int ansNrYae = currentPoll.getNrYay();
+                int ansNrNay = currentPoll.getNrNay();
+                int ansTotal = ansNrYae + ansNrNay;
 
-                        /* Add padding to have them centered together.  */
-                        int maxChars = fullTextYay.length() - fullTextNay.length();
-                        if (maxChars > 0) {
-                            String padding = new String(new char[maxChars]).replace("\0", "  ");
-                            fullTextNay = pollNay + padding + " (" + ansNrNay + ")";
-                        } else if (maxChars < 0) {
-                            String padding = new String(new char[-maxChars]).replace("\0", "  ");
-                            fullTextYay = pollYae + padding + " (" + ansNrYae + ")";
-                        }
+                String fullTextYay = pollYae + " (" + ansNrYae + ")";
+                String fullTextNay = pollNay + " (" + ansNrNay + ")";
 
-                        holder.txtQuestion.setText(pollQuestion);
-                        holder.radioAnswer1.setText(pollYae);
-                        holder.radioAnswer2.setText(pollNay);
+                /* Add padding to have them centered together.  */
+                int maxChars = fullTextYay.length() - fullTextNay.length();
+                if (maxChars > 0) {
+                    String padding = new String(new char[maxChars]).replace("\0", "  ");
+                    fullTextNay = pollNay + padding + " (" + ansNrNay + ")";
+                } else if (maxChars < 0) {
+                    String padding = new String(new char[-maxChars]).replace("\0", "  ");
+                    fullTextYay = pollYae + padding + " (" + ansNrYae + ")";
+                }
 
-                        holder.txtProgressAnswer1.setText(fullTextYay);
-                        holder.txtProgressAnswer2.setText(fullTextNay);
-                        holder.progressAnswer1.setProgress(ansTotal == 0 ? 0 : ansNrYae * 100 / ansTotal);
-                        holder.progressAnswer2.setProgress(ansTotal == 0 ? 0 : ansNrNay * 100 / ansTotal);
+                holder.txtQuestion.setText(pollQuestion);
+                holder.radioAnswer1.setText(pollYae);
+                holder.radioAnswer2.setText(pollNay);
 
-                        int lastPollIdAnswered = ((MainActivity) getActivity()).getPrefs().getInt("lastPollIdAnswered", -1);
-                        if (lastKnownPollId == lastPollIdAnswered) {
-                            holder.progressHolder1.setVisibility(View.VISIBLE);
-                            holder.progressHolder2.setVisibility(View.VISIBLE);
-                            holder.radioAnswer1.setVisibility(View.INVISIBLE);
-                            holder.radioAnswer2.setVisibility(View.INVISIBLE);
-                            holder.buttonVote.setVisibility(View.INVISIBLE);
-                        } else {
-                            holder.progressHolder1.setVisibility(View.INVISIBLE);
-                            holder.progressHolder2.setVisibility(View.INVISIBLE);
-                            holder.radioAnswer1.setVisibility(View.VISIBLE);
-                            holder.radioAnswer2.setVisibility(View.VISIBLE);
-                            holder.buttonVote.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
+                holder.txtProgressAnswer1.setText(fullTextYay);
+                holder.txtProgressAnswer2.setText(fullTextNay);
+                holder.progressAnswer1.setProgress(ansTotal == 0 ? 0 : ansNrYae * 100 / ansTotal);
+                holder.progressAnswer2.setProgress(ansTotal == 0 ? 0 : ansNrNay * 100 / ansTotal);
+
+                int lastPollIdAnswered = preferences.getInt("lastPollIdAnswered", -1);
+                if (lastKnownPollId == lastPollIdAnswered) {
+                    holder.progressHolder1.setVisibility(View.VISIBLE);
+                    holder.progressHolder2.setVisibility(View.VISIBLE);
+                    holder.radioAnswer1.setVisibility(View.INVISIBLE);
+                    holder.radioAnswer2.setVisibility(View.INVISIBLE);
+                    holder.buttonVote.setVisibility(View.INVISIBLE);
+                } else {
+                    holder.progressHolder1.setVisibility(View.INVISIBLE);
+                    holder.progressHolder2.setVisibility(View.INVISIBLE);
+                    holder.radioAnswer1.setVisibility(View.VISIBLE);
+                    holder.radioAnswer2.setVisibility(View.VISIBLE);
+                    holder.buttonVote.setVisibility(View.VISIBLE);
+                }
             }
-
-            return null;
         }
     }
 
     public final class JoinArrAsync extends AsyncTask<Integer, Arr, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
+            String nummer = preferences.getString("number", null);
             for( Integer id : ids ) {
-                deltaArr(id, true);
+                Log.d("Arr", nummer + " skall delta på arr: " + id);
+                ((MainActivity) getActivity()).sidanAccess().registerArr(id, nummer);
             }
             return null;
         }
@@ -475,8 +423,10 @@ public class FragmentArr extends Fragment {
     public final class ExitArrAsync extends AsyncTask<Integer, Arr, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
+            String nummer = preferences.getString("number", null);
             for( Integer id : ids ) {
-                deltaArr(id, false);
+                Log.d("Arr", nummer + " bangar arr: " + id);
+                ((MainActivity) getActivity()).sidanAccess().unregisterArr(id, nummer);
             }
             return null;
         }
@@ -485,7 +435,11 @@ public class FragmentArr extends Fragment {
         @Override
         protected Void doInBackground(Integer... ids) {
             for( Integer id : ids ) {
-                lurpassaArr(id);
+                String nummer = preferences.getString("number", null);
+                ((MainActivity) getActivity()).sidanAccess().lurpassaArr(id, nummer);
+                Log.d("Arr", nummer + " lurpassar på arr: " + id);
+
+
             }
             return null;
         }

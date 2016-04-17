@@ -90,38 +90,27 @@ public class FragmentChangePassword extends Fragment {
         return view;
     }
 
-    private void populateUserNames() {
-        // run in background
-        userList = ((MainActivity) getActivity()).sidanAccess().readMembers(true);
-
-        userNameList.clear();
-        for (User u : userList) {
-            userNameList.add(u.getSignature());
-        }
-
-        // run on ui thread
-
-        /* Möjlig Nullpekare här. Om både denna kör och någon annan async-task körs
-         * eller något. Lite oklart varför. */
-        if ( getActivity() != null ) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    spinnerAdapter.notifyDataSetChanged();
-
-                    Log.d("XXX_SWO", "WhoAmI Position " +  spinnerAdapter.getPosition(((MainActivity) getActivity()).whoAmI()));
-                    Spinner numberSpinner = (Spinner) getActivity().findViewById(R.id.change_username);
-                    numberSpinner.setSelection(spinnerAdapter.getPosition(((MainActivity) getActivity()).whoAmI()));
-                }
-            });
-        }
-    }
-
-    public final class ReadMembersAsync extends AsyncTask<String, Void, Void> {
+    public final class ReadMembersAsync extends AsyncTask<String, Void, List<User>> {
         @Override
-        protected Void doInBackground(String... strings) {
-            populateUserNames();
-            return null;
+        protected List<User> doInBackground(String... strings) {
+            return ((MainActivity) getActivity()).sidanAccess().readMembers(true);
+        }
+        @Override
+        protected void onPostExecute(List<User> userList) {
+            if (!userList.isEmpty()) {
+                userNameList.clear();
+                for (User u : userList) {
+                    userNameList.add(u.getSignature());
+                }
+                spinnerAdapter.notifyDataSetChanged();
+
+                String whoAmI = ((MainActivity) getActivity()).whoAmI();
+                int whoAmIPos = spinnerAdapter.getPosition(whoAmI);
+                Spinner numberSpinner = (Spinner) getActivity().findViewById(R.id.change_username);
+                numberSpinner.setSelection(whoAmIPos);
+            } else {
+                Toast.makeText(getActivity(), "Kunde inte hämta andra medlemmar", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

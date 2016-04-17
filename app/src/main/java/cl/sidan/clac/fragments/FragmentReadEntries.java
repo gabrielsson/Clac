@@ -1,6 +1,5 @@
 package cl.sidan.clac.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,16 +25,19 @@ import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeMap;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.MapsActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.adapters.AdapterEntries;
+import cl.sidan.clac.interfaces.ScrollingFragment;
 
-public class FragmentReadEntries extends Fragment {
+public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     private final String TAG = getClass().getCanonicalName();
     private ArrayList<Entry> entries = new ArrayList<>();
     private AdapterEntries entriesAdapter = null;
@@ -46,9 +47,12 @@ public class FragmentReadEntries extends Fragment {
     private SharedPreferences preferences;
     private ListView listView;
 
+    boolean isLoading = false;
+
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
         setMenuVisibility(true);
 
@@ -75,12 +79,14 @@ public class FragmentReadEntries extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        new ReadEntriesAsync().execute();
+                        top = 0;
+                        scrollPosition = 0;
+                        new ReadEntriesAsync().execute(0);
                     }
                 }
         );
         entriesContainer.setRefreshing(true);
-        new ReadEntriesAsync().execute();
+        new ReadEntriesAsync().execute(0);
 
         listView = (ListView) rootView.findViewById(R.id.entries);
         listView.setAdapter(entriesAdapter);
@@ -96,8 +102,7 @@ public class FragmentReadEntries extends Fragment {
         // Save scroll position
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
         scrollPosition = listView.getFirstVisiblePosition();
-        View v = listView.getChildAt(0);
-        top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
+        top = getTop();
 
         state.putInt("scrollPosition", scrollPosition);
         state.putInt("top", top);
@@ -114,7 +119,7 @@ public class FragmentReadEntries extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Entry e = entriesAdapter.getItem(info.position);
 
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", "");
+        String nummer = preferences.getString("number", "");
 
         if (e != null) {
             MenuItem likeItem = menu.findItem(R.id.like_entry);
@@ -144,7 +149,7 @@ public class FragmentReadEntries extends Fragment {
             case R.id.view_position:
                 e = entriesAdapter.getItem(info.position);
 
-                String title = "",
+                String title,
                         snippet = "",
                         timeSincePost = ((MainActivity) getActivity()).timeSinceEventText(e.getDateTime());
                 title = e.getSignature() + " kl. " + e.getTime() + timeSincePost;
@@ -238,6 +243,7 @@ public class FragmentReadEntries extends Fragment {
                 if (signature.startsWith("#") && signature.length() < 4) {
                     try {
                         /* Used for side effects */
+                        //noinspection ResultOfMethodCallIgnored
                         Integer.parseInt(signature.substring(1));
                         emails[0] = signature.substring(1) + "@chalmerslosers.com";
                     } catch (NumberFormatException nfe) {
@@ -282,11 +288,13 @@ public class FragmentReadEntries extends Fragment {
         }
     }
 
-    public final class ReadEntriesAsync extends AsyncTask<String, Void, List<Entry>> {
+    public final class ReadEntriesAsync extends AsyncTask<Integer, Void, List<Entry>> {
         @Override
-        protected List<Entry> doInBackground(String... strings) {
-            Log.d(TAG, "Entered populateEntries()");
-            return ((MainActivity) getActivity()).sidanAccess().readEntries(0, 50);
+        protected List<Entry> doInBackground(Integer... integers) {
+            int skip = integers[0] > 0 ? integers[0] : 0,
+                    take = 50;
+            isLoading = true;
+            return ((MainActivity) getActivity()).sidanAccess().readEntries(skip, take);
         }
 
         @Override
@@ -296,11 +304,11 @@ public class FragmentReadEntries extends Fragment {
                 Toast.makeText(rootView.getContext(),
                         "Kunde inte hämta inlägg från servern.",
                         Toast.LENGTH_SHORT).show();
+                entriesContainer.setRefreshing(false);
             } else {
-                Log.d(TAG, "Entries from server: " + response.size());
-
                 // Remove posts from ignored members
-                HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
+                HashSet<String> ignoredMembers = (HashSet<String>) preferences
+                        .getStringSet("ignoredMembers", new HashSet<String>());
                 for( int i = response.size() - 1; i >= 0; i-- ) {
                     Entry e = response.get(i);
                     if ( ignoredMembers.contains(e.getSignature()) ) {
@@ -309,14 +317,55 @@ public class FragmentReadEntries extends Fragment {
                     }
                 }
 
+                // Add both old and new entries, sort on Id
+                TreeMap<Integer, Entry> newEntries = new TreeMap<>(new Comparator<Integer>() {
+                    @Override
+                    public int compare(Integer lhs, Integer rhs) {
+                        if (lhs < rhs) {
+                            return 1;
+                        } else if (rhs > lhs) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });
+
+                for (Entry e : entries) {
+                    newEntries.put(e.getId(), e);
+                }
+                for (Entry e : response) {
+                    newEntries.put(e.getId(), e);
+                }
+                Log.d(TAG, "Entries from server: " + response.size() + ", total entries: " + newEntries.size());
+
                 entries.clear();
-                entries.addAll(response);
+                entries.addAll(newEntries.values());
                 entriesAdapter.notifyDataSetChanged();
                 entriesContainer.setRefreshing(false);
+                isLoading = false;
 
                 // Scroll to position
                 listView.setSelectionFromTop(scrollPosition, top);
             }
         }
+    }
+
+    public int getTop() {
+        View v = listView.getChildAt(0);
+        if (null != v) {
+            return (v.getTop() - listView.getPaddingTop());
+        }
+        return 0;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void readMoreEntries() {
+        scrollPosition = listView.getFirstVisiblePosition();
+        top = getTop();
+        entriesContainer.setRefreshing(true);
+        new ReadEntriesAsync().execute(entries.size());
     }
 }

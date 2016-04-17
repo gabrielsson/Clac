@@ -16,5 +16,12 @@
         <item>"4"</item>
         <item>"5"</item>
     </array>
-
+    <array name="namnEnheterInklNoll">
+        <item>"Inga öl"</item>
+        <item>"Helan"</item>
+        <item>"Halvan"</item>
+        <item>"Tersen"</item>
+        <item>"Kvarten"</item>
+        <item>"Kvinten"</item>
+    </array>
 </resources>

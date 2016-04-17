@@ -167,24 +167,23 @@ public class FragmentMembers extends Fragment {
         listView.setAdapter(memberAdapter);
     }
 
-    public final class ReadMembersAsync extends AsyncTask<String, Void, Void> {
+    public final class ReadMembersAsync extends AsyncTask<String, Void, List<User>> {
         @Override
-        protected Void doInBackground(String... strings) {
-            members.clear();
+        protected List<User> doInBackground(String... strings) {
             /* We want to show all numbers in the memberlist, thats why we set onlyValidUsers
              * to false below.
              */
-            members.addAll(((MainActivity) getActivity()).sidanAccess().readMembers(false));
-            if(getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        memberAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-            return null;
+            return ((MainActivity) getActivity()).sidanAccess().readMembers(false);
         }
-
+        @Override
+        protected void onPostExecute(List<User> memberlist) {
+            if (!memberlist.isEmpty()) {
+                members.clear();
+                members.addAll(memberlist);
+                memberAdapter.notifyDataSetChanged();
+            } else {
+                Log.d(getClass().getCanonicalName(), "Could not retrieve members");
+            }
+        }
     }
 }

@@ -54,6 +54,7 @@ public class FragmentWrite extends Fragment {
     private ArrayList<Entry> notSentList = new ArrayList<>();
 
     private AdapterMembers memberAdapter;
+    private AdapterBeer beerAdapter;
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
@@ -65,12 +66,11 @@ public class FragmentWrite extends Fragment {
                                    Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_write_entry, container, false);
 
-        rootView.findViewById(R.id.write_entry_text).requestFocus();
-
         final Spinner beers = (Spinner) rootView.findViewById(R.id.number_of_beers);
-        String[] bira = {"0", "1", "2", "3", "4", "5"};
-        String[] biraSubtext = {"Inga öl", "Helan", "Halvan", "Tersen", "Kvarten", "Kvinten"};
-        beers.setAdapter(new AdapterBeer(inflater, getActivity(), R.layout.beer_spinner_item, bira, biraSubtext));
+        String[] antalEnheter = getResources().getStringArray(R.array.antalEnheterInklNoll),
+                namnEnheter = getResources().getStringArray(R.array.namnEnheterInklNoll);
+        beerAdapter = new AdapterBeer(inflater, getActivity(), R.layout.beer_spinner_item, antalEnheter, namnEnheter);
+        beers.setAdapter(beerAdapter);
 
         ImageView choose_kumpaner = (ImageView) rootView.findViewById(R.id.choose_kumpaner);
         choose_kumpaner.setOnClickListener(new View.OnClickListener() {
@@ -82,10 +82,8 @@ public class FragmentWrite extends Fragment {
 
         float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
 
-        if(memberAdapter == null) {
-            memberAdapter = new AdapterMembers(getActivity(), R.layout.adapter_kumpaner_item, kumpaner, font_size);
-            memberAdapter.setNotifyOnChange(true);
-        }
+        memberAdapter = new AdapterMembers(getActivity(), R.layout.adapter_kumpaner_item, kumpaner, font_size);
+        memberAdapter.setNotifyOnChange(true);
 
         TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
         String kumpanString = "";
@@ -113,6 +111,7 @@ public class FragmentWrite extends Fragment {
             }
         });*/
 
+        rootView.findViewById(R.id.write_entry_text).requestFocus();
         rootView.findViewById(R.id.write_entry_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,16 +184,9 @@ public class FragmentWrite extends Fragment {
         super.onResume();
 
         float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
-
         EditText tv = (EditText) rootView.findViewById(R.id.write_entry_text);
         tv.setTextSize(font_size);
         tv.requestFocus();
-
-        if(memberAdapter == null) {
-            Log.w(getTag(), "XXX_SWO: onResume: memberAdapter == null. If this row happen, then the this if statement is necessary.");
-            memberAdapter = new AdapterMembers(getActivity(), R.layout.adapter_kumpaner_item, kumpaner, font_size);
-            memberAdapter.setNotifyOnChange(true);
-        }
 
         TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
         String kumpanString = "";

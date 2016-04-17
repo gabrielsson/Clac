@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
-            ListView listView = (ListView) findViewById(R.id.entries);
-
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -104,27 +102,6 @@ public class MainActivity extends AppCompatActivity
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getReusedFragment(new FragmentWrite());
-
-                    // Show the soft-keyboard
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                }
-            });
-
-            final ListenerScroller scrl = new ListenerScroller
-                    .Builder()
-                    .footer(fab)
-                    .minFooterTranslation(getResources().getDimensionPixelSize(R.dimen.fab_height))
-                    .actionbar(getSupportActionBar())
-                    .isSnappable(true)
-                    .build();
-            listView.setOnScrollListener(scrl);
 
             if ( null == savedInstanceState ) { // only on first create!
                 getReusedFragment(new FragmentWrite());
@@ -138,6 +115,29 @@ public class MainActivity extends AppCompatActivity
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
             }
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getReusedFragment(new FragmentWrite());
+
+                    // Show the soft-keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                }
+            });
+
+            ListView listView = (ListView) findViewById(R.id.entries);
+            final ListenerScroller scrl = new ListenerScroller
+                    .Builder()
+                    .footer(fab)
+                    .minFooterTranslation(getResources().getDimensionPixelSize(R.dimen.fab_height))
+                    .actionbar(getSupportActionBar())
+                    .isSnappable(true)
+                    .fragment(fragmentReadEntries)
+                    .build();
+            listView.setOnScrollListener(scrl);
         }
     }
 

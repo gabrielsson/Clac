@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,50 +54,49 @@ public class FragmentStats extends Fragment {
         super.onResume();
     }
 
-    public final class ReadStatsAsync extends AsyncTask<String, Void, Void> {
+    public final class ReadStatsAsync extends AsyncTask<String, Void, Boolean> {
         @Override
-        protected Void doInBackground(String... strings) {
+        protected Boolean doInBackground(String... strings) {
             List<Stats> tempEnhetsStats = ((MainActivity) getActivity()).sidanAccess().readStats("Enheter");
             List<Stats> tempGillaStats = ((MainActivity) getActivity()).sidanAccess().readStats("Like");
 
-            if ( !tempEnhetsStats.isEmpty() ) {
+            if (!tempEnhetsStats.isEmpty()) {
                 statsEnheter.clear();
                 statsEnheter.addAll(tempEnhetsStats);
             }
 
-            if ( !tempEnhetsStats.isEmpty() ) {
+            if (!tempEnhetsStats.isEmpty()) {
                 statsGilla.clear();
                 statsGilla.addAll(tempGillaStats);
             }
-            if(getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        /**
-                         * SwipeRefreshContainer can only have one child. We can add more if we
-                         * make a new class, but I'm simply to lazy to do that.
-                         */
-
-                        String text = "Enheter i veckan:\n";
-                        int i = 1;
-                        for (Stats stat : statsEnheter) {
-                            text += i + ". " + stat.getSignature() + " (" + stat.getTotal() + ")\n";
-                            i++;
-                        }
-                        text += "\nGillade i veckan:\n";
-                        i = 1;
-                        for (Stats stat : statsGilla) {
-                            text += i + ". " + stat.getSignature() + " (" + stat.getTotal() + ")\n";
-                            i++;
-                        }
-
-                        textViewStats.setText(text);
-                        statsContainer.setRefreshing(false);
-                    }
-                });
-            }
-            return null;
+            return !tempEnhetsStats.isEmpty() && !tempGillaStats.isEmpty();
         }
+        @Override
+        protected void onPostExecute(Boolean successful) {
+            if (successful) {
+                /**
+                 * SwipeRefreshContainer can only have one child. We can add more if we
+                 * make a new class, but I'm simply to lazy to do that.
+                 */
 
+                String text = "Enheter i veckan:\n";
+                int i = 1;
+                for (Stats stat : statsEnheter) {
+                    text += i + ". " + stat.getSignature() + " (" + stat.getTotal() + ")\n";
+                    i++;
+                }
+                text += "\nGillade i veckan:\n";
+                i = 1;
+                for (Stats stat : statsGilla) {
+                    text += i + ". " + stat.getSignature() + " (" + stat.getTotal() + ")\n";
+                    i++;
+                }
+
+                textViewStats.setText(text);
+                statsContainer.setRefreshing(false);
+            } else {
+                Toast.makeText(getActivity(), "Kunde inte hämta statsen. Försök senare.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

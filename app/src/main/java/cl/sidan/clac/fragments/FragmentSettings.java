@@ -49,7 +49,6 @@ public class FragmentSettings extends Fragment {
             }
         });
 
-
         TextView changePassword = (TextView) rootView.findViewById(R.id.change_password_link);
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override

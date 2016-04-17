@@ -8,14 +8,17 @@ import android.widget.AbsListView;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import cl.sidan.clac.interfaces.ScrollingFragment;
+
 public class ListenerScroller implements AbsListView.OnScrollListener
 {
-    private static Dictionary<Integer, Integer> itemHeights = new Hashtable<Integer, Integer>();
+    private static Dictionary<Integer, Integer> itemHeights = new Hashtable<>();
 
     private final View footerView;
     private final int minimumFooterTranslation;
     private final boolean isSnappable; // Snap into place or not.
     private final ActionBar actionbar;
+    private final ScrollingFragment fragment;
 
     private boolean isScrolling = false;
     private int mLastFirstVisibleItem = 0;
@@ -23,12 +26,18 @@ public class ListenerScroller implements AbsListView.OnScrollListener
     private int previousScrollY = 0;
     private int totalFooterDiff = 0;
 
+    // Endless Scroll
+    private int currentVisibleItemCount;
+    private int totalItemCount;
+    private int currentFirstVisibleItem;
+
     private ListenerScroller(Builder builder)
     {
         footerView = builder.footer;
         actionbar = builder.actionbar;
         minimumFooterTranslation = builder.minFooterTranslation;
         isSnappable = builder.isSnappable;
+        fragment = builder.fragment;
     }
 
     public static int getScrollY(AbsListView lv) {
@@ -57,13 +66,20 @@ public class ListenerScroller implements AbsListView.OnScrollListener
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState)
     {
-        if ( scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE ) {
+        if ( scrollState == SCROLL_STATE_IDLE ) {
             isScrolling = false;
-        }
 
-        if (scrollState == SCROLL_STATE_IDLE && isSnappable)
-        {
-            totalFooterDiff = slideFooter();
+            if (isSnappable) {
+                totalFooterDiff = slideFooter();
+            }
+
+            // Load more entries
+            int lastEntryPos = (this.currentFirstVisibleItem + this.currentVisibleItemCount);
+            if (lastEntryPos == this.totalItemCount) {
+                if (!fragment.isLoading()) {
+                    fragment.readMoreEntries();
+                }
+            }
         }
     }
 
@@ -90,12 +106,14 @@ public class ListenerScroller implements AbsListView.OnScrollListener
     {
         final int currentFirstVisibleItem = listview.getFirstVisiblePosition();
 
-        if (currentFirstVisibleItem > mLastFirstVisibleItem && !isScrolling && null != actionbar) {
-            isScrolling = true;
-            actionbar.hide();
-        } else if (currentFirstVisibleItem < mLastFirstVisibleItem && !isScrolling && null != actionbar) {
-            isScrolling = true;
-            actionbar.show();
+        if (!isScrolling && null != actionbar) {
+            if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+                isScrolling = true;
+                actionbar.hide();
+            } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+                isScrolling = true;
+                actionbar.show();
+            }
         }
 
         mLastFirstVisibleItem = currentFirstVisibleItem;
@@ -109,6 +127,11 @@ public class ListenerScroller implements AbsListView.OnScrollListener
         }
 
         previousScrollY = scrollY;
+
+        // Needed for endless scroll
+        this.currentFirstVisibleItem = firstVisibleItem;
+        this.currentVisibleItemCount = visibleItemCount;
+        this.totalItemCount = totalItemCount;
     }
 
     private int newFooterDiff(int diff)
@@ -126,6 +149,7 @@ public class ListenerScroller implements AbsListView.OnScrollListener
         private int minFooterTranslation = 0;
         private boolean isSnappable = false;
         private ActionBar actionbar;
+        private ScrollingFragment fragment;
 
         public Builder footer(View footer) {
             this.footer = footer;
@@ -139,6 +163,11 @@ public class ListenerScroller implements AbsListView.OnScrollListener
 
         public Builder isSnappable(boolean isSnappable) {
             this.isSnappable = isSnappable;
+            return this;
+        }
+
+        public Builder fragment(ScrollingFragment fragment) {
+            this.fragment = fragment;
             return this;
         }
 

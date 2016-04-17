@@ -43,6 +43,7 @@ import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.adapters.AdapterBeer;
 import cl.sidan.clac.adapters.AdapterMembers;
 import cl.sidan.clac.objects.RequestEntry;
+import cl.sidan.clac.objects.RequestUser;
 
 public class FragmentWrite extends Fragment {
     private static final int FILE_SELECT_CODE = 0;
@@ -55,11 +56,6 @@ public class FragmentWrite extends Fragment {
 
     private AdapterMembers memberAdapter;
     private AdapterBeer beerAdapter;
-
-    @Override
-    public final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -175,27 +171,54 @@ public class FragmentWrite extends Fragment {
             }
         });
 
-        return rootView;
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
         EditText tv = (EditText) rootView.findViewById(R.id.write_entry_text);
         tv.setTextSize(font_size);
         tv.requestFocus();
 
-        TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
-        String kumpanString = "";
-        for (User u : selectedKumpaner) {
-            kumpanString += u.getSignature() + ", ";
+        if (null != savedInstanceState) {
+            tv.setText(savedInstanceState.getString("EntryText"));
+            ArrayList<String> selectedNumbers = savedInstanceState.getStringArrayList("SelectedNumbers");
+            for (String number : selectedNumbers) {
+                User u = new RequestUser(number);
+                kumpanString += u.getSignature() + ", ";
+                selectedKumpaner.add(u);
+            }
+            kumpanText.setText(kumpanString);
+
+            Spinner entryBeers = (Spinner) rootView.findViewById(R.id.number_of_beers);
+            entryBeers.setSelection(savedInstanceState.getInt("EntryBeers"));
+
+            CheckBox entrySecret = (CheckBox) rootView.findViewById(R.id.write_entry_secret);
+            entrySecret.setChecked(savedInstanceState.getBoolean("EntrySecret"));
         }
-        kumpanText.setText(kumpanString);
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         new GetKumpanerAsync().execute();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+
+        Spinner entryBeers = (Spinner) rootView.findViewById(R.id.number_of_beers);
+        CheckBox entrySecret = (CheckBox) rootView.findViewById(R.id.write_entry_secret);
+        EditText tv = (EditText) rootView.findViewById(R.id.write_entry_text);
+
+        ArrayList<String> selectedNumbers = new ArrayList<>();
+        for (User u : selectedKumpaner) {
+            selectedNumbers.add(u.getSignature());
+        }
+
+        state.putStringArrayList("SelectedNumbers", selectedNumbers);
+        state.putString("EntryText", tv.getText().toString());
+        state.putBoolean("EntrySecret", entrySecret.isChecked());
+        state.putInt("EntryBeers", entryBeers.getSelectedItemPosition());
     }
 
     @Override

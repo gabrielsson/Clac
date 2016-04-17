@@ -285,6 +285,7 @@ public class FragmentWrite extends Fragment {
         @Override
         protected void onPostExecute(List<User> tempKumpaner) {
             if ( !tempKumpaner.isEmpty() ) {
+                Collections.reverse(tempKumpaner);
                 kumpaner.clear();
                 kumpaner.addAll(tempKumpaner);
                 memberAdapter.notifyDataSetChanged();
@@ -333,17 +334,10 @@ public class FragmentWrite extends Fragment {
                 e.printStackTrace();
             }
 
-            boolean isSuccess = ((MainActivity) getActivity()).sidanAccess().createEntry(
+            return ((MainActivity) getActivity()).sidanAccess().createEntry(
                     entry.getMessage(), entry.getLatitude(), entry.getLongitude(),
                     entry.getEnheter(), entry.getStatus(), host, entry.getSecret(), entry.getImage(),
                     entry.getFileName(), entry.getKumpaner());
-
-            if( isSuccess ) {
-                Log.d("WriteEntry", "Successfully created entry, now notifying GCM users...");
-                // GCMUtil.notifyGCM(getApplicationContext(), number, entry.getMessage());
-            }
-
-            return isSuccess;
         }
 
         @Override

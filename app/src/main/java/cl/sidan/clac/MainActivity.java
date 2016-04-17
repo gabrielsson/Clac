@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -138,6 +139,9 @@ public class MainActivity extends AppCompatActivity
                     .fragment(fragmentReadEntries)
                     .build();
             listView.setOnScrollListener(scrl);
+
+            TextView nummerView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nummerView);
+            nummerView.setText(number);
         }
     }
 

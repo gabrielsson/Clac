@@ -218,7 +218,7 @@ public class JSONParserSidanAccess implements SidanAccess {
 
 
     protected List<String> getAllSignaturesInMessage(String message) {
-        List<String> allMatches = new ArrayList<String>();
+        List<String> allMatches = new ArrayList<>();
         Matcher m = Pattern.compile("#\\d\\d?")
                 .matcher(message);
         while (m.find()) {
@@ -228,7 +228,7 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public final void createLike(Integer id, String signature, String uniqueIdentifier) {
+    public final void createLike(Integer id, String uniqueIdentifier) {
         invoke("CreateLike", "Id=" + id + "&Host=" + uniqueIdentifier);
     }
 
@@ -239,23 +239,24 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public final void registerArr(Integer id, String signature) {
+    public final void registerArr(Integer id) {
         invoke("RegisterArr", "Id=" + id);
     }
 
     @Override
-    public final void unregisterArr(Integer id, String signature) {
+    public final void unregisterArr(Integer id) {
         invoke("UnregisterArr", "Id=" + id);
     }
 
     @Override
-    public final void lurpassaArr(Integer id, String signature) {
+    public final void lurpassaArr(Integer id) {
         invoke("LurpassaArr", "Id=" + id);
     }
 
     @Override
-    public final void votePoll(Integer id, Integer votedOnYay) {
+    public final boolean votePoll(Integer id, Integer votedOnYay) {
         invoke("VotePoll", "Id=" + id + "&" + "VotedOn=" + votedOnYay);
+        return true;
     }
 
     @Override

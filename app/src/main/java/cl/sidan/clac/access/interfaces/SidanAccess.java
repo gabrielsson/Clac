@@ -84,10 +84,9 @@ public interface SidanAccess {
     /**
      * Creates a like on entry corresponding to the id
      * @param id
-     * @param signature
      * @param uniqueIdentifier is used to make sure the user can only like entry once. Typically the host.
      */
-    public void createLike(Integer id, String signature, String uniqueIdentifier);
+    public void createLike(Integer id, String uniqueIdentifier);
 
     /**
      * Create or update a new Arr
@@ -101,30 +100,27 @@ public interface SidanAccess {
     /**
      * Register a number to an Arr
      * @param id
-     * @param signature
      */
-    public void registerArr(Integer id, String signature);
+    public void registerArr(Integer id);
 
     /**
      * Unregister a number to an Arr
      * @param id
-     * @param signature
      */
-    public void unregisterArr(Integer id, String signature);
+    public void unregisterArr(Integer id);
 
     /**
      * Lurpassa on an Arr
      * @param id
-     * @param signature
      */
-    public void lurpassaArr(Integer id, String signature);
+    public void lurpassaArr(Integer id);
 
     /**
      * Vote on a poll
      * @param id
      * @param votedOnYay
      */
-    public void votePoll(Integer id, Integer votedOnYay);
+    public boolean votePoll(Integer id, Integer votedOnYay);
 
     /**
      * Get the latest Poll

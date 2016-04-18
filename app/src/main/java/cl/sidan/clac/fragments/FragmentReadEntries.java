@@ -277,10 +277,9 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-            String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", null);
 
             for(Integer i : integers) {
-                ((MainActivity) getActivity()).sidanAccess().createLike(i, nummer, host);
+                ((MainActivity) getActivity()).sidanAccess().createLike(i, host);
                 Log.d("Debug", "Liked " + i);
             }
 

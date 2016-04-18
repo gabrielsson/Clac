@@ -394,6 +394,7 @@ public class FragmentArr extends Fragment {
 
                 int lastPollIdAnswered = preferences.getInt("lastPollIdAnswered", -1);
                 if (lastKnownPollId == lastPollIdAnswered) {
+                    Log.d(getClass().getCanonicalName(), "Already voted on this poll.");
                     holder.progressHolder1.setVisibility(View.VISIBLE);
                     holder.progressHolder2.setVisibility(View.VISIBLE);
                     holder.radioAnswer1.setVisibility(View.INVISIBLE);
@@ -406,6 +407,8 @@ public class FragmentArr extends Fragment {
                     holder.radioAnswer2.setVisibility(View.VISIBLE);
                     holder.buttonVote.setVisibility(View.VISIBLE);
                 }
+            } else {
+                Log.d(getClass().getCanonicalName(), "No poll active!");
             }
         }
     }
@@ -413,35 +416,35 @@ public class FragmentArr extends Fragment {
     public final class JoinArrAsync extends AsyncTask<Integer, Arr, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
-            String nummer = preferences.getString("number", null);
-            for( Integer id : ids ) {
-                Log.d("Arr", nummer + " skall delta på arr: " + id);
-                ((MainActivity) getActivity()).sidanAccess().registerArr(id, nummer);
-            }
+            int id = ids[0];
+
+            Log.d("Arr", "Deltar på arr: " + id);
+            ((MainActivity) getActivity()).sidanAccess().registerArr(id);
+
             return null;
         }
     }
+
     public final class ExitArrAsync extends AsyncTask<Integer, Arr, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
-            String nummer = preferences.getString("number", null);
-            for( Integer id : ids ) {
-                Log.d("Arr", nummer + " bangar arr: " + id);
-                ((MainActivity) getActivity()).sidanAccess().unregisterArr(id, nummer);
-            }
+            int id = ids[0];
+
+            Log.d("Arr", "Bangar arr: " + id);
+            ((MainActivity) getActivity()).sidanAccess().unregisterArr(id);
+
             return null;
         }
     }
+
     public final class LurpassaArrAsync extends AsyncTask<Integer, Arr, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
-            for( Integer id : ids ) {
-                String nummer = preferences.getString("number", null);
-                ((MainActivity) getActivity()).sidanAccess().lurpassaArr(id, nummer);
-                Log.d("Arr", nummer + " lurpassar på arr: " + id);
+            int id = ids[0];
 
+            ((MainActivity) getActivity()).sidanAccess().lurpassaArr(id);
+            Log.d("Arr", "Lurpassar på arr: " + id);
 
-            }
             return null;
         }
     }

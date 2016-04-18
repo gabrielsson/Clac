@@ -142,24 +142,29 @@ public class FragmentArr extends Fragment {
         Arr arr = arrAdapter.getItem(info.position);
 
 
-        MenuItem joinaArrItem = menu.findItem(R.id.joina_arr);
-        MenuItem bangaArrItem = menu.findItem(R.id.banga_arr);
-        MenuItem luraArrItem = menu.findItem(R.id.lurpassa_arr);
         String nummer = preferences.getString("username", "");
 
+        MenuItem deltaOnItem = menu.findItem(R.id.delta_on);
+        MenuItem deltaOffItem = menu.findItem(R.id.delta_off);
+        MenuItem luraOnItem = menu.findItem(R.id.lurpassa_on);
+        MenuItem luraOffItem = menu.findItem(R.id.lurpassa_off);
+
         if (arr != null) {
+            Log.d("XXX_SWO", "Arr deltagare="+arr.getDeltagare());
             for( String deltagare : arr.getDeltagare().split(",") ) {
-                if( nummer.equals(deltagare) ) {
-                    joinaArrItem.setVisible(false);
-                    bangaArrItem.setVisible(true);
-                    luraArrItem.setEnabled(false);
+                if (nummer.equals(deltagare)) {
+                    deltaOnItem.setVisible(false);
+                    deltaOffItem.setVisible(true);
+                    luraOnItem.setEnabled(false);
                     break;
                 }
             }
 
+            Log.d("XXX_SWO", "Arr kanske="+arr.getKanske());
             for( String lurpassare : arr.getKanske().split(",") ) {
-                if( !luraArrItem.isEnabled() || nummer.equals(lurpassare) ) {
-                    luraArrItem.setEnabled(false);
+                if (nummer.equals(lurpassare)) {
+                    luraOnItem.setVisible(false);
+                    luraOffItem.setVisible(true);
                     break;
                 }
             }
@@ -171,22 +176,28 @@ public class FragmentArr extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         Arr arr = arrAdapter.getItem(info.position);
 
-        switch( item.getItemId() ) {
-            case R.id.joina_arr:
+        switch (item.getItemId()) {
+            case R.id.delta_on:
                 if (arr != null) {
                     new JoinArrAsync().execute(arr.getId());
                 }
                 return true;
 
-            case R.id.banga_arr:
+            case R.id.delta_off:
                 if (arr != null) {
                     new ExitArrAsync().execute(arr.getId());
                 }
                 return true;
 
-            case R.id.lurpassa_arr:
+            case R.id.lurpassa_on:
                 if (arr != null) {
-                    new LurpassaArrAsync().execute(arr.getId());
+                    new LurpassaOnAsync().execute(arr.getId());
+                }
+                return true;
+
+            case R.id.lurpassa_off:
+                if (arr != null) {
+                    new LurpassaOffAsync().execute(arr.getId());
                 }
                 return true;
 
@@ -271,13 +282,14 @@ public class FragmentArr extends Fragment {
         helpDialog.show();
     }
 
-    public final class CreateOrUpdateArrAsync extends AsyncTask<Arr, Arr, Void> {
+    public final class CreateOrUpdateArrAsync extends AsyncTask<Arr, Void, Void> {
         @Override
         protected Void doInBackground(Arr... arrs) {
-            for( Arr arr : arrs ) {
-                ((MainActivity) getActivity()).sidanAccess().createOrUpdateArr(
-                        arr.getId(), arr.getNamn(), arr.getPlats(), arr.getDatum());
-            }
+            Arr arr = arrs[0];
+
+            ((MainActivity) getActivity()).sidanAccess().createOrUpdateArr(
+                    arr.getId(), arr.getNamn(), arr.getPlats(), arr.getDatum());
+
             return null;
         }
     }
@@ -315,16 +327,13 @@ public class FragmentArr extends Fragment {
     public final class VotePollAsync extends AsyncTask<Integer, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Integer... yayList) {
-            if (currentPoll != null) {
-                for (Integer votedOnYay : yayList) {
-                    final int id = currentPoll.getId();
-                    ((MainActivity) getActivity()).getPrefs().edit()
-                            .putInt("lastPollIdAnswered", id).apply();
-                    Log.d("Poll", "Röstat " + votedOnYay + " på pollen: " + id);
-                    ((MainActivity) getActivity()).sidanAccess().votePoll(id, votedOnYay);
+            int votedOnYay = yayList[0];
+            if (null != currentPoll) {
+                final int id = currentPoll.getId();
+                preferences.edit().putInt("lastPollIdAnswered", id).apply();
 
-                }
-                return true;
+                Log.d("Poll", "Röstat " + votedOnYay + " på pollen: " + id);
+                return ((MainActivity) getActivity()).sidanAccess().votePoll(id, votedOnYay);
             }
             return false;
         }
@@ -332,10 +341,14 @@ public class FragmentArr extends Fragment {
         @Override
         protected void onPostExecute(Boolean voted) {
             if (voted) {
-                String text =
-                        holder.radioAnswer1.isChecked() ? holder.radioAnswer1.getText().toString() :
-                                holder.radioAnswer2.isChecked() ? holder.radioAnswer2.getText().toString() :
-                                        "inget!";
+                String text;
+                if (holder.radioAnswer1.isChecked()) {
+                    text = holder.radioAnswer1.getText().toString();
+                } else if (holder.radioAnswer2.isChecked()) {
+                    text = holder.radioAnswer2.getText().toString();
+                } else {
+                    text = "inget!";
+                }
                 Log.d("Vote", "Röstade på " + text);
 
                 if (holder.radioAnswer1.isChecked() || holder.radioAnswer2.isChecked()) {
@@ -356,8 +369,8 @@ public class FragmentArr extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Poll receivedPoll) {
-            currentPoll = receivedPoll;
+        protected void onPostExecute(Poll poll) {
+            currentPoll = poll;
             if(currentPoll != null) {
                 Log.d(getClass().getCanonicalName(), "Current poll: " + currentPoll.getQuestion());
                 lastPollId = currentPoll.getId() > lastPollId ? currentPoll.getId() : lastPollId;
@@ -414,7 +427,7 @@ public class FragmentArr extends Fragment {
         }
     }
 
-    public final class JoinArrAsync extends AsyncTask<Integer, Arr, Void> {
+    public final class JoinArrAsync extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
             int id = ids[0];
@@ -426,7 +439,7 @@ public class FragmentArr extends Fragment {
         }
     }
 
-    public final class ExitArrAsync extends AsyncTask<Integer, Arr, Void> {
+    public final class ExitArrAsync extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
             int id = ids[0];
@@ -438,13 +451,24 @@ public class FragmentArr extends Fragment {
         }
     }
 
-    public final class LurpassaArrAsync extends AsyncTask<Integer, Arr, Void> {
+    public final class LurpassaOnAsync extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... ids) {
             int id = ids[0];
 
-            ((MainActivity) getActivity()).sidanAccess().lurpassaArr(id);
+            ((MainActivity) getActivity()).sidanAccess().lurpassaOnArr(id);
             Log.d("Arr", "Lurpassar på arr: " + id);
+
+            return null;
+        }
+    }
+    public final class LurpassaOffAsync extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... ids) {
+            int id = ids[0];
+
+            ((MainActivity) getActivity()).sidanAccess().lurpassaOffArr(id);
+            Log.d("Arr", "Lurpassa Av på arr: " + id);
 
             return null;
         }

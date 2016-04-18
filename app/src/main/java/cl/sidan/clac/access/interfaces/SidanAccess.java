@@ -113,7 +113,13 @@ public interface SidanAccess {
      * Lurpassa on an Arr
      * @param id
      */
-    public void lurpassaArr(Integer id);
+    public void lurpassaOnArr(Integer id);
+
+    /**
+     * Remove lurpassa from Arr
+     * @param id
+     */
+    public void lurpassaOffArr(Integer id);
 
     /**
      * Vote on a poll

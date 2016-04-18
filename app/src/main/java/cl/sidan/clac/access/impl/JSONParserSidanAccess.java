@@ -249,8 +249,13 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public final void lurpassaArr(Integer id) {
+    public final void lurpassaOnArr(Integer id) {
         invoke("LurpassaArr", "Id=" + id);
+    }
+
+    @Override
+    public final void lurpassaOffArr(Integer id) {
+        invoke("LurpassaOffArr", "Id=" + id);
     }
 
     @Override

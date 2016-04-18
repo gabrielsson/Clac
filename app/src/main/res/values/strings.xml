@@ -130,7 +130,8 @@
     <string name="kumpaner">Kumpaner</string>
     <string name="bangar_arr">Jag bangar!</string>
     <string name="jag_ar_pa">Jag är på!</string>
-    <string name="lurpassa">Lurpassa</string>
+    <string name="lurpassa_on">Lurpassa På</string>
+    <string name="lurpassa_off">Lurpassa Av</string>
     <string name="hetsa">Hetsa</string>
     <string name="missingConnection">Uppkoppling saknas!</string>
     <string name="title_activity_login">Sign in</string>

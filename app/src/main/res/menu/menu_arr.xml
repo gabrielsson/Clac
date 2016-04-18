@@ -2,15 +2,19 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/banga_arr"
+    <item android:id="@+id/delta_off"
         android:title="@string/bangar_arr"
         android:visible="false" />
 
-    <item android:id="@+id/joina_arr"
+    <item android:id="@+id/delta_on"
         android:title="@string/jag_ar_pa" />
 
-    <item android:id="@+id/lurpassa_arr"
-        android:title="@string/lurpassa" />
+    <item android:id="@+id/lurpassa_off"
+        android:title="@string/lurpassa_off"
+        android:visible="false" />
+
+    <item android:id="@+id/lurpassa_on"
+        android:title="@string/lurpassa_on" />
 
     <item android:id="@+id/hetsa_arr"
         android:title="@string/hetsa"

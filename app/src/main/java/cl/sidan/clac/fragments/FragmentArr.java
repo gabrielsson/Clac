@@ -141,11 +141,12 @@ public class FragmentArr extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Arr arr = arrAdapter.getItem(info.position);
 
-        String nummer = ((MainActivity) getActivity()).getPrefs().getString("number", "");
 
         MenuItem joinaArrItem = menu.findItem(R.id.joina_arr);
         MenuItem bangaArrItem = menu.findItem(R.id.banga_arr);
         MenuItem luraArrItem = menu.findItem(R.id.lurpassa_arr);
+        String nummer = preferences.getString("username", "");
+
         if (arr != null) {
             for( String deltagare : arr.getDeltagare().split(",") ) {
                 if( nummer.equals(deltagare) ) {
@@ -258,7 +259,7 @@ public class FragmentArr extends Fragment {
                             arr.setNamn(arrNamn);
                             arr.setPlats(arrPlats);
                             arr.setDatum(date);
-                            arr.setDeltagare(((MainActivity) getActivity()).getPrefs().getString("number", null));
+                            arr.setDeltagare(preferences.getString("username", null));
 
                             new CreateOrUpdateArrAsync().execute(arr);
                         }

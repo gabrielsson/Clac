@@ -119,7 +119,7 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Entry e = entriesAdapter.getItem(info.position);
 
-        String nummer = preferences.getString("number", "");
+        String nummer = preferences.getString("username", "");
 
         if (e != null) {
             MenuItem likeItem = menu.findItem(R.id.like_entry);

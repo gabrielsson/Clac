@@ -168,6 +168,8 @@ public class MainActivity extends AppCompatActivity
             finish();
         }
 
+        notifyLocationChange(); // Add a location listener
+
         // Check if no view has focus:
         View view = this.getCurrentFocus();
         if (view != null) {

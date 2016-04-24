@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:background="@color/background">
+    android:background="?attr/background"
+    android:weightSum="1">
 
     <EditText
         android:id="@+id/write_entry_text"
@@ -19,15 +19,15 @@
         android:padding="10dp"
         android:inputType="textMultiLine|textCapSentences"
         android:background="#ffffffff"
-        android:textColor="@color/text_winered"
+        android:textColor="?attr/textColorPrimary"
         android:hint="@string/write_entry_hint" />
 
     <Button
         android:id="@+id/write_entry_send"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryPink"
-        android:textColor="@color/background"
+        android:background="?attr/colorPrimary"
+        android:textColor="?attr/textColorSecondary"
         android:text="@string/write_entry_send" />
 
     <RelativeLayout
@@ -63,7 +63,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/nopo"
-            android:text="Kumpaner"
             />
         <TextView
             android:id="@+id/kumpaner"

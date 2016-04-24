@@ -11,9 +11,9 @@
     android:background="@drawable/background">
 
     <TextView
-        android:textStyle="bold"
-        android:textColor="@color/text_winered"
         android:id="@+id/memberSignature"
+        android:textStyle="bold"
+        android:textColor="?attr/textColorPrimary"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"
@@ -22,9 +22,9 @@
         android:text="#78" />
 
     <TextView
-        android:textStyle="bold"
-        android:textColor="@color/text_winered"
         android:id="@+id/memberName"
+        android:textStyle="bold"
+        android:textColor="?attr/textColorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"
@@ -33,9 +33,9 @@
         android:text="Christofer Benett" />
 
     <TextView
-        android:textStyle="bold"
-        android:textColor="@color/text_winered"
         android:id="@+id/memberNumber"
+        android:textStyle="bold"
+        android:textColor="?attr/textColorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"
@@ -45,9 +45,9 @@
         android:text="0730-257634" />
 
     <TextView
-        android:textStyle="bold"
-        android:textColor="@color/text_winered"
         android:id="@+id/memberTitle"
+        android:textStyle="bold"
+        android:textColor="?attr/textColorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin"

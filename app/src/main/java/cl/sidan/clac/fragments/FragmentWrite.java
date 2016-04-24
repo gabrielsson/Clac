@@ -2,6 +2,7 @@ package cl.sidan.clac.fragments;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -49,6 +50,7 @@ public class FragmentWrite extends Fragment {
     private static final int FILE_SELECT_CODE = 0;
 
     private View rootView = null;
+    private SharedPreferences preferences;
 
     private ArrayList<User> kumpaner = new ArrayList<>();
     private ArrayList<User> selectedKumpaner = new ArrayList<>();
@@ -61,6 +63,7 @@ public class FragmentWrite extends Fragment {
     public final View onCreateView(LayoutInflater inflater, ViewGroup container,
                                    Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_write_entry, container, false);
+        preferences = ((MainActivity) getActivity()).getPrefs();
 
         final Spinner beers = (Spinner) rootView.findViewById(R.id.number_of_beers);
         String[] antalEnheter = getResources().getStringArray(R.array.antalEnheterInklNoll),
@@ -76,7 +79,7 @@ public class FragmentWrite extends Fragment {
             }
         });
 
-        float font_size = ((MainActivity) getActivity()).getPrefs().getFloat("font_size", 15);
+        float font_size = preferences.getFloat("font_size", 15);
 
         memberAdapter = new AdapterMembers(getActivity(), R.layout.adapter_kumpaner_item, kumpaner, font_size);
         memberAdapter.setNotifyOnChange(true);
@@ -146,7 +149,7 @@ public class FragmentWrite extends Fragment {
                 entry.setMessage(text);
                 entry.setSecret(hemlis);
 
-                boolean reportPosition = ((MainActivity) getActivity()).getPrefs().getBoolean("positionSetting", true);
+                boolean reportPosition = preferences.getBoolean("positionSetting", true);
                 Location myLocation = ((MainActivity) getActivity()).getLocation();
                 if (reportPosition && myLocation != null) {
                     entry.setLatitude(BigDecimal.valueOf(myLocation.getLatitude()));

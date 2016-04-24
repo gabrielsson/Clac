@@ -142,18 +142,18 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
                 holder.txtSignatureLine.setTextColor(Color.TRANSPARENT);
                 break;
             case 4: //#31 vs #45 - nerd #FF8000
-                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.text_orange));
-                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.text_orange));
+                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.colorOrange));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.colorOrange));
                 break;
             case 5: //NSFW
-                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.text_winered));
-                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.text_winered));
+                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.colorWineRed));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.colorWineRed));
                 holder.txtEntry.setText(String.format("NSFW!! %s", holder.txtEntry.getText()));
                 break;
             case 0: //normal
             default:
-                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.text_winered));
-                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.text_winered));
+                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.colorWineRed));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.colorWineRed));
                 break;
         }
 

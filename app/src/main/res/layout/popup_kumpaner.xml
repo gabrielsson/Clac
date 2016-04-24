@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
-    android:background="@color/background_floating_material_light"
+    android:background="?attr/background"
     >
 
     <RelativeLayout
@@ -36,7 +36,6 @@
         android:numColumns="auto_fit"
         android:layout_weight="1"
         android:gravity="center"
-        android:background="@color/background"
         android:scrollingCache="false"
         android:listSelector="@drawable/list_selector_ignored"
         tools:listitem="@layout/adapter_kumpaner_item" />

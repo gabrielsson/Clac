@@ -8,17 +8,15 @@
     android:orientation="horizontal"
     android:layout_gravity="start"
     android:gravity="center"
-    android:background="@drawable/background"
-    android:textStyle="bold"
-    android:textColor="@color/text_winered">
+    android:background="?attr/background"
+    android:textStyle="bold">
 
     <TextView
         android:textStyle="bold"
-        android:textColor="@color/text_winered"
         android:id="@+id/memberSignature"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:gravity="center"
-        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="?attr/colorPrimary"
         android:text="#78" />
 </RelativeLayout>

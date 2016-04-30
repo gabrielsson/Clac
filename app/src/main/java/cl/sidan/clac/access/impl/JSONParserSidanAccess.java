@@ -236,11 +236,11 @@ public class JSONParserSidanAccess implements SidanAccess {
     public final void createOrUpdateArr(Integer id, String namn, String plats, String datum) {
 
         if(id != null) {
-            invoke("UpdateArr", "Id=" + id + "&Namn=" + namn +
-                    "&Plats=" + plats + "&Datum=" + datum);
+            invoke("UpdateArr", "Id=" + id + "&Name=" + namn +
+                    "&Place=" + plats + "&Date=" + datum);
         } else {
-            invoke("CreateArr", "Namn=" + namn +
-                    "&Plats=" + plats + "&Datum=" + datum);
+            invoke("CreateArr", "Name=" + namn +
+                    "&Place=" + plats + "&Date=" + datum);
         }
 
     }

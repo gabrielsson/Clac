@@ -313,6 +313,11 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
         }
     }
 
+    public void setEntries(List<Entry> newEntries) {
+        Log.d(getClass().getCanonicalName(), "Got " + newEntries.size() + " from another place");
+        populateEntries(newEntries);
+    }
+
     public final class CreateLikeAsync extends AsyncTask<Integer, Entry, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {
@@ -373,9 +378,7 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
 
                 Log.d(TAG, "Entries from server: " + response.size() + ", total entries: " + tempEntries.size());
 
-                entries.clear();
-                entries.addAll(tempEntries);
-                entriesAdapter.notifyDataSetChanged();
+                populateEntries(tempEntries);
                 entriesContainer.setRefreshing(false);
                 isLoading = false;
 
@@ -383,6 +386,12 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                 listView.setSelectionFromTop(scrollPosition, top);
             }
         }
+    }
+
+    private void populateEntries(List<Entry> tempEntries) {
+        entries.clear();
+        entries.addAll(tempEntries);
+        entriesAdapter.notifyDataSetChanged();
     }
 
     public int getTop() {

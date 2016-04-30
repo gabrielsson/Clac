@@ -324,6 +324,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_settings:
                 getReusedFragment(new FragmentSettings());
                 break;
+
+            case R.id.nav_search:
+                getReusedFragment(new FragmentSearch());
+                break;
+
 /*
             case R.id.nav_tattarbilder:
                 break;
@@ -343,6 +348,9 @@ public class MainActivity extends AppCompatActivity
 
     public void registerReadEntriesFragment(FragmentReadEntries fragmentReadEntries) {
         this.fragmentReadEntries = fragmentReadEntries;
+    }
+    public FragmentReadEntries getReadEntriesFragment() {
+        return this.fragmentReadEntries;
     }
 
     public Fragment getReusedFragment(Fragment instanceFragment) {

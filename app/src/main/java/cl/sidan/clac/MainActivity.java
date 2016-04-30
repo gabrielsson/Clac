@@ -267,7 +267,11 @@ public class MainActivity extends AppCompatActivity
                             !e.getLongitude().equals(BigDecimal.ZERO) && // Have a position
                             e.getDateTime().after(yesterday) // Happened in the last day
                             ) {
-                        hm.put(e.getSignature(), e);
+                        // Only add the latest entry (per signature)
+                        Entry latest = hm.get(e.getSignature());
+                        if (null == latest || e.getDateTime().after(latest.getDateTime())) {
+                            hm.put(e.getSignature(), e);
+                        }
                     }
                 }
 

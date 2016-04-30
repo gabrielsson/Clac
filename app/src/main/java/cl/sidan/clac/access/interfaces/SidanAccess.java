@@ -189,4 +189,6 @@ public interface SidanAccess {
      * @return List of top users
      */
     List<Stats> readStats(String type);
+
+    public boolean ignoreNumber(String number);
 }

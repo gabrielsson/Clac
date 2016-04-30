@@ -6,6 +6,9 @@
 
     <attr name="navigationDrawerTheme" format="reference" />
 
+    <attr name="navbarTextColor" format="reference" />
+    <attr name="navbarIconTint" format="reference" />
+
     <attr name="politics" format="reference" />
     <attr name="complaints27" format="reference" />
     <attr name="noshow44" format="reference" />

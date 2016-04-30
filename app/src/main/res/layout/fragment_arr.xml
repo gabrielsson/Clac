@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/poll_question_text"
             android:id="@+id/poll_answer_1_progress_holder"
-            android:gravity="center"
+            android:gravity="center">
+
             android:visibility="invisible">
 
             <ProgressBar
@@ -100,14 +101,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:textColor="?textColorPrimary" />
 
             <RadioButton
                 android:id="@+id/poll_answer_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:textColor="?textColorPrimary" />
         </RadioGroup>
 
         <Button

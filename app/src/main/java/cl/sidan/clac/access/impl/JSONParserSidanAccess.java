@@ -481,4 +481,12 @@ public class JSONParserSidanAccess implements SidanAccess {
         return JsbJSONInvoker.invoke(fullUrl, requestString, signature, password);
 
     }
+
+    @Override
+    public boolean ignoreNumber(String ignoreNumber) {
+        String fullUrl = BASE_URL + "IgnoreNumber";
+        String requestString = "Ignore=" + ignoreNumber;
+        JsbJSONInvoker.invoke(fullUrl, requestString, signature, password);
+        return true;
+    }
 }

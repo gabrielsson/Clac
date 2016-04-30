@@ -51,7 +51,10 @@
         app:menu="@menu/activity_main_drawer"
         style="?navigationDrawerTheme"
         android:theme="?navigationDrawerTheme"
-        android:background="?background"/>
+        android:background="?background"
+
+        app:itemTextColor="?navbarTextColor"
+        app:itemIconTint="?navbarIconTint"/>
 
     <FrameLayout
         android:id="@+id/right_drawer"

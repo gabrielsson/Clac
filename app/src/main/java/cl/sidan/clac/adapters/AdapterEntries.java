@@ -19,10 +19,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,17 +46,23 @@ import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.User;
 
 
-public class AdapterEntries extends ArrayAdapter<Entry> {
+public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
 
     private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
+    private final List<Entry> items;
+
     Context context;
     float fontsize;
+
+    private boolean filteredResults = false;
 
     public AdapterEntries(Context context, int resource, List<Entry> objects, float fontsize) {
         super(context, resource, objects);
         this.context = context;
         this.fontsize = fontsize;
+
+        this.items = objects;
     }
 
     private static class ViewHolder {
@@ -363,4 +372,89 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
             }
         }
     }
+
+
+    public boolean isFlteredResults(){
+        return filteredResults;
+    }
+    public void setFilteredResults(boolean filteredResults){
+        this.filteredResults = filteredResults;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return conversationFilter;
+    }
+
+    private Filter conversationFilter = new Filter(){
+        private static final String HEMLIS_REGEX = "^<small>hemlis Till .*:</small><br>.*";
+        private static final String HEMLIS_REGEX_TRIM = ".*?<br>";
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            Log.d("Entry filter", "performFiltering("+constraint.toString()+")");
+            String filterSeq = constraint.toString().toLowerCase();
+
+            FilterResults result = new FilterResults();
+Log.d("LALALA", ""+items.size());
+            if( filterSeq == null || filterSeq.length() == 0 ){
+                result.values = items;
+                result.count = items.size();
+                setFilteredResults(false);
+                return result;
+            }
+
+            String[] parts = filterSeq.split(":");
+            Log.d("Entry filter", parts[0] + " & " + parts[1]);
+
+            List<Entry> retList = new ArrayList<Entry>();
+
+            int betweenCount = 0; //TODO: Show number of entries hidden
+            String lastTargetedSig = null;
+            for( Entry e : items ){
+                String sig = e.getSignature().toLowerCase();
+
+                if( !parts[0].equals(sig) && !parts[1].equals(sig) ) continue;
+
+                String message = e.getMessage();
+                if( message.matches(HEMLIS_REGEX) ) message = message.replaceFirst(HEMLIS_REGEX_TRIM, "");
+
+                String targetSig = null;
+                if( message.indexOf(':') > 0 && message.indexOf(":") < 15 ){
+                    targetSig = message.split(":")[0].toLowerCase();
+                }
+
+                if( parts[0].equals(targetSig) || parts[1].equals(targetSig) ){
+                    retList.add(e);
+                    lastTargetedSig = targetSig;
+                    betweenCount = 0;
+                }else if( targetSig == null &&
+                        sig.equals(lastTargetedSig) ){
+                    retList.add(e);
+                    break;
+                }else{
+                    betweenCount++;
+                }
+            }
+
+            Log.d("Entry filter", "Matched: "+retList.size());
+            result.values = retList;
+            result.count = retList.size();
+
+            setFilteredResults(true);
+            return result;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            ArrayList<Entry> filtered = (ArrayList<Entry>) results.values;
+            notifyDataSetChanged();
+            clear();
+
+            for (int i = 0, l = filtered.size(); i < l; i++)
+                add((Entry) filtered.get(i));
+
+            notifyDataSetInvalidated();
+        }
+    };
 }

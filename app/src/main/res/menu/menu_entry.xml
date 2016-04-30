@@ -31,4 +31,7 @@
     <item android:id="@+id/edit_entry"
         android:title="@string/andra" />
 
+    <item android:id="@+id/filter_conversation"
+        android:title="@string/filtrera_konversation" />
+
 </menu>

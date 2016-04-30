@@ -156,4 +156,8 @@
     <string name="smsa">Smsa</string>
     <string name="maila">Maila</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- Strings used in filtering messages -->
+    <string name="filtrera_konversation">Filtrera konversation</string>
+    <string name="filter_conversation_toast">"Filtrerar konversation mellan: "</string>
 </resources>

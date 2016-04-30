@@ -51,8 +51,13 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     private int scrollPosition = 0, top = 0;
     private SharedPreferences preferences;
     private ListView listView;
-
+    private EntriesListType entriesListType = EntriesListType.READ;
     boolean isLoading = false;
+    private String searchString;
+
+    private enum EntriesListType {
+        SEARCH, READ
+    }
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
@@ -86,11 +91,13 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                     public void onRefresh() {
                         top = 0;
                         scrollPosition = 0;
+                        entriesListType = EntriesListType.READ;
                         new ReadEntriesAsync().execute(0);
                     }
                 }
         );
         entriesContainer.setRefreshing(true);
+        entriesListType = EntriesListType.READ;
         new ReadEntriesAsync().execute(0);
 
         listView = (ListView) rootView.findViewById(R.id.entries);
@@ -313,9 +320,13 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
         }
     }
 
-    public void setEntries(List<Entry> newEntries) {
-        Log.d(getClass().getCanonicalName(), "Got " + newEntries.size() + " from another place");
-        populateEntries(newEntries);
+    public void searchEntries(String searchString) {
+        entries.clear();
+        entriesListType = EntriesListType.SEARCH;
+        this.searchString = searchString;
+        top = 0;
+        scrollPosition = 0;
+        new ReadEntriesAsync().execute(0);
     }
 
     public final class CreateLikeAsync extends AsyncTask<Integer, Entry, Void> {
@@ -343,7 +354,14 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
             int skip = integers[0] > 0 ? integers[0] : 0,
                     take = 50;
             isLoading = true;
-            return ((MainActivity) getActivity()).sidanAccess().readEntries(skip, take);
+
+            if (entriesListType == EntriesListType.READ) {
+                Log.d(getClass().getCanonicalName(), "Reading new entries");
+                return ((MainActivity) getActivity()).sidanAccess().readEntries(skip, take);
+            } else {
+                Log.d(getClass().getCanonicalName(), "Searching for new entries");
+                return ((MainActivity) getActivity()).sidanAccess().searchEntries(searchString, skip, take);
+            }
         }
 
         @Override

@@ -10,9 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.List;
-
-import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.fragments.FragmentReadEntries;
 
 public class FragmentSearch extends Fragment {
@@ -28,27 +25,11 @@ public class FragmentSearch extends Fragment {
             public void onClick(View v) {
                 EditText searchField = (EditText) rootView.findViewById(R.id.search_string);
                 String searchString = searchField.getText().toString();
-
-                new SearchEntriesAsync().execute(searchString);
+                FragmentReadEntries readEntriesFragment = ((MainActivity) getActivity()).getReadEntriesFragment();
+                readEntriesFragment.searchEntries(searchString);
             }
         });
 
         return rootView;
-    }
-
-    public final class SearchEntriesAsync extends AsyncTask<String, Void, List<Entry>> {
-
-        @Override
-        protected List<Entry> doInBackground(String... params) {
-            Log.d(getClass().getCanonicalName(), "Searching for " + params[0]);
-            return ((MainActivity) getActivity()).sidanAccess().searchEntries(params[0], 0, 50);
-        }
-
-        @Override
-        protected void onPostExecute(List<Entry> entries) {
-            Log.d(getClass().getCanonicalName(), "Found " + entries.size() + " entries");
-            FragmentReadEntries readEntriesFragment = ((MainActivity) getActivity()).getReadEntriesFragment();
-            readEntriesFragment.setEntries(entries);
-        }
     }
 }

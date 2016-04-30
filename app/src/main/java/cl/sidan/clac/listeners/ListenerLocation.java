@@ -6,24 +6,22 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+// import android.widget.Toast;
 
 public class ListenerLocation implements LocationListener
 {
-    private static final int LOCATION_UPDATE_TIME = 1000 * 60 * 2;
+    private static final int LOCATION_UPDATE_TIME = 1000 * 60 * 30; // 30 minutes
     private Location lastKnownLocation = null;
     private LocationManager locationManager = null;
-
-    private Context context = null;
+    private boolean isEnabled = false;
 
     public ListenerLocation(Context context, Location lastKnownLocation) {
-        this.context = context;
         // Experimental, get lastKnownLocation from activity if the location listener has been recreated.
         this.lastKnownLocation = lastKnownLocation;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-        long minTime = 1000 * 60 * 10;
-        float minDistance = 50;
+        long minTime = LOCATION_UPDATE_TIME;
+        float minDistance = 200; // in meters
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, this);
         try {
@@ -49,18 +47,23 @@ public class ListenerLocation implements LocationListener
     @Override
     public void onProviderDisabled(String provider)
     {
-
+        isEnabled = false;
+        /*
         Toast.makeText(context,
                 provider + " location provider disabled",
                 Toast.LENGTH_SHORT).show();
+        */
     }
 
     @Override
     public void onProviderEnabled(String provider)
     {
+        isEnabled = true;
+        /*
         Toast.makeText(context,
                 provider + " location provider enabled",
                 Toast.LENGTH_SHORT).show();
+        */
     }
 
     @Override
@@ -88,7 +91,7 @@ public class ListenerLocation implements LocationListener
         // because the user has likely moved
         if (isSignificantlyNewer) {
             return true;
-            // If the new location is more than two minutes older, it must be worse
+            // If the new location is more than LOCATION_UPDATE_TIME older, it must be worse
         } else if (isSignificantlyOlder) {
             return false;
         }

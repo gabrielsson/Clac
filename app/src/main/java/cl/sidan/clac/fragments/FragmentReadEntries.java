@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +40,10 @@ import cl.sidan.clac.interfaces.ScrollingFragment;
 
 public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     private final String TAG = getClass().getCanonicalName();
+
+    private static final String CONVERSATION_REGEX = "^.+\\:.*";
+    private static final String CONVERSATION_SPLIT = ":";
+
     private ArrayList<Entry> entries = new ArrayList<>();
     private AdapterEntries entriesAdapter = null;
     private SwipeRefreshLayout entriesContainer = null;
@@ -101,6 +106,22 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     public void onSaveInstanceState(Bundle state) {
         // Save scroll position
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
+        listView.setAdapter(entriesAdapter);
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if( event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK
+                        && entriesAdapter.isFlteredResults() ){
+                    entriesAdapter.getFilter().filter("");
+                    return true;
+                }
+                return false;
+            }
+        });
+
         scrollPosition = listView.getFirstVisiblePosition();
         top = getTop();
 
@@ -124,6 +145,10 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
         if (e != null) {
             MenuItem likeItem = menu.findItem(R.id.like_entry);
             likeItem.setEnabled(!nummer.equals(e.getSignature()));
+
+            boolean conversationEntry = e.getMessage().matches(CONVERSATION_REGEX);
+            MenuItem conversationItem = menu.findItem(R.id.filter_conversation);
+            conversationItem.setEnabled(conversationEntry);
 
             MenuItem viewPosItem = menu.findItem(R.id.view_position);
             viewPosItem.setEnabled(0 != e.getLatitude().compareTo(BigDecimal.ZERO) && 0 != e.getLongitude().compareTo(BigDecimal.ZERO));
@@ -266,6 +291,23 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                 startActivity(Intent.createChooser(intent, "Skicka mail.."));
                 return true;
 
+            case R.id.filter_conversation:
+                e = entriesAdapter.getItem(info.position);
+
+                if( !e.getMessage().matches(CONVERSATION_REGEX) ) return false;
+
+                String[] messageSplit = e.getMessage().split(CONVERSATION_SPLIT);
+                if( messageSplit.length < 2 ){
+                    Toast.makeText(getActivity(), "Unable to find conversation start.", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                String targetSig = messageSplit[0];
+                String writerSig = e.getSignature();
+                
+                Toast.makeText(getActivity(), this.getString(R.string.filter_conversation_toast)+writerSig+" & "+targetSig, Toast.LENGTH_SHORT).show();
+                entriesAdapter.getFilter().filter(writerSig+":"+targetSig);
+
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
@@ -15,6 +14,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,32 +128,39 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
                 dayOfWeek, kumpanString, entry.getLikes());
         holder.txtSignatureLine.setText(signatureLineText);
 
+        int color;
         switch (entry.getStatus()) {
             case 1: //politics
-                holder.txtEntry.setTextColor(Color.RED);
-                holder.txtSignatureLine.setTextColor(Color.RED);
+                color = getThemeColor(R.attr.politics);
+                holder.txtEntry.setTextColor(context.getResources().getColor(color));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(color));
                 break;
             case 2: //#27 - complaints
-                holder.txtEntry.setTextColor(Color.GRAY);
-                holder.txtSignatureLine.setTextColor(Color.GRAY);
+                color = getThemeColor(R.attr.complaints27);
+                holder.txtEntry.setTextColor(context.getResources().getColor(color));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(color));
                 break;
             case 3: //#44 - noshow
-                holder.txtEntry.setTextColor(Color.TRANSPARENT);
-                holder.txtSignatureLine.setTextColor(Color.TRANSPARENT);
+                color = getThemeColor(R.attr.noshow44);
+                holder.txtEntry.setTextColor(context.getResources().getColor(color));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(color));
                 break;
             case 4: //#31 vs #45 - nerd #FF8000
-                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.colorOrange));
-                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.colorOrange));
+                color = getThemeColor(R.attr.nerd31vs45);
+                holder.txtEntry.setTextColor(context.getResources().getColor(color));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(color));
                 break;
             case 5: //NSFW
-                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.colorWineRed));
-                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.colorWineRed));
+                color = getThemeColor(R.attr.nsfw);
+                holder.txtEntry.setTextColor(context.getResources().getColor(color));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(color));
                 holder.txtEntry.setText(String.format("NSFW!! %s", holder.txtEntry.getText()));
                 break;
             case 0: //normal
             default:
-                holder.txtEntry.setTextColor(context.getResources().getColor(R.color.colorWineRed));
-                holder.txtSignatureLine.setTextColor(context.getResources().getColor(R.color.colorWineRed));
+                color = getThemeColor(R.attr.normalentry);
+                holder.txtEntry.setTextColor(context.getResources().getColor(color));
+                holder.txtSignatureLine.setTextColor(context.getResources().getColor(color));
                 break;
         }
 
@@ -177,6 +184,12 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
         }
 
         return convertView;
+    }
+
+    private int getThemeColor(int attr) {
+        TypedValue attrValue = new TypedValue();
+        context.getTheme().resolveAttribute(attr, attrValue, true);
+        return attrValue.resourceId;
     }
 
     private static String getDayOfWeekString(Date date) {

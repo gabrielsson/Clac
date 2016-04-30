@@ -1,40 +1,129 @@
 <resources>
-    <!-- Base application theme. -->
+    <!-- DEFAULT THEME -->
     <style name="DefaultTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPink</item>
-        <item name="colorPrimaryDark">@color/colorBlueDark</item>
-        <item name="textColorPrimary">@color/colorPink</item>
-        <item name="textColorSecondary">@color/colorYellowLight</item>
-        <item name="colorAccent">@color/colorPink</item>
-        <item name="background">@color/colorYellowLight</item>
-        <item name="textAppearanceListItem">@color/colorPink</item>
+        <item name="colorPrimary">@color/pink</item> <!-- Text in popup, selected items in gridview, post entry button, -->
+        <item name="colorPrimaryDark">@color/pink_light</item>
+        <item name="textColorPrimary">@color/pink</item> <!-- e.g. EditText text -->
+        <item name="textColorSecondary">@color/yellow_light</item>
+        <item name="colorAccent">@color/pink</item> <!-- e.g. fab-button -->
+        <item name="background">@color/yellow_light</item>
+        <item name="textAppearanceListItem">@color/pink</item> <!-- primary text of list items -->
 
-        <item name="android:statusBarColor">@color/colorPink</item>
-        <item name="android:navigationBarColor">@color/colorPink</item>
+        <item name="android:editTextBackground">@color/white</item> <!-- editText -->
+        <item name="android:editTextColor">@color/pink</item> <!-- editText -->
+
+        <item name="android:colorControlNormal">@color/green</item> <!-- E.g. Toolbar menu button, checkbox unchecked, scrollbar-->
+        <item name="android:colorControlHighlight">@color/pink_light</item> <!-- highlighting -->
+        <!--        <item name="android:colorControlActivated">@color/yellow_light</item> <!- E.g. checkbox checked -->
+
+        <item name="android:statusBarColor">@color/pink</item> <!-- the android "status" bar on top -->
+        <item name="android:navigationBarColor">@color/pink</item> <!-- back buttons bar -->
+        <item name="android:buttonStyle">@style/DefaultTheme.ButtonTheme</item>
+        <item name="android:checkboxStyle">@style/DefaultTheme.CheckboxTheme</item>
+        <item name="actionBarPopupTheme">@style/DefaultTheme.AppBarOverlay</item> <!-- toolbar -->
+        <item name="popupTheme">@style/DefaultTheme.PopupOverlay</item> <!-- menu -->
+
+        <!-- EntryStyles -->
+        <item name="politics">@color/red</item>
+        <item name="complaints27">@color/gray</item>
+        <item name="noshow44">@color/transparent</item>
+        <item name="nerd31vs45">@color/orange</item>
+        <item name="nsfw">@color/red_dark</item>
+        <item name="normalentry">@color/winered</item>
     </style>
-
-    <style name="DefaultTheme.NoActionBar">
+    <style name="DefaultTheme.NoActionBar" parent="DefaultTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="DefaultTheme.AppBarOverlay">
-        <item name="android:textColorPrimary">@color/colorYellowLight</item>
-        <item name="android:textColorSecondary">@color/colorYellowLight</item>
+    <!-- Theme for ToolBar -->
+    <style name="DefaultTheme.AppBarOverlay" parent="DefaultTheme">
+        <item name="android:textColorPrimary">@color/white</item> <!-- Text -->
+        <item name="android:textColorSecondary">@color/white</item> <!-- Icons -->
+        <item name="navigationDrawerTheme">@style/DefaultTheme.NavigationDrawer</item> <!-- drawer -->
     </style>
+    <!-- Theme for Buttons -->
+    <style name="DefaultTheme.ButtonTheme">
+    </style>
+    <!-- Theme for CheckBox -->
+    <style name="DefaultTheme.CheckboxTheme">
+    </style>
+    <!-- Theme for Navigation Drawer -->
+    <style name="DefaultTheme.NavigationDrawer">
+        <item name="background">@color/pink</item>
+    </style>
+    <!-- Theme for menues -->
     <style name="DefaultTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="NightTheme">
-        <item name="colorPrimaryDark">@color/colorBlueDark</item>
-        <item name="colorAccent">@color/colorPink</item>
-    </style>
+    <!--================================================-->
+    <!-- NIGHT THEME                                    -->
+    <!--================================================-->
 
-    <style name="NightTheme.NoActionBar">
+    <style name="NightTheme">
+        <item name="colorPrimary">@color/gray</item> <!-- Text in popup, selected items in gridview, post entry button, -->
+        <item name="colorPrimaryDark">@color/green</item>
+        <item name="android:textColor">@color/white</item> <!-- Text views -->
+        <item name="textColorPrimary">@color/green</item>
+        <item name="textColorSecondary">@color/yellow_light</item>
+        <item name="colorAccent">@color/green</item> <!-- e.g. fab-button and checkboxes -->
+        <item name="background">@color/black</item>
+        <item name="textAppearanceListItem">@color/green</item> <!-- primary text of list items -->
+
+        <item name="android:editTextBackground">@color/white</item> <!-- editText -->
+        <item name="android:editTextColor">@color/pink</item> <!-- editText -->
+
+        <item name="android:colorControlNormal">@color/green</item> <!-- E.g. Toolbar menu button, checkbox unchecked, scrollbar-->
+        <item name="android:colorControlHighlight">@color/pink_light</item> <!-- highlighting -->
+<!--        <item name="android:colorControlActivated">@color/yellow_light</item> <!- E.g. checkbox checked -->
+
+        <item name="android:statusBarColor">@color/black</item> <!-- the android "status" bar on top -->
+        <item name="android:navigationBarColor">@color/black</item> <!-- back buttons bar -->
+
+        <item name="android:buttonStyle">@style/NightTheme.ButtonTheme</item>
+        <item name="android:checkboxStyle">@style/NightTheme.CheckboxTheme</item>
+        <item name="actionBarPopupTheme">@style/NightTheme.AppBarOverlay</item> <!-- toolbar -->
+        <item name="popupTheme">@style/NightTheme.PopupOverlay</item> <!-- menu -->
+
+        <!-- EntryStyles -->
+        <item name="politics">@color/red</item>
+        <item name="complaints27">@color/gray</item>
+        <item name="noshow44">@color/transparent</item>
+        <item name="nerd31vs45">@color/orange</item>
+        <item name="nsfw">@color/red_dark</item>
+        <item name="normalentry">@color/green</item>
+    </style>
+    <style name="NightTheme.NoActionBar" parent="NightTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-
-    <style name="DrawerTheme" parent="Theme.AppCompat.Light" />
+    <!-- Theme for Buttons -->
+    <style name="NightTheme.ButtonTheme" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/green</item>
+        <item name="android:background">@color/red</item>
+    </style>
+    <!-- Theme for CheckBox -->
+    <style name="NightTheme.CheckboxTheme" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/green</item>
+    </style>
+    <!-- Theme for Navigation Drawer -->
+    <style name="NightTheme.NavigationDrawer">
+        <item name="android:background">@color/red</item>
+        <item name="android:textColor">@color/black</item> <!-- Text on header -->
+        <item name="android:textColorPrimary">@color/green</item> <!-- Text in menu -->
+        <item name="android:textColorSecondary">@color/green</item> <!-- Icons -->
+        <item name="android:colorBackground">@color/gray</item>
+        <item name="android:colorAccent">@color/red</item>
+        <item name="android:colorPressedHighlight">@color/pink_light</item>
+        <item name="android:customNavigationLayout">@color/pink_light</item>
+    </style>
+    <!-- Theme for ToolBar -->
+    <style name="NightTheme.AppBarOverlay">
+        <item name="android:textColorPrimary">@color/green</item> <!-- Text -->
+        <item name="android:textColorSecondary">@color/green</item> <!-- Icons -->
+        <item name="navigationDrawerTheme">@style/NightTheme.NavigationDrawer</item> <!-- drawer -->
+    </style>
+    <!-- Theme for menus -->
+    <style name="NightTheme.PopupOverlay">
+        <item name="android:textColor">@color/green</item>
+        <item name="android:background">@color/gray</item>
+    </style>
 </resources>

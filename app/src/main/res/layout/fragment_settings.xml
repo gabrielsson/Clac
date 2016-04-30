@@ -47,5 +47,11 @@
         android:layout_gravity="center"
         android:textSize="15sp"
         android:text="@string/fontsize"
-        android:textColor="@color/text_winered" />
+        android:textColor="?attr/textColorPrimary" />
+
+    <Spinner
+        android:id="@+id/theme_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/listPreferredItemHeight">
+    </Spinner>
 </LinearLayout>

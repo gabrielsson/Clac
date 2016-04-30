@@ -1,5 +1,6 @@
 package cl.sidan.clac.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,12 +8,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;
+import cl.sidan.clac.other.ThemePicker;
 
 public class FragmentSettings extends Fragment {
     private static final float MULTIPLIER = 10;
@@ -58,7 +63,7 @@ public class FragmentSettings extends Fragment {
         });
 
         cbPosition = (CheckBox) rootView.findViewById(R.id.position_setting);
-        boolean positionSetting = preferences.getBoolean("positionSetting", true);
+        final boolean positionSetting = preferences.getBoolean("positionSetting", true);
         Log.d("Location", "Location setting is " + positionSetting);
         cbPosition.setChecked(positionSetting);
         cbPosition.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +73,35 @@ public class FragmentSettings extends Fragment {
                 preferences.edit().putBoolean("positionSetting", checked).apply();
                 Log.d("Location", "Location changed to " + checked);
                 ((MainActivity) getActivity()).notifyLocationChange();
+            }
+        });
+
+        Spinner themePicker = (Spinner) rootView.findViewById(R.id.theme_spinner);
+        themePicker.setAdapter(new ArrayAdapter<>(
+                getActivity(), android.R.layout.simple_spinner_item, ThemePicker.getThemeNames()));
+
+        themePicker.setSelection(preferences.getInt("theme", 0));
+
+        themePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int setStyle = preferences.getInt("theme", 0);
+
+                if (position != setStyle) {
+                    preferences.edit().putInt("theme", position).apply();
+                    Log.d(getClass().getCanonicalName(),
+                            "Theme set to " + ThemePicker.getThemeName(position) +
+                                    " (Style position: " + position + ", from preferences: " + setStyle + ")");
+
+                    // starta om
+                    getActivity().finish();
+                    getActivity().startActivity(new Intent(getActivity(), getActivity().getClass()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 

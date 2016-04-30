@@ -49,6 +49,7 @@ import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.listeners.ListenerLocation;
 import cl.sidan.clac.listeners.ListenerScroller;
 import cl.sidan.clac.other.MyExceptionHandler;
+import cl.sidan.clac.other.ThemePicker;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
 
     private HashMap<String, Fragment> fragments = new HashMap<>();
     private FragmentReadEntries fragmentReadEntries;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,10 @@ public class MainActivity extends AppCompatActivity
         isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
         number = preferences.getString("username", null);
         String password = preferences.getString("password", null);
+
+        // Set saved theme
+        int themePos = preferences.getInt("theme", 0);
+        this.setTheme(ThemePicker.getTheme(themePos));
 
         // Start login activity if needed
         if (!isUserLoggedIn) {

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPink">#A02447</color>
-    <color name="colorBlueDark">#303F9F</color>
-    <color name="colorPinkLight">#ff4081</color>
-
-    <color name="colorTurqoiseLight">#b3dfd0</color>
-    <color name="colorYellowLight">#fffacd</color>
-    <color name="colorGreenTransparent">#55b3dfd0</color>
-    <color name="colorWineRed">#ad2447</color>
-
+    <color name="pink">#A02447</color>
+    <color name="blue_dark">#303F9F</color>
+    <color name="pink_light">#ff4081</color>
+    <color name="turqoise_light">#b3dfd0</color>
+    <color name="yellow_light">#fffacd</color>
+    <color name="green_transparent">#55b3dfd0</color>
+    <color name="green">#43a047</color>
+    <color name="red">#FF0000</color>
+    <color name="red_dark">#b71c1c</color>
+    <color name="winered">#ad2447</color>
     <color name="text_link">#7070ff</color>
-    <color name="colorOrange">#FF8000</color>
+    <color name="orange">#FF8000</color>
     <color name="black">#000000</color>
     <color name="gray">#666666</color>
-
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#000000FF</color>
 </resources>

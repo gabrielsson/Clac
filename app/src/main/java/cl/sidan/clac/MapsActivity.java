@@ -1,5 +1,7 @@
 package cl.sidan.clac;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.NavUtils;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -15,20 +17,31 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import cl.sidan.clac.other.ThemePicker;
+
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+    private static final String APP_SHARED_PREFS = "cl.sidan";
+    private SharedPreferences preferences = null;
 
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get common preferences
+        preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
+
+        // Set saved theme
+        int themePos = preferences.getInt("theme", 0);
+        this.setTheme(ThemePicker.getTheme(themePos));
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

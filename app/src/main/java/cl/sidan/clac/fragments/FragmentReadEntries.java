@@ -201,29 +201,32 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
 
                 View writeView = ((MainActivity) getActivity()).getReusedFragment(new FragmentWrite()).getView();
 
-                boolean hemlis = false;
-                /* Om det är hemlis eller inte */
-                if (item.getItemId() == R.id.reply_entry) {
-                    e = entriesAdapter.getItem(info.position);
-                } else {
-                    e = lastClicked;
-                    hemlis = true;
+                if (null != writeView) {
+                    boolean hemlis = false;
+                    /* Om det är hemlis eller inte */
+                    if (item.getItemId() == R.id.reply_entry) {
+                        e = entriesAdapter.getItem(info.position);
+                    } else {
+                        e = lastClicked;
+                        hemlis = true;
+                    }
+
+                    String signed = e != null ? e.getSignature() : null;
+                    if (signed != null && !signed.isEmpty()) {
+                        signed += ": ";
+                    } else {
+                        signed = "";
+                    }
+
+                    EditText writeText = (EditText) writeView.findViewById(R.id.write_entry_text);
+                    writeText.setText(signed);
+                    writeText.requestFocus();
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                    ((CheckBox) writeView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
+
+                    return true;
                 }
-
-                String signed = e != null ? e.getSignature() : null;
-                if (signed != null && !signed.isEmpty()) {
-                    signed += ": ";
-                } else {
-                    signed = "";
-                }
-
-                EditText writeText = (EditText) writeView.findViewById(R.id.write_entry_text);
-                writeText.setText(signed);
-                writeText.requestFocus();
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                ((CheckBox) writeView.findViewById(R.id.write_entry_secret)).setChecked(hemlis);
-
-                return true;
+                return false;
 
             case R.id.reply_entry_sms:
                 // e = lastClicked;

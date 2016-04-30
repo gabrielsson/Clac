@@ -3,4 +3,13 @@
     <attr name="textColorPrimary" format="color" />
     <attr name="textColorSecondary" format="color" />
     <attr name="textColorSecondaryDark" format="color" />
+
+    <attr name="navigationDrawerTheme" format="reference" />
+
+    <attr name="politics" format="reference" />
+    <attr name="complaints27" format="reference" />
+    <attr name="noshow44" format="reference" />
+    <attr name="nerd31vs45" format="reference" />
+    <attr name="nsfw" format="reference" />
+    <attr name="normalentry" format="reference" />
 </resources>

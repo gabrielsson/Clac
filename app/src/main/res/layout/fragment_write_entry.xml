@@ -18,8 +18,6 @@
         android:gravity="top"
         android:padding="10dp"
         android:inputType="textMultiLine|textCapSentences"
-        android:background="#ffffffff"
-        android:textColor="?attr/textColorPrimary"
         android:hint="@string/write_entry_hint" />
 
     <Button
@@ -71,7 +69,7 @@
             android:layout_marginTop="10dp"
             android:layout_height="50dp"
             android:layout_toEndOf="@+id/choose_kumpaner"
-            />
+            android:text="#68, #71" />
     </RelativeLayout>
 
     <ImageView

@@ -11,6 +11,7 @@ import android.util.Log;
 public class ListenerLocation implements LocationListener
 {
     private static final int LOCATION_UPDATE_TIME = 1000 * 60 * 30; // 30 minutes
+    private static final int LOCATION_UPDATE_METRES = 200;
     private Location lastKnownLocation = null;
     private LocationManager locationManager = null;
     private boolean isEnabled = false;
@@ -21,7 +22,7 @@ public class ListenerLocation implements LocationListener
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         long minTime = LOCATION_UPDATE_TIME;
-        float minDistance = 200; // in meters
+        float minDistance = LOCATION_UPDATE_METRES;
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, this);
         try {

@@ -39,6 +39,12 @@ public class GCMListenerService extends GcmListenerService {
         try {
             byte[] decodedMessage = Base64.decode(base64message, Base64.DEFAULT);
             message = new String(decodedMessage, "UTF-8");
+
+            /* JSB encodes, and google encodes.... */
+            decodedMessage = Base64.decode(message, Base64.DEFAULT);
+            message = new String(decodedMessage, "UTF-8");
+
+            Log.d(getClass().getCanonicalName(), "Received message from GCM: " + message);
         } catch (UnsupportedEncodingException e) {
             Log.d(getClass().getCanonicalName(), "UnsupportedEncoding");
             e.printStackTrace();

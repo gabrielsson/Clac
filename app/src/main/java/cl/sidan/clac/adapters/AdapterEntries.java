@@ -107,7 +107,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> {
         }
 
         holder.txtEntry.setTextSize(fontsize);
-        holder.txtEntry.setText(linkifyHtml(entry.getMessage(), new URLImageParser(holder.txtEntry, context)));
+        holder.txtEntry.setText(linkifyHtml(entry.getMessage().trim().replaceAll("\\n", "<br />"), new URLImageParser(holder.txtEntry, context)));
         holder.txtEntry.setMovementMethod(LinkMovementMethod.getInstance());
 
         Date date = entry.getDateTime();

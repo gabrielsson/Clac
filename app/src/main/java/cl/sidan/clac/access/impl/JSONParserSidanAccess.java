@@ -103,6 +103,26 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
+    public final List<Entry> searchEntries(String searchString, int skip, int take) {
+        List<Entry> list = new ArrayList<Entry>();
+        JSONObject obj = invoke("SearchEntries", "SearchString=" + searchString + "&Skip=" + skip + "&Take=" + take);
+        JSONArray arr = new JSONArray();
+
+        if(obj != null) {
+            arr = obj.optJSONArray("Entries");
+        }
+
+        if( arr != null ) {
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject entry = arr.optJSONObject(i);
+                list.add(new JSONObjectEntry(entry));
+            }
+        }
+
+        return list;
+    }
+
+    @Override
     public final List<Entry> readEntriesFromId(int take, Integer id) {
         return null;
     }

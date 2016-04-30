@@ -34,6 +34,15 @@ public interface SidanAccess {
     public List<Entry> readEntries(int skip, int take);
 
     /**
+     * search take number of entries starting from skip
+     * @param searchString a string containing search sentence.
+     * @param skip
+     * @param take
+     *
+     * @return list of entry
+     */
+    public List<Entry> searchEntries(String searchString, int skip, int take);
+    /**
      * Reads [take] number of entries from the id (inclusive, more than or equal to id)
       * @param take
      * @param id

@@ -239,7 +239,7 @@ public class JSONParserSidanAccess implements SidanAccess {
             invoke("UpdateArr", "Id=" + id + "&Namn=" + namn +
                     "&Plats=" + plats + "&Datum=" + datum);
         } else {
-            invoke("CreateArr", "Id=" + id + "&Namn=" + namn +
+            invoke("CreateArr", "Namn=" + namn +
                     "&Plats=" + plats + "&Datum=" + datum);
         }
 

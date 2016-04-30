@@ -234,8 +234,15 @@ public class JSONParserSidanAccess implements SidanAccess {
 
     @Override
     public final void createOrUpdateArr(Integer id, String namn, String plats, String datum) {
-        invoke("CreateOrUpdateArr", "Id=" + id + "&Namn=" + namn +
-                "&Plats=" + plats + "&Datum=" + datum);
+
+        if(id != null) {
+            invoke("UpdateArr", "Id=" + id + "&Namn=" + namn +
+                    "&Plats=" + plats + "&Datum=" + datum);
+        } else {
+            invoke("CreateArr", "Id=" + id + "&Namn=" + namn +
+                    "&Plats=" + plats + "&Datum=" + datum);
+        }
+
     }
 
     @Override

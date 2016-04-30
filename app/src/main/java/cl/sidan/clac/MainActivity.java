@@ -189,10 +189,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START) || drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.START);
-            drawer.closeDrawer(GravityCompat.END);
-        } else {
+        if ( !closeDrawers() ) {
             /*
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -201,6 +198,15 @@ public class MainActivity extends AppCompatActivity
             */
             super.onBackPressed();
         }
+    }
+
+    public boolean closeDrawers() {
+        if (drawer.isDrawerOpen(GravityCompat.START) || drawer.isDrawerOpen(GravityCompat.END)) {
+            drawer.closeDrawer(GravityCompat.START);
+            drawer.closeDrawer(GravityCompat.END);
+            return true;
+        }
+        return false;
     }
 
     @Override

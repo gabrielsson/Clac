@@ -27,6 +27,8 @@ public class FragmentSearch extends Fragment {
                 String searchString = searchField.getText().toString();
                 FragmentReadEntries readEntriesFragment = ((MainActivity) getActivity()).getReadEntriesFragment();
                 readEntriesFragment.searchEntries(searchString);
+
+                ((MainActivity) getActivity()).closeDrawers();
             }
         });
 

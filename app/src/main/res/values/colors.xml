@@ -16,4 +16,13 @@
     <color name="gray">#666666</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#000000FF</color>
+
+    <!-- classic colors -->
+    <color name="classic_background">#B3DFCF</color>
+    <color name="classic_text">#A04058</color>
+    <color name="classic_text_light">#F6C6D2</color>
+    <color name="classic_text_secondary">#FFEACD</color>
+    <color name="classic_edit_text_background">#FFF4E3</color>
+
+
 </resources>

@@ -4,3 +4,7 @@ app/app.iml
 Clac.iml
 .idea/
 .gradle
+
+# secrets
+app/google-services.json
+app/src/main/res/values/google_maps_api.xml

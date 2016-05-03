@@ -89,6 +89,7 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        entries.clear();
                         top = 0;
                         scrollPosition = 0;
                         entriesListType = EntriesListType.READ;

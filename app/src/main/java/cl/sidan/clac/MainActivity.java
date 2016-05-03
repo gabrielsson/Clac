@@ -286,6 +286,7 @@ public class MainActivity extends AppCompatActivity
                         lngs = new float[size];
                 String[] titles = new String[size],
                         snippets = new String[size];
+                int[] beers = new int[size];
 
                 Log.d("MapIntent", "Will plot " + size + " entries in the map.");
 
@@ -304,16 +305,11 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     titles[i] = e.getSignature() + " kl. " + e.getTime() + wasYesterday + timeSinceEventText(e.getDateTime());
+                    beers[i] = e.getEnheter();
                     snippets[i] = "";
 
                     if ( !e.getMessage().isEmpty() ) {
                         snippets[i] += e.getMessage() + "  /" + e.getSignature();
-                    }
-                    if ( !e.getMessage().isEmpty() && 0 < e.getEnheter() ) {
-                        snippets[i] += "\n";
-                    }
-                    if ( 0 < e.getEnheter() ) {
-                        snippets[i] += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
                     }
                     i++;
                 }
@@ -323,6 +319,7 @@ public class MainActivity extends AppCompatActivity
                 mapIntent.putExtra("Longitudes", lngs);
                 mapIntent.putExtra("Titles", titles);
                 mapIntent.putExtra("Snippets", snippets);
+                mapIntent.putExtra("Beers", beers);
 
                 startActivity(mapIntent);
                 break;

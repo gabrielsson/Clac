@@ -189,9 +189,6 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                 if ( !e.getMessage().isEmpty() ) {
                     snippet += e.getMessage() + "  /" + e.getSignature();
                 }
-                if (0 < e.getEnheter()) {
-                    snippet += e.getEnheter() + " enheter rapporterade av " + e.getSignature();
-                }
 
                 Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
 
@@ -199,11 +196,13 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                         lngs = { e.getLongitude().floatValue() };
                 String[] titles = { title },
                         snippets = { snippet };
+                int[] beers = { e.getEnheter() };
 
                 mapIntent.putExtra("Latitudes", lats);
                 mapIntent.putExtra("Longitudes", lngs);
                 mapIntent.putExtra("Titles", titles);
                 mapIntent.putExtra("Snippets", snippets);
+                mapIntent.putExtra("Beers", beers);
 
                 startActivity(mapIntent);
 

@@ -24,6 +24,7 @@ public class FragmentChangePassword extends Fragment {
     private ArrayList<String> userNameList = new ArrayList<>();
     private ArrayAdapter<String> spinnerAdapter = null;
     private View rootView;
+    private String whoAmI;
 
     @Override
     public void onResume() {
@@ -34,6 +35,8 @@ public class FragmentChangePassword extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_change_password, container, false);
+
+        whoAmI = ((MainActivity) getActivity()).whoAmI();
 
         final Spinner numberSpinner = (Spinner) rootView.findViewById(R.id.change_username);
         final EditText adminPassword = (EditText) rootView.findViewById(R.id.admin_password);
@@ -55,7 +58,7 @@ public class FragmentChangePassword extends Fragment {
 
         if (spinnerAdapter == null) {
             userNameList.clear();
-            userNameList.add( ((MainActivity) getActivity()).whoAmI() );
+            userNameList.add(whoAmI);
             spinnerAdapter = new ArrayAdapter<>(
                     getActivity(), android.R.layout.simple_spinner_item, userNameList);
             numberSpinner.setAdapter(spinnerAdapter);
@@ -94,7 +97,6 @@ public class FragmentChangePassword extends Fragment {
                 }
                 spinnerAdapter.notifyDataSetChanged();
 
-                String whoAmI = ((MainActivity) getActivity()).whoAmI();
                 int whoAmIPos = spinnerAdapter.getPosition(whoAmI);
                 Spinner numberSpinner = (Spinner) rootView.findViewById(R.id.change_username);
                 numberSpinner.setSelection(whoAmIPos);
@@ -110,7 +112,7 @@ public class FragmentChangePassword extends Fragment {
             Boolean b = ((MainActivity) getActivity()).sidanAccess().updatePassword(
                     params[0].username, params[0].password, params[0].adminPassword);
 
-            if ( params[0].username.equals( ((MainActivity) getActivity()).whoAmI() ) ) {
+            if ( params[0].username.equals(whoAmI) ) {
                 ((MainActivity) getActivity()).logOut();
             }
 

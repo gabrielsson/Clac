@@ -72,6 +72,7 @@ public class FragmentChangePassword extends Fragment {
                 String adminPassword = adminEditText.getText().toString();
                 String password = passWordEditText.getText().toString();
 
+                Toast.makeText(getContext(), "Uppdaterar lösenord.", Toast.LENGTH_SHORT).show();
                 new ChangePasswordAsync().execute(new UserPassword(userName, password, adminPassword));
             }
         });
@@ -106,8 +107,6 @@ public class FragmentChangePassword extends Fragment {
     public final class ChangePasswordAsync extends AsyncTask<UserPassword, Void, Boolean> {
         @Override
         protected Boolean doInBackground(UserPassword... params) {
-            Toast.makeText(getContext(), "Uppdaterar lösenord.", Toast.LENGTH_SHORT).show();
-
             Boolean b = ((MainActivity) getActivity()).sidanAccess().updatePassword(
                     params[0].username, params[0].password, params[0].adminPassword);
 

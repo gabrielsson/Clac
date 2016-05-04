@@ -43,6 +43,7 @@ import cl.sidan.clac.fragments.FragmentChangePassword;
 import cl.sidan.clac.fragments.FragmentArr;
 import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentReadEntries;
+import cl.sidan.clac.fragments.FragmentSearch;
 import cl.sidan.clac.fragments.FragmentSettings;
 import cl.sidan.clac.fragments.FragmentStats;
 import cl.sidan.clac.fragments.FragmentWrite;

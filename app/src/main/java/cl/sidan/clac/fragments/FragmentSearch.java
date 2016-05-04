@@ -1,4 +1,4 @@
-package cl.sidan.clac;
+package cl.sidan.clac.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import cl.sidan.clac.MainActivity;
+import cl.sidan.clac.R;
 import cl.sidan.clac.fragments.FragmentReadEntries;
 
 public class FragmentSearch extends Fragment {

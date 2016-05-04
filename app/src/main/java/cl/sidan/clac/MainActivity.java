@@ -54,7 +54,7 @@ import cl.sidan.clac.other.ThemePicker;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String APP_SHARED_PREFS = "cl.sidan";
-    private long SECONDS_BETWEEN_UPDATE_CHECKS = 60*60*24*5; // 5 days
+    private long SECONDS_BETWEEN_UPDATE_CHECKS = 60*60*24; // 24 h
 
     private SharedPreferences preferences = null;
     private boolean isUserLoggedIn;
@@ -265,19 +265,18 @@ public class MainActivity extends AppCompatActivity
                 long TWENTYFOUR_HOURS = 60*60*24*1000,
                         ten_minutes = 60*10*1000, // Because the server time is incorrect with
                                                   // about ~7 minutes, we also add 10 minutes
+                                                  // This is important in order to separate events
+                                                  // that happened >24 hours ago,
                         unixYesterday = System.currentTimeMillis() - TWENTYFOUR_HOURS + ten_minutes;
                 Date yesterday = new Date(unixYesterday);
 
                 for ( Entry e : entries ) {
-                    if ( // !hm.containsKey(e.getSignature()) && // Not registered yet
-                            !e.getLongitude().equals(BigDecimal.ZERO) && // Have a position
-                            e.getDateTime().after(yesterday) // Happened in the last day
+                    Entry latest = hm.get(e.getSignature());
+                    if (!e.getLongitude().equals(BigDecimal.ZERO) && // Have a position
+                            e.getDateTime().after(yesterday) && // Happened in the last day
+                            (null == latest || e.getDateTime().after(latest.getDateTime())) // Latest entry per signature
                             ) {
-                        // Only add the latest entry (per signature)
-                        Entry latest = hm.get(e.getSignature());
-                        if (null == latest || e.getDateTime().after(latest.getDateTime())) {
-                            hm.put(e.getSignature(), e);
-                        }
+                        hm.put(e.getSignature(), e);
                     }
                 }
 
@@ -298,8 +297,8 @@ public class MainActivity extends AppCompatActivity
                     String wasYesterday = "";
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                        Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
-                        wasYesterday = (e.getDateTime().before(dateWithoutTime) ? " yesterday" : "");
+                        Date dateNow = sdf.parse(sdf.format(new Date()));
+                        wasYesterday = (e.getDateTime().before(dateNow) ? " yesterday" : "");
                     } catch (ParseException err) {
                         Log.e("MapIntent", "Cannot parse date for 'yesterday': " + err.getMessage());
                     }
@@ -402,13 +401,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void checkForUpdates() {
-        Long unixTime = System.currentTimeMillis() / 1000, // Unix Epoch Seconds
-                lastUpdateCheck = preferences.getLong("LastUpdateCheck", 0),
-                nextTimeToPerformCheck = unixTime - SECONDS_BETWEEN_UPDATE_CHECKS;
-        if ( lastUpdateCheck < nextTimeToPerformCheck ) {
+        Long now = System.currentTimeMillis() / 1000, // Unix Epoch Seconds
+                lastUpdateCheck = preferences.getLong("LastUpdateCheck", 0);
+
+        if ( lastUpdateCheck+SECONDS_BETWEEN_UPDATE_CHECKS < now ) {
             // Asynctask
             Log.d("XXX_SWO", "Time to check for updates, last check was " + lastUpdateCheck);
-            preferences.edit().putLong("LastUpdateCheck", unixTime).apply();
             new CheckForNewVersionAsync().execute();
         }
     }
@@ -474,18 +472,22 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(UpdateInfo info) {
-            String currentVersion = BuildConfig.VERSION_NAME;
-            Log.d("XXX_SWO", "The current version is " + currentVersion + " and latest is " + info.getLatestVersion());
-            if ( !currentVersion.equals(info.getLatestVersion()) ) {
-                Log.d("XXX_SWO", "Found new version, starting activity!");
+            if (!info.getLatestVersion().equals("0")) {
+                String currentVersion = BuildConfig.VERSION_NAME;
+                Log.d(getClass().getCanonicalName(), "The current version is " + currentVersion + " and latest is " + info.getLatestVersion());
+                if (!currentVersion.equals(info.getLatestVersion())) {
+                    Log.d(getClass().getCanonicalName(), "Found new version, starting activity!");
 
-                Intent newVersionIntent = new Intent("cl.sidan.clac.UPDATE");
-                // newVersionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // required when starting from Application
-                newVersionIntent.putExtra("UpgradeUrl", info.getURL());
-                newVersionIntent.putExtra("UpgradeNews", info.getNews());
-                startActivity(newVersionIntent);
+                    Intent newVersionIntent = new Intent("cl.sidan.clac.UPDATE");
+                    // newVersionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // required when starting from Application
+                    newVersionIntent.putExtra("UpgradeUrl", info.getURL());
+                    newVersionIntent.putExtra("UpgradeNews", info.getNews());
+                    startActivity(newVersionIntent);
+                } else {
+                    Log.d(getClass().getCanonicalName(), "No need for an Version Activity, already on latest version.");
+                }
             } else {
-                Log.d("XXX_SWO", "No need for an Version Activity.");
+                Log.d(getClass().getCanonicalName(), "Failed checking for updates.");
             }
         }
     }

@@ -22,7 +22,7 @@ public class JSONObjectUpdateInfo implements UpdateInfo {
 
     @Override
     public String getURL() {
-        String DEFAULT = "http://sidan.cl/clacen/clac-release.apk";
+        String DEFAULT = "http://sidan.cl/clac/app-release.apk";
         if (null == obj) {
             return DEFAULT;
         }

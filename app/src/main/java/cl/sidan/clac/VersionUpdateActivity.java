@@ -24,7 +24,7 @@ public class VersionUpdateActivity extends Activity {
     private static final String APP_SHARED_PREFS = "cl.sidan";
     private SharedPreferences preferences = null;
 
-    private static final String externalUrl = "http://sidan.cl/appen/";
+    private static final String externalUrl = "http://sidan.cl/clac/";
     private static final String apkFileName = "app-release.apk";
 
     private String upgradeUrl;
@@ -56,6 +56,10 @@ public class VersionUpdateActivity extends Activity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Found
+                Long unixTime = System.currentTimeMillis() / 1000; // Unix Epoch Seconds
+                preferences.edit().putLong("LastUpdateCheck", unixTime).apply();
+
                 finish();
             }
         });
@@ -112,13 +116,6 @@ public class VersionUpdateActivity extends Activity {
                 return true;
             } catch (Exception e) {
                 Log.e("UpdateAPP", "Update error! " + e.getMessage());
-                // Toasts must be run on UI thread
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(VersionUpdateActivity.this, "Kunde inte hitta uppdateringsfilen, kontakta någon!", Toast.LENGTH_LONG).show();
-                    }
-                });
             }
             return false;
         }
@@ -126,10 +123,12 @@ public class VersionUpdateActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                Log.d(getClass().getCanonicalName(), "Updating LastUpdateCheck");
                 Long unixTime = System.currentTimeMillis() / 1000; // Unix Epoch Seconds
                 preferences.edit().putLong("LastUpdateCheck", unixTime).apply();
             } else {
-                Log.d("XXX_SWO", "FAILED!");
+                Log.d(getClass().getCanonicalName(), "Failed with update.");
+                Toast.makeText(VersionUpdateActivity.this, "Misslyckades att uppdatera, testa igen senare.", Toast.LENGTH_LONG).show();
             }
         }
     }

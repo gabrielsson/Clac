@@ -66,8 +66,6 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
         StringBuilder report = new StringBuilder();
         Date curDate = new Date();
         report.append("Error Report collected on : ").append(curDate.toString()).append(NL).append(NL);
-        report.append("****** ADDITIONAL INFORMATION ******").append(NL);
-        report.append("To be filled in by user....").append(NL).append(NL).append(NL);
 
         report.append("****** DEVICE INFORMATION ******").append(NL);
         addHWInformation(report);
@@ -92,7 +90,10 @@ public class MyExceptionHandler implements UncaughtExceptionHandler {
 
         // report.append("****** EXTENDED STACKTRACE ******").append(NL).append(NL);
         // TO BE ADDED
-        //report.append(NL);
+        // report.append(NL);
+
+        report.append("****** ADDITIONAL INFORMATION ******").append(NL);
+        report.append("To be filled in by user....").append(NL).append(NL).append(NL);
 
         report.append("****** END OF REPORT ******");
 

@@ -2,6 +2,7 @@
 <resources>
     <color name="pink">#A02447</color>
     <color name="blue_dark">#303F9F</color>
+    <color name="blue_light">#64b5f6</color>
     <color name="pink_light">#ff4081</color>
     <color name="turqoise_light">#b3dfd0</color>
     <color name="yellow_light">#fffacd</color>

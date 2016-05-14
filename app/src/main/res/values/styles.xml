@@ -40,12 +40,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <!-- Theme for ToolBar -->
-    <style name="DefaultTheme.AppBarOverlay" parent="DefaultTheme">
-        <item name="android:textColorPrimary">@color/white</item> <!-- Text -->
-        <item name="android:textColorSecondary">@color/white</item> <!-- Icons -->
-        <item name="navigationDrawerTheme">@style/DefaultTheme.NavigationDrawer</item> <!-- drawer -->
-    </style>
     <!-- Theme for Buttons -->
     <style name="DefaultTheme.ButtonTheme" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/yellow_light</item>
@@ -58,6 +52,12 @@
     <!-- Theme for Navigation Drawer -->
     <style name="DefaultTheme.NavigationDrawer">
         <item name="background">@color/pink</item>
+    </style>
+    <!-- Theme for ToolBar -->
+    <style name="DefaultTheme.AppBarOverlay" parent="DefaultTheme">
+        <item name="android:textColorPrimary">@color/white</item> <!-- Text -->
+        <item name="android:textColorSecondary">@color/white</item> <!-- Icons -->
+        <item name="navigationDrawerTheme">@style/DefaultTheme.NavigationDrawer</item> <!-- drawer -->
     </style>
     <!-- Theme for menues -->
     <style name="DefaultTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

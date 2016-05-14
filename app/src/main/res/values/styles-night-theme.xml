@@ -62,7 +62,6 @@
         <item name="android:colorAccent">@color/red</item>
         <item name="android:colorPressedHighlight">@color/pink_light</item>
         <item name="android:customNavigationLayout">@color/pink_light</item>
-
     </style>
     <!-- Theme for ToolBar -->
     <style name="NightTheme.AppBarOverlay">

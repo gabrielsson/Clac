@@ -52,9 +52,8 @@
         style="?navigationDrawerTheme"
         android:theme="?navigationDrawerTheme"
         android:background="?background"
-
         app:itemTextColor="?navbarTextColor"
-        app:itemIconTint="?navbarIconTint"/>
+        app:itemIconTint="?navbarIconTint" />
 
     <FrameLayout
         android:id="@+id/right_drawer"

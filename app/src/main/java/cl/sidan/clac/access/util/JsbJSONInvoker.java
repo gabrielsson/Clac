@@ -25,15 +25,7 @@ public class JsbJSONInvoker {
     public static JSONObject invoke(String invokeUrl, String urlParameters, String userName, String password) {
         Log.d(JsbJSONInvoker.class.getCanonicalName(), "Invoking " + invokeUrl);
 
-        String response ="";
-        // Set the timeout in milliseconds until a connection is established.
-        // The default value is zero, that means the timeout is not used.
-        int timeoutConnection = 3000;
-        //HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-        // Set the default socket timeout (SO_TIMEOUT)
-        // in milliseconds which is the timeout for waiting for data.
-        int timeoutSocket = 5000;
-        //HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+        String response = "";
 
         try {
             URL url = new URL(invokeUrl);
@@ -51,7 +43,7 @@ public class JsbJSONInvoker {
                     Integer.toString(urlParameters.getBytes().length));
             connection.setRequestProperty("Content-Language", "en-US");
 
-            connection.setUseCaches (false);
+            connection.setUseCaches(false);
             connection.setDoInput(true);
             connection.setDoOutput(true);
 
@@ -70,8 +62,6 @@ public class JsbJSONInvoker {
                 Log.e("Error....", "Failed to download file");
             }
             connection.disconnect();
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

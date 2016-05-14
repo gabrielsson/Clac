@@ -309,7 +309,7 @@ public class FragmentArr extends Fragment {
 
         @Override
         protected void onPostExecute(List<Arr> response) {
-            if( response.isEmpty() ) {
+            if( null == response ) {
                 Log.d(getClass().getCanonicalName(), "Response was empty from server, will not clear arr.");
                 Toast.makeText(rootView.getContext(),
                         "Kunde inte hämta arr från servern.",
@@ -319,8 +319,8 @@ public class FragmentArr extends Fragment {
                 arrlista.clear();
                 arrlista.addAll(response);
                 arrAdapter.notifyDataSetChanged();
-                arrContainer.setRefreshing(false);
             }
+            arrContainer.setRefreshing(false);
         }
     }
 

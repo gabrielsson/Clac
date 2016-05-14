@@ -42,12 +42,13 @@ public class JSONParserSidanAccess implements SidanAccess {
 
     @Override
     public final List<Arr> readArr(String date) {
-        List<Arr> list = new ArrayList<Arr>();
+        List<Arr> list = null;
 
         JSONObject obj = invoke("ReadArr", "fromDate=" + date);
         JSONArray arr = new JSONArray();
 
         if(obj != null) {
+            list = new ArrayList<>(); // Return null if no reply from server.
             arr = obj.optJSONArray("Arr");
         }
 

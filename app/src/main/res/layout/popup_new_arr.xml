@@ -1,65 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridLayout
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/arr_popup_arrnamn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:rowCount="2"
-        android:id="@+id/arr_popup_layout1">
+        android:inputType="text"
+        android:hint="Arrnamn"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/arr_popup_arrnamn_text"
-            android:text="Arrnamn:"
-            />
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:id="@+id/arr_popup_arrnamn"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/arr_popup_arrplats_text"
-            android:text="Plats:"
-            />
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/arr_popup_arrplats"
-            />
-    </GridLayout>
+    <EditText
+        android:id="@+id/arr_popup_arrplats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Plats"
+        />
 
     <Space
-        android:id="@+id/arr_popup_space"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/arr_popup_layout1"
         />
 
     <DatePicker
+        android:id="@+id/arr_popup_datepicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/arr_popup_datepicker"
-        android:datePickerMode="spinner"
         android:firstDayOfWeek="2"
         android:calendarViewShown="false"
         android:spinnersShown="true"
-        android:layout_below="@id/arr_popup_space"
+        android:datePickerMode="spinner"
         />
+
     <TimePicker
+        android:id="@+id/arr_popup_timepicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:timePickerMode="spinner"
-        android:id="@+id/arr_popup_timepicker"
-        android:layout_below="@+id/arr_popup_datepicker"
         />
 
-</RelativeLayout>
+</LinearLayout>

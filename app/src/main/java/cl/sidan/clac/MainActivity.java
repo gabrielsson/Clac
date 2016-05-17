@@ -486,6 +486,8 @@ public class MainActivity extends AppCompatActivity
                     startActivity(newVersionIntent);
                 } else {
                     Log.d(getClass().getCanonicalName(), "No need for an Version Activity, already on latest version.");
+                    Long unixTime = System.currentTimeMillis() / 1000; // Unix Epoch Seconds
+                    preferences.edit().putLong("LastUpdateCheck", unixTime).apply();
                 }
             } else {
                 Log.d(getClass().getCanonicalName(), "Failed checking for updates.");

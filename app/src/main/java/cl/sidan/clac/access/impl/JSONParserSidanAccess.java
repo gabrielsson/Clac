@@ -256,12 +256,10 @@ public class JSONParserSidanAccess implements SidanAccess {
     @Override
     public final void createOrUpdateArr(Integer id, String namn, String plats, String datum) {
 
-        if(id != null) {
-            invoke("UpdateArr", "Id=" + id + "&Name=" + namn +
-                    "&Place=" + plats + "&Date=" + datum);
+        if(0 < id) {
+            invoke("UpdateArr", "Id=" + id + "&Name=" + namn + "&Place=" + plats + "&Date=" + datum);
         } else {
-            invoke("CreateArr", "Name=" + namn +
-                    "&Place=" + plats + "&Date=" + datum);
+            invoke("CreateArr", "Name=" + namn + "&Place=" + plats + "&Date=" + datum);
         }
 
     }

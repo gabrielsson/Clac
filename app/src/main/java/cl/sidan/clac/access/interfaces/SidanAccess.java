@@ -104,7 +104,7 @@ public interface SidanAccess {
      * @param plats
      * @param datum
      */
-    public void createOrUpdateArr(Integer id, String namn, String plats, String datum);
+    public boolean createOrUpdateArr(Integer id, String namn, String plats, String datum);
 
     /**
      * Register a number to an Arr

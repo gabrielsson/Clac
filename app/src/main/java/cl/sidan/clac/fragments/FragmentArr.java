@@ -150,7 +150,6 @@ public class FragmentArr extends Fragment {
         MenuItem luraOffItem = menu.findItem(R.id.lurpassa_off);
 
         if (arr != null) {
-            Log.d("XXX_SWO", "Arr deltagare="+arr.getDeltagare());
             for( String deltagare : arr.getDeltagare().split(",") ) {
                 if (nummer.equals(deltagare)) {
                     deltaOnItem.setVisible(false);
@@ -160,7 +159,6 @@ public class FragmentArr extends Fragment {
                 }
             }
 
-            Log.d("XXX_SWO", "Arr kanske="+arr.getKanske());
             for( String lurpassare : arr.getKanske().split(",") ) {
                 if (nummer.equals(lurpassare)) {
                     luraOnItem.setVisible(false);
@@ -282,15 +280,23 @@ public class FragmentArr extends Fragment {
         helpDialog.show();
     }
 
-    public final class CreateOrUpdateArrAsync extends AsyncTask<Arr, Void, Void> {
+    public final class CreateOrUpdateArrAsync extends AsyncTask<Arr, Void, Boolean> {
         @Override
-        protected Void doInBackground(Arr... arrs) {
+        protected Boolean doInBackground(Arr... arrs) {
             Arr arr = arrs[0];
 
-            ((MainActivity) getActivity()).sidanAccess().createOrUpdateArr(
+            return ((MainActivity) getActivity()).sidanAccess().createOrUpdateArr(
                     arr.getId(), arr.getNamn(), arr.getPlats(), arr.getDatum());
+        }
 
-            return null;
+        protected void onPostExecute(boolean success) {
+            if (success) {
+                Toast.makeText(rootView.getContext(),
+                        "Arr skapat!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(rootView.getContext(),
+                        "Något gick snett. Försök senare!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

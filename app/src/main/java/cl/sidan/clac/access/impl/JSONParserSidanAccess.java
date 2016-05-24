@@ -1,5 +1,6 @@
 package cl.sidan.clac.access.impl;
 
+import android.util.Base64;
 import android.util.Log;
 import android.text.TextUtils;
 
@@ -254,14 +255,23 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public final void createOrUpdateArr(Integer id, String namn, String plats, String datum) {
+    public final boolean createOrUpdateArr(Integer id, String name, String plats, String datum) {
+        StringBuilder sb = new StringBuilder(50 + name.length() + plats.length());
+
+        String base64name = Base64.encodeToString(name.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+        String base64place = Base64.encodeToString(plats.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+
+        sb.append("Name=").append(base64name);
+        sb.append("&Place=").append(base64place);
+        sb.append("&Date=").append(datum);
 
         if(0 < id) {
-            invoke("UpdateArr", "Id=" + id + "&Name=" + namn + "&Place=" + plats + "&Date=" + datum);
+            invoke("UpdateArr", "Id=" + id + "&" + sb.toString());
         } else {
-            invoke("CreateArr", "Name=" + namn + "&Place=" + plats + "&Date=" + datum);
+            invoke("CreateArr", sb.toString());
         }
 
+        return true;
     }
 
     @Override

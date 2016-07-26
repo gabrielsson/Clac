@@ -41,7 +41,7 @@ import cl.sidan.clac.interfaces.ScrollingFragment;
 public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     private final String TAG = getClass().getCanonicalName();
 
-    private static final String CONVERSATION_REGEX = "^.+\\:.*";
+    private static final String CONVERSATION_REGEX = "^.+:.*";
     private static final String CONVERSATION_SPLIT = ":";
 
     private ArrayList<Entry> entries = new ArrayList<>();
@@ -97,6 +97,7 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                     }
                 }
         );
+
         entriesContainer.setRefreshing(true);
         entriesListType = EntriesListType.READ;
         new ReadEntriesAsync().execute(0);
@@ -114,27 +115,30 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     public void onSaveInstanceState(Bundle state) {
         // Save scroll position
         ListView listView = (ListView) rootView.findViewById(R.id.entries);
-        listView.setAdapter(entriesAdapter);
-
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK
-                        && entriesAdapter.isFlteredResults() ){
-                    entriesAdapter.getFilter().filter("");
-                    return true;
-                }
-                return false;
-            }
-        });
 
         scrollPosition = listView.getFirstVisiblePosition();
         top = getTop();
 
         state.putInt("scrollPosition", scrollPosition);
         state.putInt("top", top);
+
+        // What does this do?! Please comment!
+        View v = getView();
+        if (null != v) {
+            v.setFocusableInTouchMode(true);
+            v.requestFocus();
+            v.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK
+                            && entriesAdapter.isFilteredResults()) {
+                        entriesAdapter.getFilter().filter("");
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
 
         super.onSaveInstanceState(state);
     }

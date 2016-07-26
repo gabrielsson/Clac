@@ -131,7 +131,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             kumpanString = " | " + kumpanString.substring(0, kumpanString.length()-1);
         }
 
-        String signatureLineText = String.format(
+        String signatureLineText = String.format(Locale.getDefault(),
                 "%s | %s (%s) %s | %d", // #68 | 2015-11-10 (tis) #38,#71 | 42
                 entry.getSignature(), format.format(date),
                 dayOfWeek, kumpanString, entry.getLikes());
@@ -324,7 +324,9 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             d.setBounds(0, 0, width, height);
 
             if( localImage < 0 ) {
-                if (source.startsWith("inmailat")) {
+                if (null == source) {
+                    return null;
+                } else if (source.startsWith("inmailat")) {
                     new LoadImage(container).execute("http://chalmerslosers.com/" + source, d);
                 } else {
                     new LoadImage(container).execute(source, d);
@@ -374,7 +376,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
     }
 
 
-    public boolean isFlteredResults(){
+    public boolean isFilteredResults(){
         return filteredResults;
     }
     public void setFilteredResults(boolean filteredResults){
@@ -396,7 +398,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             String filterSeq = constraint.toString().toLowerCase();
 
             FilterResults result = new FilterResults();
-Log.d("LALALA", ""+items.size());
+            Log.d("LALALA", ""+items.size());
             if( filterSeq == null || filterSeq.length() == 0 ){
                 result.values = items;
                 result.count = items.size();

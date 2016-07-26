@@ -123,9 +123,9 @@ public class FragmentWrite extends Fragment {
                 RequestEntry entry = new RequestEntry();
 
                 int numBeers = entryBeers.getSelectedItemPosition();
+                boolean hemlis = entrySecret.isChecked();
                 Log.d(getClass().getCanonicalName(), "Reporting " + numBeers + " beers");
                 entry.setEnheter(numBeers);
-                boolean hemlis = entrySecret.isChecked();
                 entry.setKumpaner(selectedKumpaner);
 
                 /* Ladda upp bild */
@@ -254,8 +254,13 @@ public class FragmentWrite extends Fragment {
         final Button cancelButton = (Button) dialog.findViewById(R.id.kumpan_cancel);
         final Button okButton = (Button) dialog.findViewById(R.id.kumpan_sup);
 
-        gv.setAdapter(memberAdapter);
+        if (null == gv.getAdapter()) {
+            gv.setAdapter(memberAdapter);
+        }
+        // if (!selectedKumpaner.isEmpty()) {
         memberAdapter.setSelected(selectedKumpaner);
+            // memberAdapter.notifyDataSetChanged();
+        // }
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

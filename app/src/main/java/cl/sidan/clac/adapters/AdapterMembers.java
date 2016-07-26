@@ -43,6 +43,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
 
     public void setSelected(List<User> objects) {
         selectedObjects = objects;
+        //notifyDataSetChanged();
     }
 
     public void setIgnoredMembers(HashSet<String> ignoredMembers) {

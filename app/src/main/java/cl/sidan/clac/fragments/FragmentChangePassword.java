@@ -75,7 +75,7 @@ public class FragmentChangePassword extends Fragment {
                 String adminPassword = adminEditText.getText().toString();
                 String password = passWordEditText.getText().toString();
 
-                Toast.makeText(getContext(), "Uppdaterar lösenord.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(rootView.getContext(), "Uppdaterar lösenord.", Toast.LENGTH_SHORT).show();
                 new ChangePasswordAsync().execute(new UserPassword(userName, password, adminPassword));
             }
         });
@@ -101,7 +101,7 @@ public class FragmentChangePassword extends Fragment {
                 Spinner numberSpinner = (Spinner) rootView.findViewById(R.id.change_username);
                 numberSpinner.setSelection(whoAmIPos);
             } else {
-                Toast.makeText(getActivity(), "Kunde inte hämta andra medlemmar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(rootView.getContext(), "Kunde inte hämta andra medlemmar", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -128,9 +128,9 @@ public class FragmentChangePassword extends Fragment {
                 passWordEditText.setText("");
                 adminEditText.setText("");
 
-                Toast.makeText(getContext(), "Lösenord uppdaterat!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(rootView.getContext(), "Lösenord uppdaterat!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Misslyckades med lösenordsbytet. Testa senare.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(rootView.getContext(), "Misslyckades med lösenordsbytet. Testa senare.", Toast.LENGTH_SHORT).show();
             }
         }
     }

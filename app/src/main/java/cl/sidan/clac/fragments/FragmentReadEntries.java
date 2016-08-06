@@ -309,13 +309,13 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
 
                 String[] messageSplit = e.getMessage().split(CONVERSATION_SPLIT);
                 if( messageSplit.length < 2 ){
-                    Toast.makeText(getActivity(), "Unable to find conversation start.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(rootView.getContext(), "Unable to find conversation start.", Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 String targetSig = messageSplit[0];
                 String writerSig = e.getSignature();
                 
-                Toast.makeText(getActivity(), this.getString(R.string.filter_conversation_toast)+writerSig+" & "+targetSig, Toast.LENGTH_SHORT).show();
+                Toast.makeText(rootView.getContext(), this.getString(R.string.filter_conversation_toast)+writerSig+" & "+targetSig, Toast.LENGTH_SHORT).show();
                 entriesAdapter.getFilter().filter(writerSig+":"+targetSig);
 
                 return true;

@@ -95,7 +95,7 @@ public class FragmentStats extends Fragment {
                 textViewStats.setText(text);
                 statsContainer.setRefreshing(false);
             } else {
-                Toast.makeText(getActivity(), "Kunde inte hämta statsen. Försök senare.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(rootView.getContext(), "Kunde inte hämta statsen. Försök senare.", Toast.LENGTH_SHORT).show();
             }
         }
     }

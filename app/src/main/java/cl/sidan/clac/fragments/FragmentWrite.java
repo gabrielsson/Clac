@@ -104,7 +104,7 @@ public class FragmentWrite extends Fragment {
                             FILE_SELECT_CODE);
                 } catch (ActivityNotFoundException ex) {
                     // Potentially direct the user to the Market with a Dialog
-                    Toast.makeText(getActivity(), "Please install a File Manager.",
+                    Toast.makeText(rootView.getContext(), "Please install a File Manager.",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -238,7 +238,7 @@ public class FragmentWrite extends Fragment {
                 imageView.setTag(path);
 
                 Log.d("IMAGEUPLOAD", "File selected: " + path);
-                Toast.makeText(getActivity(), "File Selected: " + path, Toast.LENGTH_LONG).show();
+                Toast.makeText(rootView.getContext(), "File Selected: " + path, Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Log.e("IMAGEUPLOAD", "File select error", e);
             }

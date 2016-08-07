@@ -1,5 +1,6 @@
 package cl.sidan.clac.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.provider.OpenableColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,7 +55,7 @@ public class FragmentWrite extends Fragment {
     private SharedPreferences preferences;
 
     private ArrayList<User> kumpaner = new ArrayList<>();
-    private ArrayList<User> selectedKumpaner = new ArrayList<>();
+    private ArrayList<String> selectedKumpaner = new ArrayList<>();
     private ArrayList<Entry> notSentList = new ArrayList<>();
 
     private AdapterMembers memberAdapter;
@@ -85,10 +87,7 @@ public class FragmentWrite extends Fragment {
         memberAdapter.setNotifyOnChange(true);
 
         TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
-        String kumpanString = "";
-        for (User u : selectedKumpaner) {
-            kumpanString += u.getSignature() + ", ";
-        }
+        String kumpanString = TextUtils.join(",", selectedKumpaner);
         kumpanText.setText(kumpanString);
 
        /* rootView.findViewById(R.id.bilduppladdning).setOnClickListener(new View.OnClickListener() {
@@ -126,7 +125,12 @@ public class FragmentWrite extends Fragment {
                 boolean hemlis = entrySecret.isChecked();
                 Log.d(getClass().getCanonicalName(), "Reporting " + numBeers + " beers");
                 entry.setEnheter(numBeers);
-                entry.setKumpaner(selectedKumpaner);
+
+                ArrayList<User> kumpaner = new ArrayList<>();
+                for(String signature : selectedKumpaner) {
+                    kumpaner.add(new RequestUser(signature));
+                }
+                entry.setKumpaner(kumpaner);
 
                 /* Ladda upp bild */
                 ImageView imageView = (ImageView) rootView.findViewById(R.id.write_entry_imagechoosen);
@@ -180,12 +184,8 @@ public class FragmentWrite extends Fragment {
 
         if (null != savedInstanceState) {
             tv.setText(savedInstanceState.getString("EntryText"));
-            ArrayList<String> selectedNumbers = savedInstanceState.getStringArrayList("SelectedNumbers");
-            for (String number : selectedNumbers) {
-                User u = new RequestUser(number);
-                kumpanString += u.getSignature() + ", ";
-                selectedKumpaner.add(u);
-            }
+            selectedKumpaner = savedInstanceState.getStringArrayList("SelectedNumbers");
+            kumpanString = TextUtils.join(",", selectedKumpaner);
             kumpanText.setText(kumpanString);
 
             Spinner entryBeers = (Spinner) rootView.findViewById(R.id.number_of_beers);
@@ -213,12 +213,7 @@ public class FragmentWrite extends Fragment {
         CheckBox entrySecret = (CheckBox) rootView.findViewById(R.id.write_entry_secret);
         EditText tv = (EditText) rootView.findViewById(R.id.write_entry_text);
 
-        ArrayList<String> selectedNumbers = new ArrayList<>();
-        for (User u : selectedKumpaner) {
-            selectedNumbers.add(u.getSignature());
-        }
-
-        state.putStringArrayList("SelectedNumbers", selectedNumbers);
+        state.putStringArrayList("SelectedNumbers", selectedKumpaner);
         state.putString("EntryText", tv.getText().toString());
         state.putBoolean("EntrySecret", entrySecret.isChecked());
         state.putInt("EntryBeers", entryBeers.getSelectedItemPosition());
@@ -257,27 +252,29 @@ public class FragmentWrite extends Fragment {
         if (null == gv.getAdapter()) {
             gv.setAdapter(memberAdapter);
         }
-        // if (!selectedKumpaner.isEmpty()) {
+
         memberAdapter.setSelected(selectedKumpaner);
-            // memberAdapter.notifyDataSetChanged();
-        // }
+        memberAdapter.notifyDataSetChanged();
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (!selectedKumpaner.contains(kumpaner.get(position))) {
+                if (!selectedKumpaner.contains(kumpaner.get(position).getSignature())) {
                     v.setSelected(true);
-                    selectedKumpaner.add(memberAdapter.getItem(position));
+                    selectedKumpaner.add(memberAdapter.getItem(position).getSignature());
                 } else {
                     v.setSelected(false);
-                    selectedKumpaner.remove(memberAdapter.getItem(position));
+                    selectedKumpaner.remove(memberAdapter.getItem(position).getSignature());
                 }
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        memberAdapter.notifyDataSetChanged();
-                    }
-                });
+                Activity activity = getActivity();
+                if (null != activity) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            memberAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
             }
         });
 
@@ -295,10 +292,7 @@ public class FragmentWrite extends Fragment {
             @Override
             public void onClick(View v) {
                 TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
-                String kumpanString = "";
-                for (User u : selectedKumpaner) {
-                    kumpanString += u.getSignature() + ", ";
-                }
+                String kumpanString = TextUtils.join(",", selectedKumpaner);
                 kumpanText.setText(kumpanString);
                 dialog.hide();
             }

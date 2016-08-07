@@ -21,7 +21,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
     private Context context;
     private int layout;
     private float fontsize = 15;
-    private List<User> selectedObjects = new ArrayList<>();
+    private List<String> selectedUsers = new ArrayList<>();
     private HashSet<String> ignoredMembers = new HashSet<>();
 
     public AdapterMembers(Context context, int resource, List<User> objects, float fontsize) {
@@ -41,8 +41,8 @@ public class AdapterMembers extends ArrayAdapter<User> {
         TextView txtTitle = null;
     }
 
-    public void setSelected(List<User> objects) {
-        selectedObjects = objects;
+    public void setSelected(List<String> objects) {
+        selectedUsers = objects;
         //notifyDataSetChanged();
     }
 
@@ -96,7 +96,7 @@ public class AdapterMembers extends ArrayAdapter<User> {
             holder.txtSignature.setTextSize(fontsize);
 
             holder.txtSignature.setBackgroundResource(R.drawable.background);
-            if ( selectedObjects.contains(user) || ignoredMembers.contains(user.getSignature()) ) {
+            if ( selectedUsers.contains(user.getSignature()) || ignoredMembers.contains(user.getSignature()) ) {
                 holder.txtSignature.setBackgroundResource(R.drawable.list_selector_ignored);
             }
         }

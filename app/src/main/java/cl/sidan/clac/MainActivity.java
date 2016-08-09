@@ -49,7 +49,7 @@ import cl.sidan.clac.fragments.FragmentStats;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.listeners.ListenerLocation;
 import cl.sidan.clac.listeners.ListenerScroller;
-import cl.sidan.clac.other.MyExceptionHandler;
+import cl.sidan.clac.other.FirebaseExceptionHandler;
 import cl.sidan.clac.other.ThemePicker;
 
 public class MainActivity extends AppCompatActivity
@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Report exceptions
+        Thread.setDefaultUncaughtExceptionHandler(new FirebaseExceptionHandler(this));
+
         // Get common preferences
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
         isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
@@ -92,9 +95,6 @@ public class MainActivity extends AppCompatActivity
             finish();
         } else {
             LazyHolder.INSTANCE = new JSONParserSidanAccess(number, password);
-
-            // Report exceptions via mail
-            Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
 
             // Standard view consist of a FragmentReadEntries, together with a Actionbar menu,
             // and a FloatingActionButton

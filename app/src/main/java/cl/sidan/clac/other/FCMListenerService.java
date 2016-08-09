@@ -13,7 +13,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
-import java.util.Objects;
 
 import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.R;

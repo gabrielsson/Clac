@@ -26,6 +26,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +51,7 @@ import cl.sidan.clac.fragments.FragmentStats;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.listeners.ListenerLocation;
 import cl.sidan.clac.listeners.ListenerScroller;
+import cl.sidan.clac.other.FCMInstanceIDListenerService;
 import cl.sidan.clac.other.FirebaseExceptionHandler;
 import cl.sidan.clac.other.ThemePicker;
 
@@ -164,6 +167,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         checkForUpdates();
+        registerFCMId();
 
         preferences = getApplicationContext().getSharedPreferences(APP_SHARED_PREFS, Context.MODE_PRIVATE);
         isUserLoggedIn = preferences.getBoolean("userLoggedIn", false);
@@ -410,6 +414,10 @@ public class MainActivity extends AppCompatActivity
             Log.d("XXX_SWO", "Time to check for updates, last check was " + lastUpdateCheck);
             new CheckForNewVersionAsync().execute();
         }
+    }
+
+    private void registerFCMId() {
+        FCMInstanceIDListenerService.sendRegistrationToServer(FirebaseInstanceId.getInstance().getToken(), this);
     }
 
     /**************************************************************************

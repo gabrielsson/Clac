@@ -9,9 +9,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
-import com.google.firebase.auth.api.model.StringList;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.lang.Thread.UncaughtExceptionHandler;

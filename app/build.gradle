@@ -7,12 +7,12 @@ android {
         applicationId "cl.sidan.clac"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 3
-        versionName "3.3"
+        versionCode 4
+        versionName "4.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

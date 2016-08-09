@@ -165,7 +165,6 @@ public class JSONParserSidanAccess implements SidanAccess {
             if(message.isEmpty()) {
                 sb.append("Message=");
             } else {
-                // Base64 encode
                 sb.append("Message=").append(URLEncoder.encode(message,"UTF-8"));
             }
             if(latitude != null) sb.append("&Latitude=").append(latitude);
@@ -258,12 +257,16 @@ public class JSONParserSidanAccess implements SidanAccess {
     public final boolean createOrUpdateArr(Integer id, String name, String plats, String datum) {
         StringBuilder sb = new StringBuilder(50 + name.length() + plats.length());
 
-        String base64name = Base64.encodeToString(name.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-        String base64place = Base64.encodeToString(plats.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
 
-        sb.append("Name=").append(base64name);
-        sb.append("&Place=").append(base64place);
-        sb.append("&Date=").append(datum);
+        try {
+            sb.append("Name=").append(URLEncoder.encode(name, "UTF-8"));
+            sb.append("&Place=").append(URLEncoder.encode(plats, "UTF-8"));
+            sb.append("&Date=").append(URLEncoder.encode(datum, "UTF-8"));
+
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         if(0 < id) {
             invoke("UpdateArr", "Id=" + id + "&" + sb.toString());

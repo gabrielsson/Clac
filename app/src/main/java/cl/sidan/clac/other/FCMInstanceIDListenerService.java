@@ -6,39 +6,46 @@ import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
-import com.google.android.gms.iid.InstanceIDListenerService;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import cl.sidan.clac.R;
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.SidanAccess;
-import cl.sidan.clac.interfaces.GCMChangeListener;
 
-public class GCMRegistrationService extends InstanceIDListenerService {
-    public static final String PREFS_REG_ID_KEY = "gcm_reg_id";
+public class FCMInstanceIDListenerService extends FirebaseInstanceIdService {
+    private String TAG = this.getClass().getCanonicalName();
 
+    /**
+     * Called if InstanceID token is updated. This may occur if the security of
+     * the previous token had been compromised. Note that this is also called
+     * when the InstanceID token is initially generated, so this is where
+     * you retrieve the token.
+     */
+    // [START refresh_token]
     @Override
     public void onTokenRefresh() {
-        register(this);
+        // Get updated InstanceID token.
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        sendRegistrationToServer(refreshedToken, this);
     }
 
-    public static void register( final Context context ) {
-        new RegisterAsyncTask(context).execute();
+    public static void sendRegistrationToServer(String token, Context mContext) {
+        new RegisterAsyncTask(mContext).execute(token);
     }
 
-    private static class RegisterAsyncTask extends AsyncTask<Context, Void, Context> {
+    private static class RegisterAsyncTask extends AsyncTask<String, Void, Context> {
         String msg = "";
         boolean success = false;
 
-        private Context mContext;
+        Context mContext;
 
-        public RegisterAsyncTask(Context context) {
-            mContext = context;
+        public RegisterAsyncTask(Context mContext) {
+            this.mContext = mContext;
         }
 
         @Override
-        protected Context doInBackground(Context[] objects) {
+        protected Context doInBackground(String[] tokens) {
             SharedPreferences prefs = mContext.getSharedPreferences("cl.sidan", 0);
 
             try {
@@ -47,19 +54,12 @@ public class GCMRegistrationService extends InstanceIDListenerService {
                 if( nummer == null || password == null ){
                     throw new Exception("Number or password missing.");
                 }
-
-                InstanceID instanceID = InstanceID.getInstance(mContext);
-                String token = instanceID.getToken(
-                        mContext.getString(R.string.gcm_defaultSenderId),
-                        GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-                Log.i(getClass().getCanonicalName(), "GCM Registration Token: " + token);
-
                 // Send token to the server
                 SidanAccess sidanAccess = new JSONParserSidanAccess(nummer, password);
                 String androidId = Settings.Secure.getString(
                         mContext.getContentResolver(),
                         Settings.Secure.ANDROID_ID);
-                sidanAccess.registerGCM(token, androidId);
+                sidanAccess.registerGCM(tokens[0], androidId);
 
                 prefs.edit().putBoolean("SENT_TOKEN_TO_SERVER", true).apply();
             } catch (Exception e) {
@@ -68,14 +68,6 @@ public class GCMRegistrationService extends InstanceIDListenerService {
             }
 
             return mContext;
-        }
-
-        @Override
-        protected void onPostExecute(Context context) {
-            if( context instanceof GCMChangeListener){
-                ((GCMChangeListener) context).onGCMChange(success, msg);
-            }
-            super.onPostExecute(context);
         }
     }
 }

@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 import cl.sidan.clac.access.impl.JSONParserSidanAccess;
 import cl.sidan.clac.access.interfaces.SidanAccess;
-import cl.sidan.clac.other.GCMRegistrationService;
 
 /**
  * A login screen that offers login via email/password.
@@ -142,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(this, username, password);
+            mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute();
         }
     }
@@ -218,10 +217,8 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUsername;
         private final String mPassword;
-        private final Context mContext;
 
-        UserLoginTask(Context context, String username, String password) {
-            mContext = context;
+        UserLoginTask(String username, String password) {
             mUsername = username;
             mPassword = password;
         }
@@ -251,8 +248,6 @@ public class LoginActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(intent);
-
-                GCMRegistrationService.register(mContext);
 
                 finish();
             } else {

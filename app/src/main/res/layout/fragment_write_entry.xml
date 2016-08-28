@@ -56,21 +56,40 @@
 
         <ImageView
             android:id="@+id/choose_kumpaner"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/nopo"
             />
         <TextView
             android:id="@+id/kumpaner"
             android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_height="50dp"
             android:layout_toEndOf="@+id/choose_kumpaner"
             android:text="#68, #71" />
     </RelativeLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/write_entry_position"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/write_entry_position_alt_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Kunde inte hitta din position"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/write_entry_imagechoosen"

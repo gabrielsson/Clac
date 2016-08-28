@@ -31,6 +31,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.net.InetAddress;
@@ -48,7 +58,7 @@ import cl.sidan.clac.adapters.AdapterMembers;
 import cl.sidan.clac.objects.RequestEntry;
 import cl.sidan.clac.objects.RequestUser;
 
-public class FragmentWrite extends Fragment {
+public class FragmentWrite extends Fragment implements OnMapReadyCallback {
     private static final int FILE_SELECT_CODE = 0;
 
     private View rootView = null;
@@ -60,6 +70,11 @@ public class FragmentWrite extends Fragment {
 
     private AdapterMembers memberAdapter;
     private AdapterBeer beerAdapter;
+
+    public static MapView mapView;
+    public static GoogleMap map;
+    public static SupportMapFragment smap;
+
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +104,11 @@ public class FragmentWrite extends Fragment {
         TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
         String kumpanString = TextUtils.join(",", selectedKumpaner);
         kumpanText.setText(kumpanString);
+
+        mapView = (MapView) rootView.findViewById(R.id.write_entry_position);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        mapView.getMapAsync(this);
 
        /* rootView.findViewById(R.id.bilduppladdning).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,7 +221,6 @@ public class FragmentWrite extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         new GetKumpanerAsync().execute();
     }
 
@@ -239,6 +258,25 @@ public class FragmentWrite extends Fragment {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        boolean reportPosition = preferences.getBoolean("positionSetting", true);
+        Location myLoc = ((MainActivity) getActivity()).getLocation();
+        LatLng pos;
+
+        if (reportPosition && myLoc != null) {
+            pos = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
+            map.addMarker(new MarkerOptions().position(pos).title("Min position"));
+            map.setMyLocationEnabled(true);
+            rootView.findViewById(R.id.write_entry_position).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.write_entry_position_alt_text).setVisibility(View.GONE);
+        } else {
+            rootView.findViewById(R.id.write_entry_position).setVisibility(View.GONE);
+            rootView.findViewById(R.id.write_entry_position_alt_text).setVisibility(View.VISIBLE);
+        }
     }
 
     private void showRapporteraKumpanerPopUp() {

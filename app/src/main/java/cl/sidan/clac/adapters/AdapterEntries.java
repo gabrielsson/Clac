@@ -25,7 +25,6 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -227,6 +226,15 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
     }
 
     public final Spannable linkifyHtml(String html, URLImageParser urlIP) {
+        html = replaceURIs(html);
+
+        /* Convert the html */
+        Spanned text = Html.fromHtml(html, urlIP, null);
+
+        return new SpannableString(text);
+    }
+
+    public static String replaceURIs(String html) {
         /**
          *  We match anything that even remotely look like a url, convert it to a propper url with
          *  <a></a>-tags. Then we delete the <a></a>-tags if the url is already enclosed in them.
@@ -235,15 +243,14 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
         // convert links that does not start with "=" to real <a href='link'>link</a>
         html = Pattern.compile("(?<!=['\"]?)((?:https?://|ftps?://|www\\d{0,3}[.])(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("<a href='$1'>$1</a>");
+
         // if the link is in the form "inmailat/...jpg" prepend full url.
         html = Pattern.compile("(?<!/)(inmailat/.*\\.)(jpg|jpeg|gif|png)", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("http://sidan.cl/$1$2");
 
-        /* Convert the html */
-        Spanned text = Html.fromHtml(html, urlIP, null);
-
-        return new SpannableString(text);
+        return html;
     }
+
 
     public final class URLImageParser implements Html.ImageGetter {
         ArrayList<String> localImagesURLArray  = new ArrayList<>();
@@ -398,8 +405,8 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             String filterSeq = constraint.toString().toLowerCase();
 
             FilterResults result = new FilterResults();
-            Log.d("LALALA", ""+items.size());
-            if( filterSeq == null || filterSeq.length() == 0 ){
+            Log.d("Entry filter", "items size: "+items.size());
+            if( filterSeq.isEmpty() ){
                 result.values = items;
                 result.count = items.size();
                 setFilteredResults(false);
@@ -409,7 +416,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             String[] parts = filterSeq.split(":");
             Log.d("Entry filter", parts[0] + " & " + parts[1]);
 
-            List<Entry> retList = new ArrayList<Entry>();
+            List<Entry> retList = new ArrayList<>();
 
             int betweenCount = 0; //TODO: Show number of entries hidden
             String lastTargetedSig = null;
@@ -454,7 +461,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             clear();
 
             for (int i = 0, l = filtered.size(); i < l; i++)
-                add((Entry) filtered.get(i));
+                add(filtered.get(i));
 
             notifyDataSetInvalidated();
         }

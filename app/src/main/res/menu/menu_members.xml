@@ -12,6 +12,9 @@
         android:id="@+id/member_mail"
         android:title="@string/maila" />
     <item
+        android:id="@+id/member_address"
+        android:title="@string/address" />
+    <item
         android:id="@+id/member_ignore"
         android:title="@string/ignorera" />
 

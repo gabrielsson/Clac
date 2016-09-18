@@ -9,6 +9,7 @@ public class RequestUser implements User {
     private String title;
     private String phone;
     private String email;
+    private String address;
     private boolean valid;
 
     public RequestUser(String number) {
@@ -43,6 +44,11 @@ public class RequestUser implements User {
     @Override
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public String getAddress() {
+        return address;
     }
 
     @Override

@@ -7,5 +7,6 @@ public interface User {
     String getTitle();
     String getPhone();
     String getEmail();
+    String getAddress();
     Boolean isValid();
 }

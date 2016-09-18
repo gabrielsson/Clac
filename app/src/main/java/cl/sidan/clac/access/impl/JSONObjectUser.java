@@ -46,6 +46,11 @@ public class JSONObjectUser implements User {
     }
 
     @Override
+    public String getAddress() {
+        return obj.optString("Address");
+    }
+
+    @Override
     public Boolean isValid() {
         return obj.optBoolean("IsValid");
     }

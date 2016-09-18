@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -69,6 +70,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMyLocationEnabled(true);
 
         Bundle extras = getIntent().getExtras();
         float[] lats = {},
@@ -100,7 +102,7 @@ public class MapsActivity extends AppCompatActivity
             // check BitmapDescriptorFactory.HUE_*.
             // It is possible to create a BitmapDescriptor from drawables etc.
             BitmapDescriptor icon;
-            if (0 < beers[i]) {
+            if (i < beers.length && 0 < beers[i]) {
                 icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
             } else {
                 icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
@@ -109,7 +111,7 @@ public class MapsActivity extends AppCompatActivity
 
             // Add a marker and set the number of beers drunk
             Marker marker = mMap.addMarker(mark);
-            beerMap.put(marker, beers[i]);
+            beerMap.put(marker, (beers.length > i ? beers[i] : 0));
         }
 
         /* Add propellern */

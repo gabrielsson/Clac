@@ -2,6 +2,8 @@ package cl.sidan.clac.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,12 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import cl.sidan.clac.MainActivity;
+import cl.sidan.clac.MapsActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.User;
 import cl.sidan.clac.adapters.AdapterMembers;
@@ -74,6 +79,7 @@ public class FragmentMembers extends Fragment {
         MenuItem callItem = menu.findItem(R.id.member_call);
         MenuItem smsItem = menu.findItem(R.id.member_sms);
         MenuItem mailItem = menu.findItem(R.id.member_mail);
+        MenuItem addressItem = menu.findItem(R.id.member_address);
 
         SharedPreferences preferences = ((MainActivity) getActivity()).getPrefs();
         HashSet<String> ignoredMembers = (HashSet<String>) preferences.getStringSet("ignoredMembers", new HashSet<String>());
@@ -89,6 +95,9 @@ public class FragmentMembers extends Fragment {
         }
         if ( null == user.getEmail() || user.getEmail().isEmpty() ) {
             mailItem.setEnabled(false);
+        }
+        if ( null == user.getAddress() || user.getAddress().isEmpty() ) {
+            addressItem.setEnabled(false);
         }
     }
 
@@ -142,6 +151,35 @@ public class FragmentMembers extends Fragment {
                 intent.putExtra(Intent.EXTRA_SUBJECT, "");
 
                 startActivity(intent);
+                return true;
+
+            case R.id.member_address:
+
+                try {
+                    List<Address> addresses = (new Geocoder(rootView.getContext())).getFromLocationName(user.getAddress(), 1);
+                    Address adr = addresses.get(0);
+
+                    float[] lats = { (float) adr.getLatitude() },
+                            lngs = { (float) adr.getLongitude() };
+                    String[] titles = { user.getSignature() + " hemma" },
+                            snippets = { "" };
+                    int[] beers = { 0 };
+
+                    Log.d("Address", "Adress found: " + adr);
+
+                    Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+                    mapIntent.putExtra("Latitudes", lats);
+                    mapIntent.putExtra("Longitudes", lngs);
+                    mapIntent.putExtra("Titles", titles);
+                    mapIntent.putExtra("Snippets", snippets);
+                    mapIntent.putExtra("Beers", beers);
+                    startActivity(mapIntent);
+
+                } catch (IOException e) {
+                    Log.e("Address", "Could not find address.");
+                    Toast.makeText(rootView.getContext(), "Kan inte lösa adressen.", Toast.LENGTH_LONG).show();
+                }
+
                 return true;
 
             default:

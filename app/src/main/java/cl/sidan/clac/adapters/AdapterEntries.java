@@ -245,7 +245,7 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
                 .matcher(html).replaceAll("<a href='$1'>$1</a>");
 
         // if the link is in the form "inmailat/...jpg" prepend full url.
-        html = Pattern.compile("(?<!/)(inmailat/.*\\.)(jpg|jpeg|gif|png)", Pattern.CASE_INSENSITIVE)
+        html = Pattern.compile("(?<!/)(inmailat/.*\\.)([a-zA-Z]{2,3})", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("http://sidan.cl/$1$2");
 
         return html;

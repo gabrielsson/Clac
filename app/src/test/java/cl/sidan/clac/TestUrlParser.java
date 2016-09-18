@@ -49,6 +49,13 @@ public class TestUrlParser {
         // Replace inmailat/ with absolute URI
         uris.put("<img src=inmailat/pics.jpg />",
                 "<img src=http://sidan.cl/inmailat/pics.jpg />");
+
+        // Actual failed URIs
+        uris.put("www.meetup.com/Javaforum-Goteborg/members/195180612/",
+                "<a href=\'www.meetup.com/Javaforum-Goteborg/members/195180612/\'>www.meetup.com/Javaforum-Goteborg/members/195180612/</a>");
+
+        uris.put("<a href=inmailat/160914153613/Capsning.pdf>inmailat/160914153613/Capsning.pdf</a>",
+                "<a href=http://sidan.cl/inmailat/160914153613/Capsning.pdf>inmailat/160914153613/Capsning.pdf</a>");
     }
 
     @Test

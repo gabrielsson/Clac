@@ -40,7 +40,9 @@ public class FragmentMembers extends Fragment {
 
     private AdapterMembers memberAdapter = null;
     private List<User> members = new ArrayList<>();
+    private int scrollPosition = 0, top = 0;
 
+    private ListView memberList;
     private View rootView;
 
     @Override
@@ -57,13 +59,31 @@ public class FragmentMembers extends Fragment {
             memberAdapter.setNotifyOnChange(true);
         }
 
-        ListView memberList = (ListView) rootView.findViewById(R.id.memberList);
+        memberList = (ListView) rootView.findViewById(R.id.memberList);
         memberList.setAdapter(memberAdapter);
         registerForContextMenu(memberList);
 
         new ReadMembersAsync().execute();
 
+        if( null != savedInstanceState ) {
+            scrollPosition = savedInstanceState.getInt("scrollPosition", 0);
+            top = savedInstanceState.getInt("top", 0);
+        }
+
         return rootView;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        // Save scroll position
+        scrollPosition = memberList.getFirstVisiblePosition();
+        top = getTop();
+
+        state.putInt("scrollPosition", scrollPosition);
+        state.putInt("top", top);
+
+        super.onSaveInstanceState(state);
     }
 
     @Override
@@ -201,8 +221,15 @@ public class FragmentMembers extends Fragment {
             memberAdapter.setNotifyOnChange(true);
         }
 
-        ListView listView = (ListView) rootView.findViewById(R.id.memberList);
-        listView.setAdapter(memberAdapter);
+        memberList.setAdapter(memberAdapter);
+    }
+
+    public int getTop() {
+        View v = memberList.getChildAt(0);
+        if (null != v) {
+            return (v.getTop() - memberList.getPaddingTop());
+        }
+        return 0;
     }
 
     public final class ReadMembersAsync extends AsyncTask<String, Void, List<User>> {
@@ -219,6 +246,9 @@ public class FragmentMembers extends Fragment {
                 members.clear();
                 members.addAll(memberlist);
                 memberAdapter.notifyDataSetChanged();
+
+                // Scroll to position
+                memberList.setSelectionFromTop(scrollPosition, top);
             } else {
                 Log.d(getClass().getCanonicalName(), "Could not retrieve members");
             }

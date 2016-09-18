@@ -94,6 +94,7 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
                         scrollPosition = 0;
                         entriesListType = EntriesListType.READ;
                         new ReadEntriesAsync().execute(0);
+                        ((MainActivity) getActivity()).clearNotifications();
                     }
                 }
         );

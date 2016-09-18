@@ -1,5 +1,6 @@
 package cl.sidan.clac;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -380,7 +381,6 @@ public class MainActivity extends AppCompatActivity
         return reusedFragment;
     }
 
-
     public void logOut() {
         preferences.edit().clear().apply();
 
@@ -392,7 +392,6 @@ public class MainActivity extends AppCompatActivity
         finish();
 
     }
-
 
     public final void notifyLocationChange() {
         if( preferences.getBoolean("positionSetting", true) && locationListener == null ) {
@@ -418,6 +417,11 @@ public class MainActivity extends AppCompatActivity
 
     private void registerFCMId() {
         FCMInstanceIDListenerService.sendRegistrationToServer(FirebaseInstanceId.getInstance().getToken(), this);
+    }
+
+    public void clearNotifications() {
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancelAll();
     }
 
     /**************************************************************************

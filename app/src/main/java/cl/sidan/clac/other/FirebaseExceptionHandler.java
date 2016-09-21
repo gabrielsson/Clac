@@ -29,6 +29,7 @@ public class FirebaseExceptionHandler implements UncaughtExceptionHandler {
     @Override
     public final void uncaughtException(Thread t, Throwable e) {
         FirebaseCrash.report(e);
+        e.printStackTrace();
 
         if (isUIThread()) {
             sendNotification(errorTitle, errorMsg);

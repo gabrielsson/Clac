@@ -38,6 +38,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cl.sidan.clac.R;
@@ -241,12 +242,30 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
          *  We also add the full url to local images that has been uploaded to /inmailat/.
          **/
         // convert links that does not start with "=" to real <a href='link'>link</a>
-        html = Pattern.compile("(?<!=['\"]?)((?:https?://|ftps?://|www\\d{0,3}[.])(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
-                .matcher(html).replaceAll("<a href='$1'>$1</a>");
+        // (?<!) is used for negative look-behind; the matching test cannot start with this string,
+        // but it is not part of the regexp (not captured). Check https://regex101.com/ for a
+        // decent online regexp builder.
 
         // if the link is in the form "inmailat/...jpg" prepend full url.
-        html = Pattern.compile("(?<!/)(inmailat/.*\\.)([a-zA-Z]{2,3})", Pattern.CASE_INSENSITIVE)
+        html = Pattern.compile("(?<![/>])(inmailat/.*\\.)([a-zA-Z]{2,3})", Pattern.CASE_INSENSITIVE)
                 .matcher(html).replaceAll("http://sidan.cl/$1$2");
+
+        Matcher m = Pattern.compile("((?:https?://|ftps?://|www\\d{0,3}\\.)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))", Pattern.CASE_INSENSITIVE)
+                .matcher(html);
+
+        // If we find an URI, split it and fix the different parts recursively; not really the Java
+        // way, but fuck it, I don't care anymore.
+        if (m.find()) {
+            String head = html.substring(0, m.start()),
+                    url = m.group(),
+                    tail = html.substring(m.end(), html.length());
+
+            if (head.endsWith("=")) {
+                return head + "\'" + url + "\'" + replaceURIs(tail);
+            } else if (!head.matches(".*=['\"]")) {
+                return head + "<a href='" + url + "'>" + url + "</a>" + replaceURIs(tail);
+            }
+        }
 
         return html;
     }

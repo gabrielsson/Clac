@@ -36,7 +36,7 @@ public class TestUrlParser {
 
         // Don't disturb already resolved URI.
         uris.put("<a href=www.example.com>link</a>",
-                "<a href=www.example.com>link</a>");
+                "<a href='www.example.com'>link</a>");
 
         // Don't disturb already resolved URI starting with '
         uris.put("<a href='www.example.com'>link</a>",
@@ -48,15 +48,22 @@ public class TestUrlParser {
 
         // Replace inmailat/ with absolute URI
         uris.put("<img src=inmailat/pics.jpg />",
-                "<img src=http://sidan.cl/inmailat/pics.jpg />");
+                "<img src='http://sidan.cl/inmailat/pics.jpg' />");
 
         // Actual failed URIs
         uris.put("www.meetup.com/Javaforum-Goteborg/members/195180612/",
                 "<a href=\'www.meetup.com/Javaforum-Goteborg/members/195180612/\'>www.meetup.com/Javaforum-Goteborg/members/195180612/</a>");
 
         uris.put("<a href=inmailat/160914153613/Capsning.pdf>inmailat/160914153613/Capsning.pdf</a>",
-                "<a href=http://sidan.cl/inmailat/160914153613/Capsning.pdf>inmailat/160914153613/Capsning.pdf</a>");
+                "<a href='http://sidan.cl/inmailat/160914153613/Capsning.pdf'>inmailat/160914153613/Capsning.pdf</a>");
+
+        uris.put("<a href='inmailat/160920191347/Screenshot_2016-09-20-11-58-00.png'>Screenshot_2016-09-20-11-58-00.png</a><br>#56: kan du inhysa tjejen ovan, hon vill ha ett sovrum bara!",
+                "<a href='http://sidan.cl/inmailat/160920191347/Screenshot_2016-09-20-11-58-00.png'>Screenshot_2016-09-20-11-58-00.png</a><br>#56: kan du inhysa tjejen ovan, hon vill ha ett sovrum bara!");
+
+        uris.put("<img src=http://www.gifs.net/Animation11/Jobs_and_People/Police/Siren_2.gif>",
+                "<img src='http://www.gifs.net/Animation11/Jobs_and_People/Police/Siren_2.gif'>");
     }
+
 
     @Test
     public void replaceURIs() {

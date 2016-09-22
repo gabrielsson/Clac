@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,11 +34,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -58,7 +56,7 @@ import cl.sidan.clac.adapters.AdapterMembers;
 import cl.sidan.clac.objects.RequestEntry;
 import cl.sidan.clac.objects.RequestUser;
 
-public class FragmentWrite extends Fragment implements OnMapReadyCallback {
+public class FragmentWrite extends Fragment implements OnMapReadyCallback, LocationListener {
     private static final int FILE_SELECT_CODE = 0;
 
     private View rootView = null;
@@ -72,9 +70,7 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback {
     private AdapterBeer beerAdapter;
 
     public static MapView mapView;
-    public static GoogleMap map;
-    public static SupportMapFragment smap;
-
+    private boolean myPositionDisabled = true;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,6 +100,8 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback {
         TextView kumpanText = (TextView) rootView.findViewById(R.id.kumpaner);
         String kumpanString = TextUtils.join(",", selectedKumpaner);
         kumpanText.setText(kumpanString);
+
+        ((MainActivity) getActivity()).addLocationListener(this);
 
         mapView = (MapView) rootView.findViewById(R.id.write_entry_position);
         mapView.onCreate(savedInstanceState);
@@ -176,8 +174,9 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback {
                 boolean reportPosition = preferences.getBoolean("positionSetting", true);
                 Location myLocation = ((MainActivity) getActivity()).getLocation();
                 if (reportPosition && myLocation != null) {
-                    entry.setLatitude(BigDecimal.valueOf(myLocation.getLatitude()));
-                    entry.setLongitude(BigDecimal.valueOf(myLocation.getLongitude()));
+                    LatLng pos = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    entry.setLatitude(BigDecimal.valueOf(pos.latitude));
+                    entry.setLongitude(BigDecimal.valueOf(pos.longitude));
                 }
 
                 if (text.trim().isEmpty() && base64Image == null && numBeers == 0) {
@@ -263,20 +262,48 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         boolean reportPosition = preferences.getBoolean("positionSetting", true);
-        Location myLoc = ((MainActivity) getActivity()).getLocation();
-        LatLng pos;
+        MainActivity mainActivity = ((MainActivity) getActivity());
+        Location myLoc = mainActivity != null ? mainActivity.getLocation() : null;
 
         if (reportPosition && myLoc != null) {
-            pos = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
+            LatLng pos = new LatLng(myLoc.getLatitude(), myLoc.getLongitude());
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f));
-            map.addMarker(new MarkerOptions().position(pos).title("Min position"));
             map.setMyLocationEnabled(true);
+
             rootView.findViewById(R.id.write_entry_position).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.write_entry_position_alt_text).setVisibility(View.GONE);
         } else {
             rootView.findViewById(R.id.write_entry_position).setVisibility(View.GONE);
             rootView.findViewById(R.id.write_entry_position_alt_text).setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d("Write - Location", "Got location change " + location);
+        mapView.getMapAsync(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Write - Location", "Got status change for provider " + provider + " - " + status);
+        mapView.getMapAsync(this);
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Write - Location", "Provider " + provider + " enabled");
+        rootView.findViewById(R.id.write_entry_position).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.write_entry_position_alt_text).setVisibility(View.GONE);
+        mapView.getMapAsync(this);
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Write - Location", "Provider " + provider + " disabled");
+        //rootView.findViewById(R.id.write_entry_position).setVisibility(View.GONE);
+        //rootView.findViewById(R.id.write_entry_position_alt_text).setVisibility(View.VISIBLE);
+        mapView.getMapAsync(this);
     }
 
     private void showRapporteraKumpanerPopUp() {

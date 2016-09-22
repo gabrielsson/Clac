@@ -6,7 +6,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-// import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class ListenerLocation implements LocationListener
 {
@@ -14,7 +15,7 @@ public class ListenerLocation implements LocationListener
     private static final int LOCATION_UPDATE_METRES = 200;
     private Location lastKnownLocation = null;
     private LocationManager locationManager = null;
-    private boolean isEnabled = false;
+    private ArrayList<LocationListener> listeners = new ArrayList<>();
 
     public ListenerLocation(Context context, Location lastKnownLocation) {
         // Experimental, get lastKnownLocation from activity if the location listener has been recreated.
@@ -43,33 +44,34 @@ public class ListenerLocation implements LocationListener
         if( isBetterLocation(loc, lastKnownLocation) ) {
             lastKnownLocation = loc;
         }
+
+        for (LocationListener listener : listeners) {
+            listener.onLocationChanged(loc);
+        }
     }
 
     @Override
     public void onProviderDisabled(String provider)
     {
-        isEnabled = false;
-        /*
-        Toast.makeText(context,
-                provider + " location provider disabled",
-                Toast.LENGTH_SHORT).show();
-        */
+        for (LocationListener listener : listeners) {
+            listener.onProviderDisabled(provider);
+        }
     }
 
     @Override
     public void onProviderEnabled(String provider)
     {
-        isEnabled = true;
-        /*
-        Toast.makeText(context,
-                provider + " location provider enabled",
-                Toast.LENGTH_SHORT).show();
-        */
+        for (LocationListener listener : listeners) {
+            listener.onProviderEnabled(provider);
+        }
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras)
     {
+        for (LocationListener listener : listeners) {
+            listener.onStatusChanged(provider, status, extras);
+        }
     }
 
     /** Determines whether one Location reading is better than the current Location fix
@@ -88,8 +90,8 @@ public class ListenerLocation implements LocationListener
         boolean isSignificantlyOlder = timeDelta < -LOCATION_UPDATE_TIME;
         boolean isNewer = timeDelta > 0;
 
-        // If it's been more than two minutes since the current location, use the new location
-        // because the user has likely moved
+        // If it's been more than LOCATION_UPDATE_TIME minutes since the current location, use the
+        // new location because the user has likely moved
         if (isSignificantlyNewer) {
             return true;
             // If the new location is more than LOCATION_UPDATE_TIME older, it must be worse
@@ -117,6 +119,18 @@ public class ListenerLocation implements LocationListener
         }
         return false;
     }
+
+    public static boolean isGoodEnoughLocation(Location loc) {
+        if (loc == null) {
+            return false;
+        }
+
+        long timeDelta = System.currentTimeMillis() - loc.getTime();
+        boolean isNew = timeDelta < LOCATION_UPDATE_TIME;
+
+        return isNew;
+    }
+
 
     /** Checks whether two providers are the same */
     private static boolean isSameProvider(String provider1, String provider2) {
@@ -148,5 +162,9 @@ public class ListenerLocation implements LocationListener
 
     public final void stopLocationUpdates() {
         locationManager.removeUpdates(this);
+    }
+
+    public void addListener(LocationListener l) {
+        listeners.add(l);
     }
 }

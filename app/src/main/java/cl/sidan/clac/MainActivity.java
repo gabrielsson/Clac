@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -196,12 +197,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if ( !closeDrawers() ) {
-            /*
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-            */
             super.onBackPressed();
         }
     }
@@ -390,7 +385,6 @@ public class MainActivity extends AppCompatActivity
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
-
     }
 
     public final void notifyLocationChange() {
@@ -401,6 +395,12 @@ public class MainActivity extends AppCompatActivity
             locationListener.stopLocationUpdates();
             locationListener = null;
             Log.d("Location", "Stopped and removed location listener.");
+        }
+    }
+
+    public void addLocationListener(LocationListener l) {
+        if (locationListener != null) {
+            locationListener.addListener(l);
         }
     }
 
@@ -448,11 +448,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     public final Location getLocation() {
+        // Test if we should recreate the location listener.
+        if (locationListener == null) {
+            notifyLocationChange();
+        }
+
         if( locationListener != null ) {
             lastKnownLocation = locationListener.getLocation();
-            return lastKnownLocation;
         }
-        return null;
+
+        if ( !ListenerLocation.isGoodEnoughLocation(lastKnownLocation) ) {
+            lastKnownLocation = null;
+        }
+
+        return lastKnownLocation;
     }
 
     public String timeSinceEventText(Date event) {

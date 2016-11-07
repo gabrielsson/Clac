@@ -177,24 +177,28 @@ public class FragmentMembers extends Fragment {
 
                 try {
                     List<Address> addresses = (new Geocoder(rootView.getContext())).getFromLocationName(user.getAddress(), 1);
-                    Address adr = addresses.get(0);
+                    if (addresses.size() > 0) {
+                        Address adr = addresses.get(0);
 
-                    float[] lats = { (float) adr.getLatitude() },
-                            lngs = { (float) adr.getLongitude() };
-                    String[] titles = { user.getSignature() + " hemma" },
-                            snippets = { "" };
-                    int[] beers = { 0 };
+                        float[] lats = {(float) adr.getLatitude()},
+                                lngs = {(float) adr.getLongitude()};
+                        String[] titles = {user.getSignature() + " hemma"},
+                                snippets = {""};
+                        int[] beers = {0};
 
-                    Log.d("Address", "Adress found: " + adr);
+                        Log.d("Address", "Adress found: " + adr);
 
-                    Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
-                    mapIntent.putExtra("Latitudes", lats);
-                    mapIntent.putExtra("Longitudes", lngs);
-                    mapIntent.putExtra("Titles", titles);
-                    mapIntent.putExtra("Snippets", snippets);
-                    mapIntent.putExtra("Beers", beers);
-                    startActivity(mapIntent);
-
+                        Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+                        mapIntent.putExtra("Latitudes", lats);
+                        mapIntent.putExtra("Longitudes", lngs);
+                        mapIntent.putExtra("Titles", titles);
+                        mapIntent.putExtra("Snippets", snippets);
+                        mapIntent.putExtra("Beers", beers);
+                        startActivity(mapIntent);
+                    } else {
+                        Log.d("Address", "Google could not resolve address: " + user.getAddress());
+                        Toast.makeText(rootView.getContext(), "Kan inte lösa adressen.", Toast.LENGTH_LONG).show();
+                    }
                 } catch (IOException e) {
                     Log.e("Address", "Could not find address.");
                     Toast.makeText(rootView.getContext(), "Kan inte lösa adressen.", Toast.LENGTH_LONG).show();

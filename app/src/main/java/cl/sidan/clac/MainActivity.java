@@ -157,6 +157,9 @@ public class MainActivity extends AppCompatActivity
 
             TextView nummerView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nummerView);
             nummerView.setText(number);
+
+            TextView appNameVersionView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.app_name_and_version);
+            appNameVersionView.setText(getString(R.string.cl_appen_clac) + " " + BuildConfig.VERSION_NAME);
         }
     }
 
@@ -414,7 +417,7 @@ public class MainActivity extends AppCompatActivity
 
         if ( lastUpdateCheck+SECONDS_BETWEEN_UPDATE_CHECKS < now ) {
             // Asynctask
-            Log.d("XXX_SWO", "Time to check for updates, last check was " + lastUpdateCheck);
+            Log.d("UpdateAPP", "Time to check for updates, last check was " + lastUpdateCheck);
             new CheckForNewVersionAsync().execute();
         }
     }

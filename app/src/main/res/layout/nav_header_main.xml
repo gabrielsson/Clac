@@ -18,10 +18,11 @@
         android:src="@drawable/nopo" />
 
     <TextView
+        android:id="@+id/app_name_and_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="CL appen CLac" />
+        android:text="@string/cl_appen_clac" />
 
     <TextView
         android:id="@+id/nummerView"

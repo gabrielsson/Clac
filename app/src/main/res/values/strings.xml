@@ -161,4 +161,5 @@
     <!-- Strings used in filtering messages -->
     <string name="filtrera_konversation">Filtrera konversation</string>
     <string name="filter_conversation_toast">"Filtrerar konversation mellan: "</string>
+    <string name="cl_appen_clac">CL appen CLac</string>
 </resources>

@@ -82,7 +82,7 @@ public class VersionUpdateActivity extends Activity {
                 c.setRequestMethod("GET");
                 c.setDoOutput(true);
                 c.connect();
-                Log.d("XXX_SWO", "Connecting to " + arg0[0]);
+                Log.d("UpdateAPP", "Connecting to " + arg0[0]);
 
                 // Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 // getExternalCacheDir().getAbsolutePath();

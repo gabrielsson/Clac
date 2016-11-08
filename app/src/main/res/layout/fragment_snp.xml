@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="?attr/background">
+
+    <Button
+        android:id="@+id/add_snp"
+        android:layout_width="20pt"
+        android:layout_height="20pt"
+        android:text="+"
+        android:enabled="true" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:orientation="vertical"
+        android:id="@+id/snpContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/snp_lista"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

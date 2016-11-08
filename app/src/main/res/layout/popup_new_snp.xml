@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Spinner
+        android:id="@+id/snp_popup_s_or_p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nummer" />
+
+    <Spinner
+        android:id="@+id/snp_popup_nummer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nummer" />
+
+    <EditText
+        android:id="@+id/snp_popup_namn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Namn"
+        />
+
+    <EditText
+        android:id="@+id/snp_popup_mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="Mail"
+        />
+
+    <EditText
+        android:id="@+id/snp_popup_telefon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Telefon"
+        />
+
+    <EditText
+        android:id="@+id/snp_popup_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Föreningar"
+        />
+
+</LinearLayout>

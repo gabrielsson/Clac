@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/snpHolder"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:layout_gravity="start"
+    android:gravity="start"
+    android:background="@drawable/background">
+
+    <TextView
+        android:id="@+id/snp_signatur"
+        android:text="S99"
+        android:textStyle="bold"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:textColor="?attr/textColorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start" />
+
+    <TextView
+        android:id="@+id/snp_namn"
+        android:text="Johan Sebastian Bach"
+        android:textStyle="bold"
+        android:textColor="?attr/textColorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/snp_signatur" />
+
+    <TextView
+        android:id="@+id/snp_mail"
+        android:text="j.s@bach.com"
+        android:textStyle="italic"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_toEndOf="@id/snp_signatur"
+        android:layout_toRightOf="@id/snp_signatur" />
+
+    <TextView
+        android:id="@+id/snp_tele"
+        android:text="07052012456"
+        android:gravity="end"
+        android:textStyle="italic"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/snp_mail"
+        android:layout_toEndOf="@id/snp_namn"
+        android:layout_toRightOf="@id/snp_namn" />
+
+    <TextView
+        android:id="@+id/snp_hist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:layout_below="@+id/snp_tele" />
+
+</RelativeLayout>

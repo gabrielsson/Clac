@@ -18,6 +18,10 @@
             android:id="@+id/nav_members"
             android:icon="@android:drawable/ic_menu_my_calendar"
             android:title="Medlemmar" />
+        <item
+            android:id="@+id/nav_snp"
+            android:icon="@android:drawable/ic_lock_silent_mode"
+            android:title="S &amp; P" />
 <!--
         <item
             android:id="@+id/nav_tattarbilder"

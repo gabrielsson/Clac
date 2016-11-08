@@ -1,7 +1,5 @@
 package cl.sidan.clac.access.interfaces;
 
-
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -191,4 +189,23 @@ public interface SidanAccess {
     List<Stats> readStats(String type);
 
     public boolean ignoreNumber(String number);
+
+    /**
+     * Get all Suspects and prospects
+     * @return List of Ss and Ps
+     */
+    List<SnP> readSnP();
+
+    /**
+     * Create or update an Suspect or Prospect
+     * @param id will be -1 for a new s or p
+     * @param status
+     * @param nummer
+     * @param namn
+     * @param mail
+     * @param tele
+     * @param hist
+     */
+    public boolean createOrUpdateSnP(Integer id, String status, Integer nummer, String namn, String mail, String tele, String hist);
+
 }

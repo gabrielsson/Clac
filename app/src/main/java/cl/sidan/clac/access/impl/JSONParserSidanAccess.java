@@ -24,6 +24,7 @@ import cl.sidan.clac.access.interfaces.Article;
 import cl.sidan.clac.access.interfaces.Entry;
 import cl.sidan.clac.access.interfaces.Poll;
 import cl.sidan.clac.access.interfaces.SidanAccess;
+import cl.sidan.clac.access.interfaces.SnP;
 import cl.sidan.clac.access.interfaces.Stats;
 import cl.sidan.clac.access.interfaces.UpdateInfo;
 import cl.sidan.clac.access.interfaces.User;
@@ -499,6 +500,50 @@ public class JSONParserSidanAccess implements SidanAccess {
         String fullUrl = BASE_URL + "IgnoreNumber";
         String requestString = "Ignore=" + ignoreNumber;
         JsbJSONInvoker.invoke(fullUrl, requestString, signature, password);
+        return true;
+    }
+
+
+    @Override
+    public List<SnP> readSnP() {
+        String request = "";
+
+        JSONObject json = invoke("GetSnP", request);
+        JSONArray array = new JSONArray();
+        if(json != null) {
+            array = json.optJSONArray("SnP");
+        }
+
+        List<SnP> result = new ArrayList<>();
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                result.add(new JSONObjectSnP(array.optJSONObject(i)));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean createOrUpdateSnP(Integer id, String status, Integer nummer, String name, String mail, String tele, String hist) {
+        StringBuilder sb = new StringBuilder(50 + name.length());
+
+        try {
+            sb.append("Status=").append(URLEncoder.encode(status, "UTF-8"));
+            sb.append("&Number=").append(URLEncoder.encode(nummer.toString(), "UTF-8"));
+            sb.append("&Name=").append(URLEncoder.encode(name, "UTF-8"));
+            sb.append("&Email=").append(URLEncoder.encode(mail, "UTF-8"));
+            sb.append("&Phone=").append(URLEncoder.encode(tele, "UTF-8"));
+            sb.append("&History=").append(URLEncoder.encode(hist, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        if(0 < id) {
+            invoke("UpdateSnP", "Id=" + id + "&" + sb.toString());
+        } else {
+            invoke("CreateSnP", sb.toString());
+        }
+
         return true;
     }
 }

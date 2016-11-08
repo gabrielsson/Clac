@@ -49,6 +49,7 @@ import cl.sidan.clac.fragments.FragmentMembers;
 import cl.sidan.clac.fragments.FragmentReadEntries;
 import cl.sidan.clac.fragments.FragmentSearch;
 import cl.sidan.clac.fragments.FragmentSettings;
+import cl.sidan.clac.fragments.FragmentSnP;
 import cl.sidan.clac.fragments.FragmentStats;
 import cl.sidan.clac.fragments.FragmentWrite;
 import cl.sidan.clac.listeners.ListenerLocation;
@@ -255,6 +256,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_members:
                 getReusedFragment(new FragmentMembers());
+                break;
+            case R.id.nav_snp:
+                getReusedFragment(new FragmentSnP());
                 break;
             case R.id.nav_stats:
                 getReusedFragment(new FragmentStats());

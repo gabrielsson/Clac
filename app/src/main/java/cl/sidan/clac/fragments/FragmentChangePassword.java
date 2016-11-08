@@ -107,14 +107,14 @@ public class FragmentChangePassword extends Fragment {
     }
 
     public final class ChangePasswordAsync extends AsyncTask<UserPassword, Void, Boolean> {
+        boolean logout = false;
+
         @Override
         protected Boolean doInBackground(UserPassword... params) {
             Boolean b = ((MainActivity) getActivity()).sidanAccess().updatePassword(
                     params[0].username, params[0].password, params[0].adminPassword);
 
-            if ( params[0].username.equals(whoAmI) ) {
-                ((MainActivity) getActivity()).logOut();
-            }
+            logout = params[0].username.equals(whoAmI);
 
             return b;
         }
@@ -129,6 +129,10 @@ public class FragmentChangePassword extends Fragment {
                 adminEditText.setText("");
 
                 Toast.makeText(rootView.getContext(), "Lösenord uppdaterat!", Toast.LENGTH_SHORT).show();
+
+                if (logout) {
+                    ((MainActivity) getActivity()).logOut();
+                }
             } else {
                 Toast.makeText(rootView.getContext(), "Misslyckades med lösenordsbytet. Testa senare.", Toast.LENGTH_SHORT).show();
             }

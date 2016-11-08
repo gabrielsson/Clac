@@ -476,8 +476,12 @@ public class JSONParserSidanAccess implements SidanAccess {
 
     @Override
     public boolean updatePassword(String forSignature, String password, String admin) {
-        JSONObject jsonObject = invoke("ChangePassword", "User=" + forSignature + "&Password=" + password + "&Admin=" + admin);
-        return true;
+        JSONObject obj = invoke("ChangePassword", "User=" + forSignature + "&Password=" + password + "&Admin=" + admin);
+        try {
+            return forSignature.equals("#" + obj.getString("User"));
+        } catch (JSONException e) {
+            return false;
+        }
     }
 
     @Override

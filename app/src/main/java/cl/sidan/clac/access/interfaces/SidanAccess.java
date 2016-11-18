@@ -208,4 +208,10 @@ public interface SidanAccess {
      */
     public boolean createOrUpdateSnP(Integer id, String status, Integer nummer, String namn, String mail, String tele, String hist);
 
+    /**
+     * Delete Arr
+     * @param id
+     * @return success
+     */
+    Boolean deleteArr(Integer id);
 }

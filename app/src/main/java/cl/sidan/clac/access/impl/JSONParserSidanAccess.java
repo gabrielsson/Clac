@@ -550,4 +550,18 @@ public class JSONParserSidanAccess implements SidanAccess {
 
         return true;
     }
+
+    @Override
+    public Boolean deleteArr(Integer id) {
+        JSONObject obj = invoke("DeleteArr", "Id=" + id);
+        boolean success = false;
+        try {
+            if (obj != null) {
+                success = obj.getBoolean("Success");
+            }
+        } catch (JSONException e) {
+            success = false;
+        }
+        return success;
+    }
 }

@@ -115,6 +115,7 @@
     <string name="svara_via_email">via epost</string>
     <string name="gillaEntry">Gilla</string>
     <string name="andra">Ändra</string>
+    <string name="ta_bort">Ta bort</string>
     <string name="rapporteraPosition">Rapportera position</string>
     <string name="bilduppladdning">Bättre bild</string>
     <string name="not_registered_user">Du är inte registrerad.</string>

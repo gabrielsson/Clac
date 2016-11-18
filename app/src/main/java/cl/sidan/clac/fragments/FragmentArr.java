@@ -206,9 +206,50 @@ public class FragmentArr extends Fragment {
                 showSkapaEllerUppdateraArr(arr);
                 return true;
 
+            case R.id.delete_arr:
+                showTaBortArr(arr);
+                return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+    private void showTaBortArr(Arr arr) {
+        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(rootView.getContext());
+        helpBuilder.setTitle("Ta bort Arr");
+        // helpBuilder.setIcon(R.drawable.olsug_32);
+
+        LayoutInflater factory = LayoutInflater.from(rootView.getContext());
+        final View textEntryView = factory.inflate(R.layout.popup_delete_arr, null);
+        helpBuilder.setView(textEntryView);
+
+        final TextView arrNamnText = (TextView) textEntryView.findViewById(R.id.arr_popup_arrnamn);
+        final TextView arrPlatsText = (TextView) textEntryView.findViewById(R.id.arr_popup_arrplats);
+        final TextView arrDateText = (TextView) textEntryView.findViewById(R.id.arr_popup_datetime);
+        final Integer arrId = arr == null ? -1 : arr.getId();
+
+        arrNamnText.setText(arr.getNamn());
+        arrPlatsText.setText(arr.getPlats());
+        arrDateText.setText(arr.getDatum());
+
+        helpBuilder.setNegativeButton("Ångra",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing but close the dialog
+                    }
+                });
+        helpBuilder.setPositiveButton("Ta bort",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        RequestArr arr = new RequestArr();
+                        arr.setId(arrId);
+                        new DeleteArrAsync().execute(arr);
+                    }
+        });
+
+        // Remember, create doesn't show the dialog
+        AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
     }
 
     private void showSkapaEllerUppdateraArr(Arr arr) {
@@ -293,6 +334,25 @@ public class FragmentArr extends Fragment {
             if (success) {
                 Toast.makeText(rootView.getContext(),
                         "Arr skapat!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(rootView.getContext(),
+                        "Något gick snett. Försök senare!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public final class DeleteArrAsync extends AsyncTask<Arr, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Arr... arrs) {
+            Arr arr = arrs[0];
+            return ((MainActivity) getActivity()).sidanAccess().deleteArr(arr.getId());
+        }
+
+        protected void onPostExecute(boolean success) {
+            Log.d("DeleteArr", "Got success " + success);
+            if (success) {
+                Toast.makeText(rootView.getContext(),
+                        "Arr Borttaget!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(rootView.getContext(),
                         "Något gick snett. Försök senare!", Toast.LENGTH_SHORT).show();

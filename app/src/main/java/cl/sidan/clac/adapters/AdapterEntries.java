@@ -38,6 +38,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +50,6 @@ import cl.sidan.clac.access.interfaces.User;
 public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
 
     private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-
     private final List<Entry> items;
 
     Context context;
@@ -131,9 +131,13 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
             kumpanString = " | " + kumpanString.substring(0, kumpanString.length()-1);
         }
 
+        // Fix DST offset
+        TimeZone tz = TimeZone.getDefault();
+        int currentOffsetFromUTC = tz.getRawOffset() + (tz.inDaylightTime(date) ? tz.getDSTSavings() : 0);
+
         String signatureLineText = String.format(Locale.getDefault(),
                 "%s | %s (%s) %s | %d", // #68 | 2015-11-10 (tis) #38,#71 | 42
-                entry.getSignature(), format.format(date),
+                entry.getSignature(), format.format(date.getTime() + currentOffsetFromUTC),
                 dayOfWeek, kumpanString, entry.getLikes());
         holder.txtSignatureLine.setText(signatureLineText);
 

@@ -170,6 +170,12 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback, Locat
 
                 entry.setMessage(text);
                 entry.setSecret(hemlis);
+                // Is this a good idea?
+                // Pros: if we cannot send the entry right away, and try a new resending later,
+                // the entry will still have the correct date/time.
+                // Cons: time in the server vs the device is probably different and might cause
+                // messages to get out of sync.
+                // entry.setDateTime(now);
 
                 boolean reportPosition = preferences.getBoolean("positionSetting", true);
                 Location myLocation = ((MainActivity) getActivity()).getLocation();
@@ -411,8 +417,10 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback, Locat
 
                 if (e.getMessage().trim().isEmpty() && e.getImage() == null && e.getEnheter() == 0) {
                     notSentList.remove(i);
+                    i--;
                 } else if (onCreateEntry(e)) {
                     notSentList.remove(i);
+                    i--;
                 }
             }
             return notSentList.isEmpty();
@@ -437,6 +445,9 @@ public class FragmentWrite extends Fragment implements OnMapReadyCallback, Locat
         protected void onPostExecute(Boolean retur) {
             if (!retur) {
                 Log.e("WriteEntry", "Could not create some Entries.");
+                Toast.makeText(rootView.getContext(),
+                        "Kunde inte posta alla meddelanden just nu, försök senare.",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }

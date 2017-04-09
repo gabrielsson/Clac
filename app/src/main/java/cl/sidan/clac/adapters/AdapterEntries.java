@@ -132,11 +132,12 @@ public class AdapterEntries extends ArrayAdapter<Entry> implements Filterable {
         }
 
         // Fix DST offset
-        int currentOffsetFromUTC = TimeZone.getDefault().getOffset(date.getTime());
-
+        int currentOffsetFromUTC = TimeZone.getDefault().useDaylightTime() ? 0 :
+                TimeZone.getDefault().getOffset(date.getTime());
+        String currentDate = format.format(date.getTime() + currentOffsetFromUTC);
         String signatureLineText = String.format(Locale.getDefault(),
                 "%s | %s (%s) %s | %d", // #68 | 2015-11-10 (tis) #38,#71 | 42
-                entry.getSignature(), format.format(date.getTime() + currentOffsetFromUTC),
+                entry.getSignature(), currentDate,
                 dayOfWeek, kumpanString, entry.getLikes());
         holder.txtSignatureLine.setText(signatureLineText);
 

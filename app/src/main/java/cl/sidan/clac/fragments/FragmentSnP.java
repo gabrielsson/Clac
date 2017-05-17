@@ -163,6 +163,10 @@ public class FragmentSnP extends Fragment {
                 showSkapaEllerUppdateraSnP(user);
                 return true;
 
+            case R.id.snp_tabort:
+                new DeleteSnPAsync().execute(user);
+                return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
@@ -192,11 +196,18 @@ public class FragmentSnP extends Fragment {
         final EditText snpHistoryText = (EditText) textEntryView.findViewById(R.id.snp_popup_history);
 
         ArrayList<Integer> numberArray = new ArrayList<>();
-        for(int i=1; i<50; i++) { numberArray.add(i); }
+        for(int i=1; i<50; i++) {
+            numberArray.add(i);
+        }
+        final int snpId = u == null ? -1 : u.getId();
+        final int snpNum = u == null ? -1 : u.getNumber();
+
         Integer num;
         for (SnP sorp : snplista) {
             num = sorp.getNumber();
-            if( !numberArray.contains(num) ) {
+            if( (snpId == -1 || num != snpNum) && numberArray.contains(num) ) {
+                numberArray.remove(num);
+            } else if (num == snpNum && !numberArray.contains(num)) {
                 numberArray.add(num);
             }
         }
@@ -213,8 +224,6 @@ public class FragmentSnP extends Fragment {
                 this.getContext(), android.R.layout.simple_spinner_item, snpArray);
         snp_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         snpSorPSpinner.setAdapter(snp_adapter);
-
-        final Integer snpId = u == null ? -1 : u.getId();
 
         if( u != null ) {
             int indexNum = numberArray.indexOf(u.getNumber());
@@ -276,6 +285,25 @@ public class FragmentSnP extends Fragment {
             if (success) {
                 Toast.makeText(rootView.getContext(),
                         "S eller P skapat!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(rootView.getContext(),
+                        "Något gick snett. Försök senare!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public final class DeleteSnPAsync extends AsyncTask<SnP, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(SnP... snps) {
+            SnP snp = snps[0];
+
+            return ((MainActivity) getActivity()).sidanAccess().deleteSnP(snp.getId());
+        }
+
+        protected void onPostExecute(boolean success) {
+            if (success) {
+                Toast.makeText(rootView.getContext(),
+                        "S eller P borttagen!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(rootView.getContext(),
                         "Något gick snett. Försök senare!", Toast.LENGTH_SHORT).show();

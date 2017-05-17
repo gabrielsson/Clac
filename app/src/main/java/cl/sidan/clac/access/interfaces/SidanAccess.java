@@ -209,9 +209,16 @@ public interface SidanAccess {
     public boolean createOrUpdateSnP(Integer id, String status, Integer nummer, String namn, String mail, String tele, String hist);
 
     /**
+     * Delete an S or a P
+     * @param id
+     * @return success
+     */
+    boolean deleteSnP(Integer id);
+
+    /**
      * Delete Arr
      * @param id
      * @return success
      */
-    Boolean deleteArr(Integer id);
+    boolean deleteArr(Integer id);
 }

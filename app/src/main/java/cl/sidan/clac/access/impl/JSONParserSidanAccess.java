@@ -1,6 +1,5 @@
 package cl.sidan.clac.access.impl;
 
-import android.util.Base64;
 import android.util.Log;
 import android.text.TextUtils;
 
@@ -552,7 +551,21 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public Boolean deleteArr(Integer id) {
+    public boolean deleteSnP(Integer id) {
+        JSONObject obj = invoke("DeleteSnP", "Id=" + id);
+        boolean success = false;
+        try {
+            if (obj != null) {
+                success = obj.getBoolean("Success");
+            }
+        } catch (JSONException e) {
+            success = false;
+        }
+        return success;
+    }
+
+    @Override
+    public boolean deleteArr(Integer id) {
         JSONObject obj = invoke("DeleteArr", "Id=" + id);
         boolean success = false;
         try {

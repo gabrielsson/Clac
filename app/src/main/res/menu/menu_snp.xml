@@ -14,5 +14,7 @@
     <item
         android:id="@+id/snp_uppdatera"
         android:title="@string/andra" />
-
+    <item
+        android:id="@+id/snp_tabort"
+        android:title="@string/tabort" />
 </menu>

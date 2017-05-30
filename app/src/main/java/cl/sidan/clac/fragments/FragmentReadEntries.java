@@ -1,5 +1,6 @@
 package cl.sidan.clac.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -7,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -20,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
@@ -35,8 +40,10 @@ import cl.sidan.clac.MainActivity;
 import cl.sidan.clac.MapsActivity;
 import cl.sidan.clac.R;
 import cl.sidan.clac.access.interfaces.Entry;
+import cl.sidan.clac.adapters.AdapterBeer;
 import cl.sidan.clac.adapters.AdapterEntries;
 import cl.sidan.clac.interfaces.ScrollingFragment;
+import cl.sidan.clac.objects.RequestEntry;
 
 public class FragmentReadEntries extends Fragment implements ScrollingFragment {
     private final String TAG = getClass().getCanonicalName();
@@ -165,10 +172,12 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
 
             MenuItem viewPosItem = menu.findItem(R.id.view_position);
             viewPosItem.setEnabled(0 != e.getLatitude().compareTo(BigDecimal.ZERO) && 0 != e.getLongitude().compareTo(BigDecimal.ZERO));
-        }
 
-        MenuItem editItem = menu.findItem(R.id.edit_entry);
-        editItem.setEnabled(false);
+            if(!e.getSignature().equals(nummer) || info.position >= 10) {
+                MenuItem editItem = menu.findItem(R.id.edit_entry);
+                editItem.setEnabled(false);
+            }
+        }
     }
 
     public ArrayList<Entry> returnEntries() {
@@ -216,6 +225,16 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
 
             case R.id.edit_entry:
                 Log.d("Context menu", "Edit entry " + info.id);
+                e = entriesAdapter.getItem(info.position);
+                String number = ((MainActivity) getActivity()).whoAmI();
+                /**
+                 *  Kan bara ändra på sina egna inlägg och om de är en av de 10 senaste.
+                 */
+                if (e != null && e.getSignature().equals(number) && info.position < 10) {
+                    Log.d("Change Entry", "Creating popup for entry " + e.getId());
+                    showEditEntryPopup(e);
+                }
+
                 return true;
 
             case R.id.like_entry:
@@ -323,6 +342,64 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    private ArrayList<String> selectedKumpaner = new ArrayList<>();
+    private void showEditEntryPopup(final Entry e) {
+        AlertDialog.Builder helpBuilder = new AlertDialog.Builder(rootView.getContext());
+        helpBuilder.setTitle("Uppdatera Meddelande");
+        // helpBuilder.setIcon(R.drawable.olsug_32);
+
+        LayoutInflater factory = LayoutInflater.from(rootView.getContext());
+        final View textEntryView = factory.inflate(R.layout.popup_change_msg, null);
+        helpBuilder.setView(textEntryView);
+
+        final EditText msgText = (EditText) textEntryView.findViewById(R.id.write_entry_text);
+        final Spinner msgBeers = (Spinner) textEntryView.findViewById(R.id.number_of_beers);
+        final CheckBox msgSecret = (CheckBox) textEntryView.findViewById(R.id.write_entry_secret);
+        final TextView kumpanText = (TextView) textEntryView.findViewById(R.id.kumpaner);
+
+        msgText.setText(e.getMessage());
+        String[] antalEnheter = getResources().getStringArray(R.array.antalEnheterInklNoll),
+                namnEnheter = getResources().getStringArray(R.array.namnEnheterInklNoll);
+        AdapterBeer beerAdapter = new AdapterBeer(factory, getActivity(), R.layout.beer_spinner_item, antalEnheter, namnEnheter);
+        msgBeers.setAdapter(beerAdapter);
+        msgSecret.setChecked(e.getSecret());
+        /**
+         * För att ändra kumpanerna kommer vi att vilja lyfta ut viss funktionalitet från
+         * FragmentWrite och lägga det i MainActivity.
+         * Exempelvis showRapporteraKumpanerPopUp och de arrayer/funktioner som håller koll på
+         * vilka kumpaner man har för tillfället.
+         */
+        kumpanText.setText(TextUtils.join(",", e.getKumpaner()));
+
+        helpBuilder.setNegativeButton("Ångra",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing but close the dialog
+                    }
+                });
+        helpBuilder.setPositiveButton("Uppdatera",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String message = msgText.getText().toString();
+                        int beers = msgBeers.getSelectedItemPosition();
+                        boolean secret = msgSecret.isChecked();
+
+                        RequestEntry updatedEntry = new RequestEntry();
+                        updatedEntry.setId(e.getId());
+                        updatedEntry.setMessage(message);
+                        updatedEntry.setEnheter(beers);
+                        updatedEntry.setSecret(secret);
+                        updatedEntry.setKumpaner(e.getKumpaner());
+
+                        new UpdateEntryAsync().execute(updatedEntry);
+                    }
+                });
+
+        // Remember, create doesn't show the dialog
+        AlertDialog helpDialog = helpBuilder.create();
+        helpDialog.show();
     }
 
     public void searchEntries(String searchString) {
@@ -434,5 +511,26 @@ public class FragmentReadEntries extends Fragment implements ScrollingFragment {
         top = getTop();
         entriesContainer.setRefreshing(true);
         new ReadEntriesAsync().execute(entries.size());
+    }
+
+    public final class UpdateEntryAsync extends AsyncTask<Entry, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Entry... entries) {
+            Entry entry = entries[0];
+
+            return ((MainActivity) getActivity()).sidanAccess().updateEntry(
+                    entry.getId(), entry.getMessage(), entry.getEnheter(), entry.getSecret(),
+                    entry.getKumpaner());
+        }
+
+        protected void onPostExecute(boolean success) {
+            if (success) {
+                Toast.makeText(rootView.getContext(),
+                        "Meddelande uppdaterat!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(rootView.getContext(),
+                        "Något gick snett. Försök senare!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

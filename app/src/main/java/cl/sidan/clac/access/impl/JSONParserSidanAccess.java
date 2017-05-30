@@ -140,11 +140,6 @@ public class JSONParserSidanAccess implements SidanAccess {
     }
 
     @Override
-    public final void editEntry(Integer id, String message) {
-
-    }
-
-    @Override
     public final void deleteEntry(Integer id) {
 
     }
@@ -209,6 +204,54 @@ public class JSONParserSidanAccess implements SidanAccess {
         sendNotification(message);
 
         return invoke("CreateEntry", sb.toString()) != null;
+    }
+
+    @Override
+    public boolean updateEntry(Integer id, String message, Integer enheter, boolean secret, List<User> sideKicks) {
+        // Initial capacity is just set arbitrary big: 300 characters.
+        // The default is 16 characters, but then we always need to grow.
+        // We got a bug report on OutOfMemoryError, which happened because of String builder
+        // enlargement.
+        StringBuilder sb = new StringBuilder(300 + message.length());
+        sb.append("Id=").append(id).append("&");
+        try {
+            if(message.isEmpty()) {
+                sb.append("Message=");
+            } else {
+                sb.append("Message=").append(URLEncoder.encode(message,"UTF-8"));
+            }
+            if(enheter != null) {
+                sb.append("&Enheter=").append(enheter);
+            }
+
+            if(secret) {
+                sb.append("&Secret=True");
+            }
+
+            if(sideKicks != null && !sideKicks.isEmpty()) {
+                JSONArray ja = new JSONArray();
+                sb.append("&SideKicks=[");
+                try {
+                    String user = "";
+                    for( User u : sideKicks ) {
+                        user = u.getSignature().substring(1);
+                        JSONObject jo = new JSONObject();
+                        jo.put("Signature", user);
+                        ja.put(jo);
+                    }
+                    sb.append(ja.join(",")).append("]");
+                } catch (JSONException err) {
+                    Log.e("JSONERROR", "Error parsing JSON: " + err.getMessage());
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        //notify invoke("Notify....");
+        sendNotification(message);
+
+        return invoke("EditEntry", sb.toString()) != null;
     }
 
     protected void sendNotification(String message) {

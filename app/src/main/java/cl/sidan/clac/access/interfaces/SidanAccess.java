@@ -64,13 +64,6 @@ public interface SidanAccess {
     public Entry readEntry(Integer id);
 
     /**
-     * Appends a row to the end of the message
-     * @param id
-     * @param message
-     */
-    public void editEntry(Integer id, String message);
-
-    /**
      * deletes entry corresponding to the id
      * @param id
      */
@@ -221,4 +214,6 @@ public interface SidanAccess {
      * @return success
      */
     boolean deleteArr(Integer id);
+
+    boolean updateEntry(Integer id, String message, Integer enheter, boolean secret, List<User> kumpaner);
 }

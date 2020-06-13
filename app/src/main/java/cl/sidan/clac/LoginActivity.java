@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
 
     protected boolean isNumberValid(String number) {
         //TODO: Replace this with your own logic
-        return number.contains("#") && Integer.parseInt(number.substring(1)) < 100;
+        return number.contains("#") && Integer.parseInt(number.substring(1)) < 1000;
     }
 
     protected boolean isEmailValid(String email) {
